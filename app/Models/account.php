@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class Account extends Model
 {
@@ -39,5 +40,20 @@ class Account extends Model
     public function pendingRegister()
     {
         return $this->belongsTo(PendingRegister::class, 'id_pending_register', 'id_pending_register');
+    }
+
+    public static function authenticate($email, $password)
+    {
+        $account = self::where('email', $email)->first();
+
+        if (!$account) {
+            return null; 
+        }
+
+        if (!Hash::check($password, $account->password)) {
+            return false; 
+        }
+
+        return $account; 
     }
 }

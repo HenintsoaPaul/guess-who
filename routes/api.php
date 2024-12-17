@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TokenController;
-
+use App\Http\Controllers\PendingAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +17,8 @@ use App\Http\Controllers\TokenController;
 */
 
 Route::post('/generate-token/{userId}', [TokenController::class, 'generateToken']);
+Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
+Route::post('/login', [TokenController::class, 'login']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
