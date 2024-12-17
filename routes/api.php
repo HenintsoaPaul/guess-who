@@ -17,7 +17,7 @@ use App\Http\Controllers\PinController;
 
 Route::resource('emails', PinController::class);
 
-Route::get('emails/sendPin', [PinController::class, 'sendPinCode'])->name('sendPin');
+Route::post('emails/sendPin', [PinController::class, 'sendPinCode']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
