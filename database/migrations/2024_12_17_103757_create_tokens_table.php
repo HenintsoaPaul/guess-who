@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('id_token');
             $table->timestamp('date_expiration');
             $table->string('token', 250);
-            $table->unsignedBigInteger('Id_account');
+            $table->unsignedBigInteger('id_account');
             $table->timestamps();
 
             $table->foreign('id_account')->references('id_account')->on('accounts');

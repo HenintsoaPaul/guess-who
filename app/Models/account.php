@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
+
     use HasFactory;
 
-    protected $table = 'account';
+    protected $table = 'accounts';
     protected $primaryKey = 'id_account';
     public $timestamps = false; 
 
