@@ -28,3 +28,4 @@ class Token extends Model
         return $this->belongsTo(Account::class, 'id_account', 'id_account');
     }
 }
+
