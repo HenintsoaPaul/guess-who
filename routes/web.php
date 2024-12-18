@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,3 +31,6 @@ Route::middleware(['etudiants', 'role:admin'])->group(function () {
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/register', [RegisterController::class, 'controlInput']);
