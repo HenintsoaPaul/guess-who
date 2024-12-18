@@ -127,23 +127,11 @@ class TokenService {
      * @param int $expiryTime Durée de validité en secondes (par défaut : 3600 secondes = 1 heure).
      * @return bool `true` si le token est valide, sinon `false`.
      */
-    public static function isValid(string $identifier, string $token, int $expiryTime = 3600): bool {
-        if (!isset($this->tokens[$identifier])) {
+    public static function isValid(string $id, string $token, int $expiryTime = 3600): bool {
+        $tokenModel = self::getLastUsableToken($id);
+        if( $tokenModel == NULL || $tokenModel->token != $token){
             return false;
         }
-
-        // Récupère les détails du token stocké.
-        $storedToken = $this->tokens[$identifier];
-        if ($storedToken['token'] !== $token) {
-            return false;
-        }
-
-        // Vérifie si le token a expiré.
-        if (time() - $storedToken['created_at'] > $expiryTime) {
-            unset($this->tokens[$identifier]); // Supprime le token expiré.
-            return false;
-        }
-
         return true;
     }
 }
