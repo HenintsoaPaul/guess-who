@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use Illuminate\Http\JsonResponse;
+
 class JsonResponseService
 {
-    public function success(string $message, $data = null, int $statusCode = 200)
+    public function success(string $message, $data = null, int $statusCode = 200): JsonResponse
     {
         return response()->json([
             'status' => 'success',
@@ -12,8 +14,8 @@ class JsonResponseService
             'data' => $data,
         ], $statusCode);
     }
-   
-    public function error(string $message, $errors = null, int $statusCode = 400)
+
+    public function error(string $message, $errors = null, int $statusCode = 400): JsonResponse
     {
         return response()->json([
             'status' => 'error',
