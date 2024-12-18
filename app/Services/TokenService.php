@@ -63,7 +63,7 @@ class TokenService {
     }
 
     public static function genExpirationDate(){
-        return TimesService::generateDate(now(),3600*5);
+        return TimesService::generateDate(now(),3600*2);
     }
 
     /**
@@ -155,7 +155,7 @@ class TokenService {
      * @param int $expiryTime Durée de validité en secondes (par défaut : 3600 secondes = 1 heure).
      * @return bool `true` si le token est valide, sinon `false`.
      */
-    public static function isValidBarerToken(string $id, string $token, int $expiryTime = 3600): bool {
+    public static function isValidBarerToken(string $id, string $token): bool {
         $tokenModel = self::getLastUsableToken($id);
         if( $tokenModel == NULL ||  !self::isTheSameToken($token,$tokenModel->token)){
             return false;
@@ -164,7 +164,7 @@ class TokenService {
     }
 
     public static function isTheSameToken($token,$token_ref){
-        return $token == $token_ref
+        return $token == $token_ref;
     }
     public static function isValid(string $id,Request $request): bool {
         $token = self::getBarerToken($request);
