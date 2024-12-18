@@ -96,11 +96,15 @@ class TokenService {
         }
     }
 
-    public static function regenerate(int $id, Request $request): string
-    {
+    public static function getBarerToken(Request $request) {
         $fulltoken = $request->header('Authorization');
         // Get only the bearer token
         $token = $request->bearerToken();
+        return $token;
+    }
+    public static function regenerate(int $id, Request $request): string
+    {
+        $token = self::getBarerToken($request);
         return self::regenerateToken($id,$token);
     }  
 
