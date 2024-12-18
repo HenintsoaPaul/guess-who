@@ -12,7 +12,17 @@ use Illuminate\Http\Request;
  * Service pour gérer les tokens
  */
 class TokenService {
-    private $tokens = []; // Tableau pour stocker les tokens générés.
+    /**
+     * Recupere le barer token dans la requet
+     * @param Request $request La requete a effectuer
+     * @return string le token recuperer dans le header de la requete
+     */
+    public static function getBarerToken(Request $request) {
+        $fulltoken = $request->header('Authorization');
+        // Get only the bearer token
+        $token = $request->bearerToken();
+        return $token;
+    }
 
     /**
      * Génère un nouveau token unique.
@@ -108,17 +118,6 @@ class TokenService {
         $token = self::getBarerToken($request);
         return self::regenerateToken($id,$token);
     }
-    /**
-     * Recupere le barer token dans la requet
-     * @param Request $request La requete a effectuer
-     * @return string le token recuperer dans le header de la requete
-     */
-    public static function getBarerToken(Request $request) {
-        $fulltoken = $request->header('Authorization');
-        // Get only the bearer token
-        $token = $request->bearerToken();
-        return $token;
-    }
 
     /**
      * Recuperer le model du dernier token valide cree.
@@ -151,11 +150,16 @@ class TokenService {
      * @param int $expiryTime Durée de validité en secondes (par défaut : 3600 secondes = 1 heure).
      * @return bool `true` si le token est valide, sinon `false`.
      */
-    public static function isValid(string $id, string $token, int $expiryTime = 3600): bool {
+    public static function isValidBarerToken(string $id, string $token, int $expiryTime = 3600): bool {
         $tokenModel = self::getLastUsableToken($id);
         if( $tokenModel == NULL || $tokenModel->token != $token){
             return false;
         }
         return true;
     }
+    public static function isValid(string $id,Request $request): bool {
+        $token = self::getBarerToken($request);
+        return self::isValidBarerToken($id,$token);
+    }
+
 }
