@@ -20,14 +20,17 @@ use App\Http\Controllers\PendingAuthController;
 |
 */
 
-Route::resource('emails', PinController::class);
+// Route::resource('emails', PinController::class);
 
-Route::post('emails/sendPin', [PinController::class, 'sendPinCode']);
+// Route::post('emails/sendPin', [PinController::class, 'sendPinCode']);
 
-Route::post('/generate-token/{userId}', [TokenController::class, 'generateToken']);
-Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
+// Route::post('/generate-token/{userId}', [TokenController::class, 'generateToken']);
+// Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
+// Route::post('/login', [TokenController::class, 'login']);
+
 Route::post('/login', [TokenController::class, 'login']);
-n
+
+Route::post('/validate-pin', [TokenController::class, 'validatePin']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
