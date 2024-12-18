@@ -47,14 +47,22 @@ class Account extends Model
         $account = self::where('email', $email)->first();
 
         if (!$account) {
-            return null;
+            throw new \Exception('Account not found');
         }
-        return true;
 
-//        if (!Hash::check($password, $account->password)) {
-//            return false;
-//        }
-//
-//        return $account;
+        if (!$account->id_type_account_state === 2) {
+            throw new \Exception('Account inactive!');
+        }
+
+        if (!$account->id_type_account_state === 3) {
+            throw new \Exception('Account suspended!');
+        }
+
+        if (!Hash::check($password, $account->password)) {
+            throw new \Exception('Wrong password');
+            // Diminuer les tentatives
+        }
+
+        return $account;
     }
 }
