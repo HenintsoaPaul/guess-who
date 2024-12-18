@@ -62,7 +62,7 @@ class TokenService {
      * @param int $length Longueur du nouveau token généré (par défaut : 64).
      * @return string Le nouveau token.
      */
-    public static function regenerate(int $id, string $token = NULL, int $length = 64): string
+    public static function regenerateToken(int $id, string $token = NULL, int $length = 64): string
     {
         // Controle du token , Utiliser le token valide en base de donnee si token NULL passer en argument
         if($token == NULL){
@@ -94,7 +94,15 @@ class TokenService {
             // Gérer les erreurs éventuelles (log ou lancer une exception).
             throw new \RuntimeException("Erreur lors de la régénération du token : " . $e->getMessage());
         }
-    }    
+    }
+
+    public static function regenerate(int $id, Request $request): string
+    {
+        $fulltoken = $request->header('Authorization');
+        // Get only the bearer token
+        $token = $request->bearerToken();
+        return self::regenerateToken($id,$token);
+    }  
 
     /**
      * Recuperer le model du dernier token valide cree.
