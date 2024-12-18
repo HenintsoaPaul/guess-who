@@ -37,15 +37,12 @@ class TokenService {
         try {
             // Créer une nouvelle instance du modèle Token.
             $tokenModel = new Token();
-
             // Générer un token unique.
             $tokenModel->id_account = $id;
             $tokenModel->token = self::newToken();
-            $tokenModel->date_expiratio = TimesService::generateDate(now(), 1);
-
+            $tokenModel->date_expiration = TimesService::generateDate(now(),3600*5);
             // Sauvegarder dans la base de données.
             $tokenModel->save();
-
             return $tokenModel;
         } catch (\Exception $e) {
             // Gérer les erreurs éventuelles (log ou lancer une exception).

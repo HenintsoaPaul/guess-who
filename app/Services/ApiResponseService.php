@@ -18,7 +18,7 @@ namespace App\Services;
                 'details' => []
             ],
         ];
-        return json_encode($response);
+        return response()->json($response);
     }
 
     public static function getResponseStatusByCode($statusCode){
