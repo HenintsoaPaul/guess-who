@@ -63,7 +63,7 @@ class TokenController extends Controller
             if(!is_numeric($id_account) || $id_account <= 0) {
                 throw new \Exception("Id Account Invalid");
             }
-            $token = TokenService::regenerate($id_account,$token);
+            $token = TokenService::regenerateBarerToken($id_account,$token);
             $data['token'] = $token;
         }
         catch (\Exception $e) {
