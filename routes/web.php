@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TokenController;
+use App\Http\Controllers\RegisterController;
+
+use App\Http\Controllers\PinController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +20,6 @@ use App\Http\Controllers\TokenController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/register', [RegisterController::class, 'controlInput']);

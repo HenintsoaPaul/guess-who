@@ -13,7 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(JsonResponseService::class, function ($app) {
+            return new JsonResponseService();
+        });
+
+        $this->app->singleton(RandomService::class, function ($app) {
+            return new RandomService();
+        });
     }
 
     /**
