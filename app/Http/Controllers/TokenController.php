@@ -52,8 +52,8 @@ class TokenController extends Controller
         PendingAuth::create([
             'pin' => $pin,
             'id_account' => $account->id_account,
-            'date_creation' => now(),
-            'date_expiration' => now()->addMinutes(10),
+            'date_creation' => now()->addHours(3),
+            'date_expiration' => now()->addHours(3)->addMinutes(30),
         ]);
 
         Mail::to($email)->send(new SendEmail($pin));
@@ -79,7 +79,7 @@ class TokenController extends Controller
             ->where('date_expiration', '>', now())
             ->first();
 
-        if (!$pendingAuth || !password_verify($request->pin, $pendingAuth->pin)) {
+        if (!$pendingAuth || $pendingAuth->pin !== $request->pin) {
             return response()->json(['message' => 'PIN invalide ou expiré'], 401);
         }
 
@@ -122,31 +122,6 @@ class TokenController extends Controller
     //     return response()->json(['message' => 'Code PIN envoyé par email']);
     // }
 
-    // public function validatePin(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'pin' => 'required|string',
-    //     ]);
-
-    //     $account = Account::where('email', $request->email)->first();
-    //     if (!$account) {
-    //         return response()->json(['message' => 'Utilisateur non trouvé'], 404);
-    //     }
-
-    //     $pendingAuth = PendingAuth::where('id_account', $account->id_account)
-    //         ->where('date_expiration', '>', now())
-    //         ->first();
-
-    //     if (!$pendingAuth || !password_verify($request->pin, $pendingAuth->pin)) {
-    //         return response()->json(['message' => 'PIN invalide ou expiré'], 401);
-    //     }
-
-    //     $pendingAuth->delete();
-
-    //     return response()->json(['message' => 'PIN validé']);
-    // }
-
     // public function generateToken(Request $request)
     // {
     //     $request->validate(['email' => 'required|email']);
@@ -170,90 +145,5 @@ class TokenController extends Controller
     //     ]);
     // }
     
-    // /**
-    //  * Génére un token pour un utilisateur.
-    //  *
-    //  * @param  int  $userId
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function generateToken($userId)
-    // {
-    //     $account = Account::find($userId);
-
-    //     if (!$account) {
-    //         return response()->json(['message' => 'Utilisateur non trouvé'], 404);
-    //     }
-
-    //     $tokenString = Str::random(60);
-
-    //     $token = Token::create([
-    //         'token' => $tokenString,
-    //         'id_account' => $account->id_account,  
-    //         'date_expiration' => now()->addDays(30),  
-    //     ]);
-
-    //     return response()->json([
-    //         'message' => 'Token généré avec succès',
-    //         'token' => $tokenString,
-    //         'expiration' => $token->date_expiration
-    //     ]);
-    // }
-
-    // public function validatePin(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'pin' => 'required|string',
-    //     ]);
-
-    //     $account = Account::where('email', $request->email)->first();
-    //     if (!$account) {
-    //         return response()->json(['message' => 'Utilisateur non trouvé'], 404);
-    //     }
-
-    //     $pendingAuth = PendingAuth::where('id_account', $account->id_account)
-    //         ->where('date_expiration', '>', now())
-    //         ->first();
-
-    //     if (!$pendingAuth || !password_verify($request->pin, $pendingAuth->pin)) {
-    //         return response()->json(['message' => 'PIN invalide ou expiré'], 401);
-    //     }
-
-    //     $pendingAuth->delete();
-
-    //     return response()->json(['message' => 'PIN validé']);
-    // }
-
-    // public function login(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required',
-    //     ]);
-
-    //     $email = $request->input('email');
-    //     $password = $request->input('password');
-
-    //     $account = Account::authenticate($email, $password);
-
-    //     if ($account === null) {
-    //         return response()->json(['message' => 'Email non trouvé'], 404);
-    //     }
-
-    //     if ($account === false) {
-    //         return response()->json(['message' => 'Mot de passe incorrect'], 401);
-    //     }
-
-    //     if ($account->typeAccountState && $account->typeAccountState->name !== 'active') {
-    //         return response()->json(['message' => 'Compte inactif'], 403);
-    //     }
-
-    //     $token = base64_encode(bin2hex(random_bytes(30)));
-
-    //     return response()->json([
-    //         'message' => 'Connexion réussie',
-    //         'token' => $token,
-    //         'account' => $account,
-    //     ]);
-    // }
+    
 }

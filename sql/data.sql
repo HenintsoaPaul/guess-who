@@ -21,3 +21,5 @@ VALUES
 (NOW() + INTERVAL '30 days', NOW(), '12345', 1),
 (NOW() + INTERVAL '20 days', NOW(), '67890', 2);
 
+SELECT * FROM pending_auths WHERE id_account = (SELECT id_account FROM accounts WHERE email = 'antema.fy01@gmail.com') AND date_expiration > NOW();
+
