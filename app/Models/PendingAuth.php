@@ -11,7 +11,7 @@ class PendingAuth extends Model
 
     protected $table = 'pending_auths';
     protected $primaryKey = 'id_pending_auth';
-    public $timestamps = false; 
+    public $timestamps = false;
 
     protected $fillable = [
         'date_expiration',
@@ -34,4 +34,23 @@ class PendingAuth extends Model
         return self::find($id);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public static function addNew(string $pin, int $idAccount) {
+        $daty = new \DateTime();
+        $lifeTime = new \DateInterval('PT90S'); // Delai de 90 secondes
+
+        $pendingAuth = new PendingAuth();
+        $pendingAuth->date_creation = $daty;
+        $pendingAuth->date_expiration = $daty->add($lifeTime);
+        $pendingAuth->pin = $pin;
+        $pendingAuth->id_account = $idAccount;
+
+        if (!$pendingAuth->save()) {
+            throw new \Exception("Failed to insert pending auth");
+        }
+
+        return $pendingAuth;
+    }
 }

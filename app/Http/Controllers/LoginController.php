@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
+use App\Models\PendingAuth;
+use App\Services\AuthService;
 use App\Services\JsonResponseService;
+use App\Services\RandomService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -26,9 +28,24 @@ class LoginController extends Controller
                 'password' => 'required',
             ]);
 
-            $account = Account::authenticate($credentials['email'], $credentials['password']);
-            return $this->jsonResponse->success('Mety ilay controle', $account );
+            DB::transaction(function () use ($credentials) {
+                $account = AuthService::authenticate($credentials['email'], $credentials['password']);
 
+                // generate pin
+                $pin = RandomService::newPin();
+
+                // send pin on email
+                // TODO: atao eto...
+
+                // insert pending_auth
+                $pendingAuth = PendingAuth::addNew($pin, $account->id_account);
+
+                $res = $pendingAuth->save();
+                if (!$res) {
+                    throw new \Exception("Failed to insert pending_auth.");
+                }
+                return $this->jsonResponse->success('Mety ilay controle', $pendingAuth );
+            });
         } catch (ValidationException $e) {
             return $this->jsonResponse->validationError($e);
 
