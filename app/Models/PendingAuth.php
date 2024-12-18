@@ -9,7 +9,7 @@ class PendingAuth extends Model
 {
     use HasFactory;
 
-    protected $table = 'pending_auth';
+    protected $table = 'pending_auths';
     protected $primaryKey = 'id_pending_auth';
     public $timestamps = false; 
 
@@ -28,4 +28,10 @@ class PendingAuth extends Model
     {
         return $this->belongsTo(Account::class, 'id_account', 'id_account');
     }
+
+    public static function getById($id)
+    {
+        return self::find($id);
+    }
+
 }
