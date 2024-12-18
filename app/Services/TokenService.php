@@ -40,7 +40,7 @@ class TokenService {
             // Générer un token unique.
             $tokenModel->id_account = $id;
             $tokenModel->token = self::newToken();
-            $tokenModel->date_expiration = TimesService::generateDate(now(),3600*5);
+            $tokenModel->date_expiration = self::genExpirationDate();
             // Sauvegarder dans la base de données.
             $tokenModel->save();
             return $tokenModel;
@@ -50,30 +50,74 @@ class TokenService {
         }
     }
 
+    public static function genExpirationDate(){
+        return TimesService::generateDate(now(),3600*5);
+    }
+
     /**
      * Régénère un token pour un utilisateur donné.
      *
      * @param int $id Identifiant de l'utilisateur.
+     * @param string $token Le token a regenerer.
      * @param int $length Longueur du nouveau token généré (par défaut : 64).
      * @return string Le nouveau token.
      */
-    public static function regenerate(int $id, int $length = 64): string {
+    public static function regenerate(int $id, string $token = NULL, int $length = 64): string
+    {
+        // Controle du token , Utiliser le token valide en base de donnee si token NULL passer en argument
+        if($token == NULL){
+            $tokenModel = self::getLastUsableToken($id);
+            if($tokenModel == NULL){
+                throw new \Exception("Token invalid pour le compte : ".$id." et token : ".$token);
+            }
+            $token = $tokenModel->token;
+        }
         try {
             // Générer un nouveau token.
             $newToken = self::newToken($length);
-
-            // Mise à jour du token dans la base de données.
-            DB::table('tokens')->where('user_id', $id)->update([
-                'token' => $newToken,
-                'expires_at' => TimesService::generateDate(now(), 1)
-            ]);
-
+    
+            // Mise à jour du token dans la base de données avec les conditions sur `id_account` et `token`.
+            $updated = DB::table('tokens')
+                ->where('id_account', $id)
+                ->where('token', $token)
+                ->update([
+                    'token' => $newToken,
+                    'date_expiration' => self::genExpirationDate()
+                ]);
+    
+            // Vérifie si la mise à jour a été effectuée.
+            if ($updated === 0) {
+                throw new \RuntimeException("Aucun enregistrement trouvé avec cet id_account et token.");
+            }
             return $newToken;
         } catch (\Exception $e) {
             // Gérer les erreurs éventuelles (log ou lancer une exception).
             throw new \RuntimeException("Erreur lors de la régénération du token : " . $e->getMessage());
         }
+    }    
+
+    /**
+     * Recuperer le model du dernier token valide cree.
+     * 
+     * @param int $id_account L'identifiant pour un account d'un utilisateur.
+     * @return Token|null Le model de token utilisable correspondant a l'id_account, ou null si aucun token valide n'a ete trouve.
+     */
+    public static function getLastUsableToken($id_account)
+    {
+        // Vérifie que l'identifiant est valide.
+        if (empty($id_account) || !is_numeric($id_account)) {
+            return null;
+        }
+
+        // Récupère le token avec la date d'expiration supérieure à maintenant.
+        $tokenModel = Token::where('id_account', $id_account)
+            ->where('date_expiration', '>', now())
+            ->orderBy('date_expiration', 'desc') // Le dernier token valide créé.
+            ->first();
+
+        return $tokenModel;
     }
+
 
     /**
      * Vérifie si un token est valide pour un identifiant donné.

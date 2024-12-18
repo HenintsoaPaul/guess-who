@@ -9,14 +9,11 @@ namespace App\Services;
     public static function apiResponse(int $code , string $message , array $data = [] , array $errors = [] ){
         $status = ApiResponseService::getResponseStatusByCode($code);
         $response =[
-            'status'=>$status,
-            'code'=>$code,
+            'succes'=>$status,
+            'status'=>$code,
             'message'=>$message,
             'data'=>$data,
-            'error'=>[
-                'errors' => $errors,
-                'details' => []
-            ],
+            'error'=>$errors,
         ];
         return response()->json($response);
     }
@@ -24,15 +21,15 @@ namespace App\Services;
     public static function getResponseStatusByCode($statusCode){
         switch ($statusCode) {
             case '200':
-                return 'OK';
+                return 'Ttrue';
                 break;
             case '400':
             case '404':
             case '500':
-                return 'Error';
+                return 'False';
                 break;
             default:
-                return 'Undefined';
+                return 'False';
                 break;
         }
     }

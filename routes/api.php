@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('token',[TokenController::class,'index']);
-Route::get('token/gen',[TokenController::class,'generate']);
+Route::get('token/gen/{id_account}',[TokenController::class,'generate']);
+Route::get('token/regen/{id_account}',[TokenController::class,'regenerate']);
