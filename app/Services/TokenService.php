@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Services\TimesService;
 use App\Models\Token;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 
 /**
  * Service pour gérer les tokens
@@ -62,7 +64,7 @@ class TokenService {
      * @param int $length Longueur du nouveau token généré (par défaut : 64).
      * @return string Le nouveau token.
      */
-    public static function regenerateToken(int $id, string $token = NULL, int $length = 64): string
+    public static function regenerateBarerToken(int $id, string $token = NULL, int $length = 64): string
     {
         // Controle du token , Utiliser le token valide en base de donnee si token NULL passer en argument
         if($token == NULL){
@@ -95,18 +97,28 @@ class TokenService {
             throw new \RuntimeException("Erreur lors de la régénération du token : " . $e->getMessage());
         }
     }
-
+    /**
+     * Regenerer un token pour un utilisateur a partir du token dans le header de la requete
+     * @param int $id L'identifiant du compte de l'utilisateur
+     * @param Request $request La requete a effectuer
+     * @return string Le nouveau token generer
+     */
+    public static function regenerate(int $id, Request $request): string
+    {
+        $token = self::getBarerToken($request);
+        return self::regenerateToken($id,$token);
+    }
+    /**
+     * Recupere le barer token dans la requet
+     * @param Request $request La requete a effectuer
+     * @return string le token recuperer dans le header de la requete
+     */
     public static function getBarerToken(Request $request) {
         $fulltoken = $request->header('Authorization');
         // Get only the bearer token
         $token = $request->bearerToken();
         return $token;
     }
-    public static function regenerate(int $id, Request $request): string
-    {
-        $token = self::getBarerToken($request);
-        return self::regenerateToken($id,$token);
-    }  
 
     /**
      * Recuperer le model du dernier token valide cree.
