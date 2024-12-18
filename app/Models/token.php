@@ -9,7 +9,7 @@ class Token extends Model
 {
     use HasFactory;
 
-    protected $table = 'token';
+    protected $table = 'tokens';
     protected $primaryKey = 'id_token';
     public $timestamps = false; 
 
@@ -28,3 +28,4 @@ class Token extends Model
         return $this->belongsTo(Account::class, 'id_account', 'id_account');
     }
 }
+
