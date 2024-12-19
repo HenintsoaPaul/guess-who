@@ -6,16 +6,24 @@ namespace App\Services;
  * Service pour gerer les fonctions de dates
  */
  class ApiResponseService {
+    // public static function apiResponse(int $code , string $message , array $data = [] , array $errors = [] ){
+    //     $status = ApiResponseService::getResponseStatusByCode($code);
+    //     $response =[
+    //         'succes'=>$status,
+    //         'status'=>$code,
+    //         'message'=>$message,
+    //         'data'=>$data,
+    //         'error'=>$errors,
+    //     ];
+    //     return response()->json($response);
+    // }
+
     public static function apiResponse(int $code , string $message , array $data = [] , array $errors = [] ){
-        $status = ApiResponseService::getResponseStatusByCode($code);
-        $response =[
-            'succes'=>$status,
-            'status'=>$code,
-            'message'=>$message,
-            'data'=>$data,
-            'error'=>$errors,
-        ];
-        return response()->json($response);
+        $jsonResonse = new JsonResponseService();
+        if (empty($data) && !empty($errors)){
+            return $jsonResonse->error($message,$errors,$code);
+        }
+        return $jsonResonse->success($message,$data,$code);
     }
 
     public static function getResponseStatusByCode($statusCode){
