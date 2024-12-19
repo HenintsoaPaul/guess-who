@@ -23,8 +23,8 @@ Route::resource('emails', PinController::class);
 
 Route::post('emails/sendPin', [PinController::class, 'sendPinCode']);
 Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
-Route::post('/login', [TokenController::class, 'login']);
 
+Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user(); 

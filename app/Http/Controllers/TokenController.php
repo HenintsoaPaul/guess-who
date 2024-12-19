@@ -36,37 +36,4 @@ class TokenController extends Controller
             'expiration' => $token->date_expiration
         ]);
     }
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $email = $request->input('email');
-        $password = $request->input('password');
-
-        $account = Account::authenticate($email, $password);
-
-        if ($account === null) {
-            return response()->json(['message' => 'Email non trouvé'], 404);
-        }
-
-        if ($account === false) {
-            return response()->json(['message' => 'Mot de passe incorrect'], 401);
-        }
-
-        if ($account->typeAccountState && $account->typeAccountState->name !== 'active') {
-            return response()->json(['message' => 'Compte inactif'], 403);
-        }
-
-        $token = base64_encode(bin2hex(random_bytes(30)));
-
-        return response()->json([
-            'message' => 'Connexion réussie',
-            'token' => $token,
-            'account' => $account,
-        ]);
-    }
 }
