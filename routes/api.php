@@ -28,9 +28,9 @@ use App\Http\Controllers\PendingAuthController;
 // Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
 // Route::post('/login', [TokenController::class, 'login']);
 
-Route::post('/login', [TokenController::class, 'login']);
+Route::post('/login', [PinController::class, 'login']);
 
-Route::post('/validate-pin', [TokenController::class, 'validatePin']);
+Route::post('/validate-pin', [PinController::class, 'validatePin']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
