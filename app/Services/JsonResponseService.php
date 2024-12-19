@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class JsonResponseService
 {
@@ -22,5 +23,10 @@ class JsonResponseService
             'message' => $message,
             'errors' => $errors,
         ], $statusCode);
+    }
+
+    public function validationError(ValidationException $e): JsonResponse
+    {
+        return $this->error('Les données sont invalides.', $e->errors(), 422);
     }
 }

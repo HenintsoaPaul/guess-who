@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 
 class Account extends Model
 {
@@ -42,19 +41,72 @@ class Account extends Model
         return $this->belongsTo(PendingRegister::class, 'id_pending_register', 'id_pending_register');
     }
 
-    public static function authenticate(string $email, string $password)
+    public function remainingAttempt(): int
     {
-        $account = self::where('email', $email)->first();
+        return $this->max_attempt - $this->attempt;
+    }
 
-        if (!$account) {
-            return null;
+    /**
+     * @return int The number of remaining attempt(s).
+     * @throws \Exception
+     */
+    public function increaseAttempt(): int {
+        $res = $this->update([
+            'attempt' => $this->attempt + 1,
+        ]);
+        if (!$res) {
+            throw new \Exception('Failed to increase attempt');
         }
-        return true;
 
-//        if (!Hash::check($password, $account->password)) {
-//            return false;
-//        }
-//
-//        return $account;
+        if ($this->attempt === $this->max_attempt) {
+            $this->lockAccount();
+            throw new \Exception('Account locked!');
+        }
+
+        return $this->remainingAttempt();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function lockAccount() {
+        $a_state = new AccountState();
+        $a_state->date_state = new \DateTime();
+        $a_state->id_account = $this->id_account;
+        $a_state->suspend();
+
+        $res = $a_state->save();
+        if (!$res) {
+            throw new \Exception('Failed to lock account! Error on insert account_state.');
+        }
+
+        $res = $this->update([
+            'id_type_account_state' => $a_state->id_type_account_state,
+        ]);
+        if (!$res) {
+            throw new \Exception('Failed to lock account! Error on update column account.id_type_account_state.');
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function unlockAccount() {
+        $a_state = new AccountState();
+        $a_state->date_state = new \DateTime();
+        $a_state->id_account = $this->id_account;
+        $a_state->activate();
+
+        $res = $a_state->save();
+        if (!$res) {
+            throw new \Exception('Failed to unlock account! Error on insert account_state.');
+        }
+
+        $res = $this->update([
+            'id_type_account_state' => $a_state->id_type_account_state,
+        ]);
+        if (!$res) {
+            throw new \Exception('Failed to unlock account! Error on update column account.id_type_account_state.');
+        }
     }
 }
