@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Account extends Model
 {
@@ -60,6 +61,7 @@ class Account extends Model
 
         if ($this->attempt === $this->max_attempt) {
             $this->lockAccount();
+            DB::commit();
             throw new \Exception('Account locked!');
         }
 

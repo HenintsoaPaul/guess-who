@@ -36,7 +36,7 @@ class LoginController extends Controller
             $pin = RandomService::newPin();
 
             // send pin on email
-            // TODO: atao eto...
+            Mail::to($email)->send(new SendEmail($pin));
 
             // insert pending_auth
             $pendingAuth = PendingAuth::addNew($pin, $account->id_account);
