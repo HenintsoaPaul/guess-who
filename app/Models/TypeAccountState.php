@@ -9,7 +9,7 @@ class TypeAccountState extends Model
 {
     use HasFactory;
 
-    protected $table = 'type_account_states';
+    protected $table = 'type_account_state';
     protected $primaryKey = 'id_type_account_state';
     public $timestamps = false; 
     protected $fillable = [

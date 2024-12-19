@@ -9,7 +9,7 @@ class PendingAuth extends Model
 {
     use HasFactory;
 
-    protected $table = 'pending_auths';
+    protected $table = 'pending_auth';
     protected $primaryKey = 'id_pending_auth';
     public $timestamps = false; 
 
