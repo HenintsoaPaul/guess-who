@@ -19,10 +19,11 @@ class TokenController extends Controller
      *
      * @param RandomService $randomService
      */
-    public function __construct(randomService $randomService)
+    public function __construct(randomService $randomService
     {
         $this->randomService = $randomService;
     }
+
 
     public function login(Request $request)
     {
@@ -144,6 +145,5 @@ class TokenController extends Controller
     //         'expiration' => $token->date_expiration,
     //     ]);
     // }
-    
     
 }
