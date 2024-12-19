@@ -2,10 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TokenController;
 
 use App\Http\Controllers\PinController;
-
-use App\Http\Controllers\TokenController;
 use App\Http\Controllers\PendingAuthController;
 
 
@@ -32,6 +31,12 @@ Route::post('/login', [PinController::class, 'login']);
 
 Route::post('/validate-pin', [PinController::class, 'validatePin']);
 
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return $request->user(); 
 });
+
+// TOKEN ROUTER
+Route::get('token',[TokenController::class,'index']); // afficher un token generer
+Route::get('token/gen/{id_account}',[TokenController::class,'generate']); // generer un token pour un account
+Route::get('token/regen/{id_account}',[TokenController::class,'regenerate']); // regenerer un token pour un account
