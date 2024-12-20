@@ -16,6 +16,16 @@ Run the following command in the terminal:
 
 ```json
 {
+    "email": "locked@gmail.com"
+}
+```
+
+### Login
+
+* Send `POST` request to `http://localhost:8000/api/login`
+
+```json
+{
     "email": "locked@gmail.com",
     "password": "mypassword"
 }
@@ -29,25 +39,29 @@ Run the following command in the terminal:
 
 ```json
 {
-    "email": "locked@gmail.com",
-    "password": "mypassword"
+    "id_account": 1,
+    "new_password": "vaovao"
 }
 ```
 
+* It returns an `id` that we need for the password change validation.
+
+* See the `pin` in the email.
+
 ### Modify Account Password -- Validation
 
-* Validates to password modification.
+* Validates password modification. Use `id` and `pin` from the request above.
 
 * Send `POST` request to `http://localhost:8000/api/account/password/validate`
 
 ```json
 {
-    "email": "locked@gmail.com",
-    "password": "mypassword"
+    "id": 1,
+    "pin": "yourpin"
 }
 ```
 
-
+-----
 ## Attention
 
 Tsy alefa ao anaty zip ilay folder `./vendor`
