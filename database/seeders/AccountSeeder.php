@@ -15,7 +15,7 @@ class AccountSeeder extends Seeder
     public function run()
     {
         DB::table('account')->insert([
-            "email" => "henintsoapaul@gmail.com",
+            "email" => "locked@gmail.com",
             "password" => "mypassword",
             "id_pending_register" => 1,
             "id_type_account_state" => 2,
