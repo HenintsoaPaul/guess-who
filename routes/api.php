@@ -1,11 +1,9 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\TokenController;
-
 use App\Http\Controllers\PinController;
-use App\Http\Controllers\PendingAuthController;
+use App\Http\Controllers\TokenController;
+use Illuminate\Support\Facades\Route;
 
 /**
  * @OA\Info(
@@ -42,12 +40,16 @@ Route::post('/login', [PinController::class, 'login']);
 Route::post('/validate-pin', [PinController::class, 'validatePin']);
 
 //Unlock
-Route::post('/account/unlock', [AccountController::class, 'login']);
-Route::post('/account/unlock/validate', [AccountController::class, 'validatePin']);
+Route::post('/account/unlock', [AccountController::class, 'unloci']);
+Route::post('/account/change/password', [AccountController::class, 'changePassword']);
 
 Route::get('/api/documentation', function () {
     return view('swagger.index');
 });
+
+// Register
+Route::get('/register', [RegisterController::class, 'controlInput']);
+
 
 // TOKEN ROUTER
 Route::get('token', [TokenController::class, 'index']); // afficher un token généré
