@@ -22,6 +22,36 @@ class LoginController extends Controller
         $this->jsonResponse = $jsonResponse;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="Login user",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="password", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful login"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Email non trouvé"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Mot de passe incorrect"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Compte inactif"
+     *     )
+     * )
+     */
     public function login(Request $request): JsonResponse
     {
         $credentials = null;

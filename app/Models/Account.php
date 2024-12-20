@@ -128,4 +128,9 @@ class Account extends Model
             throw new \Exception('Failed to reset attempts! Error on update column account.attempt.');
         }
     }
+
+    public static function getByEmail($email): Account
+    {
+        return self::where('email', $email)->firstOrFail();
+    }
 }

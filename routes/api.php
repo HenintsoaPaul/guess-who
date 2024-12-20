@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TokenController;
 
@@ -36,9 +37,13 @@ use App\Http\Controllers\PendingAuthController;
 // Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
 // Route::post('/login', [TokenController::class, 'login']);
 
-//route validation
+//Login
 Route::post('/login', [PinController::class, 'login']);
 Route::post('/validate-pin', [PinController::class, 'validatePin']);
+
+//Unlock
+Route::post('/account/unlock', [AccountController::class, 'login']);
+Route::post('/account/unlock/validate', [AccountController::class, 'validatePin']);
 
 Route::get('/api/documentation', function () {
     return view('swagger.index');

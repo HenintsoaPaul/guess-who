@@ -160,12 +160,14 @@ class PinController extends Controller
 
         $account->resetAttempt();
 
+        // todo: ovaina Alex
         $tokenString = Str::random(60);
         $token = Token::create([
             'token' => $tokenString,
             'id_account' => $account->id_account,
             'date_expiration' => now()->addDays(30),
         ]);
+        // todo: ovaina Alex
 
         return response()->json([
             'message' => 'PIN validé. Token généré avec succès.',
