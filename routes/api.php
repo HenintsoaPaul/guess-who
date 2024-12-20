@@ -3,7 +3,7 @@
 use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TokenController;
-use App\Http\Controllers\PinController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PendingAuthController;
 use App\Http\Controllers\RegisterController;
 // use App\Http\Controllers\TokenController;
@@ -29,8 +29,8 @@ use App\Http\Controllers\RegisterController;
 // Route::post('/login', [TokenController::class, 'login']);
 
 //Login
-Route::post('/login', [PinController::class, 'login']);
-Route::post('/validate-pin', [PinController::class, 'validatePin']);
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/validate-pin', [LoginController::class, 'validatePin']);
 
 //Unlock
 Route::post('/account/unlock', [AccountController::class, 'unlock']);
