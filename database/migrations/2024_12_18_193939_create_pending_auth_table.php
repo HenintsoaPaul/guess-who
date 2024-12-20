@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tokens', function (Blueprint $table) {
-            $table->id('id_token');
+        Schema::create('pending_auth', function (Blueprint $table) {
+            $table->id('id_pending_auth');
             $table->timestamp('date_expiration');
-            $table->string('token', 250);
+            $table->timestamp('date_creation');
+            $table->string('pin', 50);
             $table->unsignedBigInteger('id_account');
             $table->timestamps();
 
-            $table->foreign('id_account')->references('id_account')->on('accounts');
+            $table->foreign('id_account')->references('id_account')->on('account');
         });
     }
 
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tokens');
+        Schema::dropIfExists('pending_auth');
     }
 };

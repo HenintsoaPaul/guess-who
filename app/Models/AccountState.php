@@ -11,7 +11,8 @@ class AccountState extends Model
 
     protected $table = 'account_state';
     protected $primaryKey = 'id_account_state';
-    public $timestamps = false; 
+    public $timestamps = false;
+
 
     protected $fillable = [
         'date_state',
@@ -35,5 +36,15 @@ class AccountState extends Model
     public function typeAccountState()
     {
         return $this->belongsTo(TypeAccountState::class, 'id_type_account_state', 'id_type_account_state');
+    }
+
+    public function activate()
+    {
+        $this->id_type_account_state = 1;
+    }
+
+    public function suspend()
+    {
+        $this->id_type_account_state = 2;
     }
 }
