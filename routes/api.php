@@ -3,10 +3,19 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TokenController;
-
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\PendingAuthController;
 
+/**
+ * @OA\Info(
+ *     title="API Guess Who",
+ *     version="1.0.0",
+ *     description="Documentation pour l'API Guess Who.",
+ *     @OA\Contact(
+ *         email="support@votre-site.com"
+ *     )
+ * )
+ */
 
 /*
 |--------------------------------------------------------------------------
@@ -19,18 +28,26 @@ use App\Http\Controllers\PendingAuthController;
 |
 */
 
-Route::resource('emails', PinController::class);
+// Route::resource('emails', PinController::class);
 
-Route::post('emails/sendPin', [PinController::class, 'sendPinCode']);
-Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
+// Route::post('emails/sendPin', [PinController::class, 'sendPinCode']);
 
-Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
+// Route::post('/generate-token/{userId}', [TokenController::class, 'generateToken']);
+// Route::get('/pending-auth/{id}', [PendingAuthController::class, 'getPendingAuthById']);
+// Route::post('/login', [TokenController::class, 'login']);
+
+//route validation
+Route::post('/login', [PinController::class, 'login']);
+Route::post('/validate-pin', [PinController::class, 'validatePin']);
+Route::get('/api/documentation', function () {
+    return view('swagger.index');
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user(); 
 });
 
 // TOKEN ROUTER
-Route::get('token',[TokenController::class,'index']); // afficher un token generer
-Route::get('token/gen/{id_account}',[TokenController::class,'generate']); // generer un token pour un account
-Route::get('token/regen/{id_account}',[TokenController::class,'regenerate']); // regenerer un token pour un account
+Route::get('token', [TokenController::class, 'index']); // afficher un token généré
+Route::get('token/gen/{id_account}', [TokenController::class, 'generate']); // générer un token pour un account
+Route::get('token/regen/{id_account}', [TokenController::class, 'regenerate']); // régénérer un token pour un account
