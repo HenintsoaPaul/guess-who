@@ -1,39 +1,78 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\account;  
-use App\Models\Token;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use App\Services\ApiResponseService;
+use App\Services\TokenService;
 
 class TokenController extends Controller
 {
-    /**
-     * Génére un token pour un utilisateur.
-     *
-     * @param  int  $userId
-     * @return \Illuminate\Http\Response
-     */
-    public function generateToken($userId)
+    public function index()
     {
-        $account = Account::find($userId);
-
-        if (!$account) {
-            return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+        $data = array();
+        $errors = array();
+        $status = 200;
+        $message = "Token generer";
+        try {
+            $token = TokenService::newToken();
+            $data['token'] = $token ;
         }
+        catch (\Exception $e) {
+            $errors['exception'] = $e;
+            $status = 400;
+            $message = $e->getMessage();
+        }
+        return ApiResponseService::apiResponse($status,$message,$data,$errors);
+    }
+    public function generate($id_account)
+    {
 
-        $tokenString = Str::random(60);
+        $status = 200;
+        $data = array();
+        $errors = [];
+        $message = "Generation d'un model de token pour un utilisateur";
+        try {
+            if(!is_numeric($id_account) || $id_account <= 0) {
+                throw new \Exception("Id Account Invalid");
+            }
+            $token = TokenService::generate($id_account);
+            $data['token_model'] = $token;
+        }
+        catch (\Exception $e) {
+            $errors['exception'] = $e;
+            $errors['details'] = [
+                'id_account'=>$id_account
+            ];
+            $status = 400;
+            $message = $e->getMessage();
+        }
+        return ApiResponseService::apiResponse($status,$message,$data,$errors);
+    }
 
-        $token = Token::create([
-            'token' => $tokenString,
-            'id_account' => $account->id_account,  
-            'date_expiration' => now()->addDays(30),  
-        ]);
+    public function regenerate($id_account)
+    {
 
-        return response()->json([
-            'message' => 'Token généré avec succès',
-            'token' => $tokenString,
-            'expiration' => $token->date_expiration
-        ]);
+        $status = 200;
+        $token = NULL;
+        $data = array();
+        $errors = [];
+        $message = "Regeneration du token pour l'id account ".$id_account;
+        try {
+            if(!is_numeric($id_account) || $id_account <= 0) {
+                throw new \Exception("Id Account Invalid");
+            }
+            $token = TokenService::regenerateBarerToken($id_account,$token);
+            $data['token'] = $token;
+        }
+        catch (\Exception $e) {
+            $errors['exception'] = $e;
+            $errors['details'] = [
+                'id_account'=>$id_account,
+                'token'=>$token
+            ];
+            $status = 400;
+            $message = $e->getMessage();
+        }
+        return ApiResponseService::apiResponse($status,$message,$data,$errors);
     }
 }

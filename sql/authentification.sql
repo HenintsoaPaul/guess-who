@@ -1,12 +1,12 @@
 CREATE TABLE pending_register(
-   Id_pending_register SERIAL,
+   id_pending_register SERIAL,
    email VARCHAR(50)  NOT NULL,
    password VARCHAR(250)  NOT NULL,
    date_register TIMESTAMP NOT NULL,
    date_expiration TIMESTAMP NOT NULL,
-   date_validation TIMESTAMP NOT NULL,
+   date_validation TIMESTAMP,
    pin VARCHAR(250)  NOT NULL,
-   PRIMARY KEY(Id_pending_register)
+   PRIMARY KEY(id_pending_register)
 );
 
 CREATE TABLE type_account_state(
@@ -23,7 +23,7 @@ CREATE TABLE account(
    max_attempt INTEGER NOT NULL DEFAULT 3,
    id_pending_register INTEGER NOT NULL,
    id_type_account_state INTEGER NOT NULL,
-   PRIMARY KEY(Id_account),
+   PRIMARY KEY(id_account),
    UNIQUE(id_pending_register),
    FOREIGN KEY(id_pending_register) REFERENCES pending_register(id_pending_register),
    FOREIGN KEY(id_type_account_state) REFERENCES type_account_state(id_type_account_state)
@@ -54,6 +54,18 @@ CREATE TABLE pending_auth(
    date_creation TIMESTAMP NOT NULL,
    pin VARCHAR(50)  NOT NULL,
    id_account INTEGER NOT NULL,
+   PRIMARY KEY(id_pending_auth),
+   FOREIGN KEY(id_account) REFERENCES account(id_account)
+);
+
+CREATE TABLE pending_pwd_change(
+   id_pending_pwd SERIAL,
+   date_expiration TIMESTAMP NOT NULL,
+   date_creation TIMESTAMP NOT NULL,
+   date_validation TIMESTAMP,
+   pin VARCHAR(255)  NOT NULL,
+   id_account INTEGER NOT NULL,
+   new_password VARCHAR(255) NOT NULL,
    PRIMARY KEY(id_pending_auth),
    FOREIGN KEY(id_account) REFERENCES account(id_account)
 );

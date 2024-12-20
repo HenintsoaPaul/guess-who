@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; 
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
 use App\Mail\SendEmail;
@@ -10,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\PendingRegister;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 /**
  * @OA\Info(title="API Guess Who", version="1.0")

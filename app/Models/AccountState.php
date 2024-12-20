@@ -13,6 +13,7 @@ class AccountState extends Model
     protected $primaryKey = 'id_account_state';
     public $timestamps = false;
 
+
     protected $fillable = [
         'date_state',
         'id_account',
@@ -39,11 +40,11 @@ class AccountState extends Model
 
     public function activate()
     {
-        $this->id_account_state = 1;
+        $this->id_type_account_state = 1;
     }
 
     public function suspend()
     {
-        $this->id_account_state = 2;
+        $this->id_type_account_state = 2;
     }
 }

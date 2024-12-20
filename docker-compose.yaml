@@ -14,12 +14,16 @@ services:
     volumes:
       - .:/var/www/html
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8000" ]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    command: ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=8000"]
+    command: [ "sh", "-c", "
+          php artisan migrate --force &&
+          php artisan db:seed --force &&
+          php artisan serve --host=0.0.0.0 --port=8000
+    " ]
 
   postgres_guess_who:
     container_name: postgres_guess_who
@@ -33,7 +37,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD", "pg_isready", "-d", "postgres", "-U", "postgres"]
+      test: [ "CMD", "pg_isready", "-d", "postgres", "-U", "postgres" ]
       timeout: 5s
       retries: 5
       start_period: 60s

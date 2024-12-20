@@ -35,15 +35,17 @@ class PendingAuth extends Model
     }
 
     /**
+     * Creer une nouvelle instance. Puis fais un insert.
+     *
      * @throws \Exception
      */
-    public static function addNew(string $pin, int $idAccount) {
+    public static function addNew(string $pin, int $idAccount, \DateInterval $delai = null): PendingAuth {
         $daty = new \DateTime();
-        $lifeTime = new \DateInterval('PT90S'); // Delai de 90 secondes
+        $delai = $delai ?? new \DateInterval('PT90S'); // Utilisation de la valeur par défaut si $delai est null
 
         $pendingAuth = new PendingAuth();
         $pendingAuth->date_creation = $daty;
-        $pendingAuth->date_expiration = $daty->add($lifeTime);
+        $pendingAuth->date_expiration = (clone $daty)->add($delai); // Clone $daty pour ne pas modifier l'original
         $pendingAuth->pin = $pin;
         $pendingAuth->id_account = $idAccount;
 
@@ -53,4 +55,5 @@ class PendingAuth extends Model
 
         return $pendingAuth;
     }
+
 }

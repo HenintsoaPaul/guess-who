@@ -11,17 +11,18 @@ use Illuminate\Http\Request;
 /**
  * Service pour gérer les tokens
  */
-class TokenService {
+class TokenService
+{
     /**
      * Recupere le barer token dans la requet
      * @param Request $request La requete a effectuer
      * @return string le token recuperer dans le header de la requete
      */
-    public static function getBarerToken(Request $request) {
+    public static function getBarerToken(Request $request): string
+    {
         $fulltoken = $request->header('Authorization');
         // Get only the bearer token
-        $token = $request->bearerToken();
-        return $token;
+        return $request->bearerToken();
     }
 
     /**
@@ -30,7 +31,8 @@ class TokenService {
      * @param int $length Longueur du token généré (par défaut : 64).
      * @return string Le nouveau token.
      */
-    public static function newToken(int $length = 64): string {
+    public static function newToken(int $length = 64): string
+    {
         if ($length <= 0) {
             throw new \InvalidArgumentException("La longueur du token doit être un entier positif.");
         }
@@ -45,7 +47,8 @@ class TokenService {
      * @param int $id Identifiant de l'utilisateur.
      * @return Token Le modèle de token créé.
      */
-    public static function generate(int $id): Token {
+    public static function generate(int $id): Token
+    {
         try {
             // Créer une nouvelle instance du modèle Token.
             $tokenModel = new Token();
@@ -62,8 +65,9 @@ class TokenService {
         }
     }
 
-    public static function genExpirationDate(){
-        return TimesService::generateDate(now(),3600*2);
+    public static function genExpirationDate()
+    {
+        return TimesService::generateDate(now(), 3600 * 2);
     }
 
     /**
@@ -76,23 +80,23 @@ class TokenService {
      */
     public static function regenerateBarerToken(int $id, string $token = NULL, int $length = 64): string
     {
-        
+
         // Controle du token , Utiliser le token valide en base de donnee si token NULL passer en argument
         $tokenModel = self::getLastUsableToken($id);
-        if($token == NULL){
-            if($tokenModel == NULL){
-                throw new \Exception("Token n'existe pas pour le compte : ".$id);
+        if ($token == NULL) {
+            if ($tokenModel == NULL) {
+                throw new \Exception("Token n'existe pas pour le compte : " . $id);
             }
             $token = $tokenModel->token;
         }
         // Verifier si le token est valide avant de regenerer
-        if(!self::isTheSameToken($token,$tokenModel->token)){
-            throw new \Exception("Token invalid pour le compte : ".$id." et token : ".$token);
+        if (!self::isTheSameToken($token, $tokenModel->token)) {
+            throw new \Exception("Token invalid pour le compte : " . $id . " et token : " . $token);
         }
         try {
             // Générer un nouveau token.
             $newToken = self::newToken($length);
-    
+
             // Mise à jour du token dans la base de données avec les conditions sur `id_account` et `token`.
             $updated = DB::table('tokens')
                 ->where('id_account', $id)
@@ -101,7 +105,7 @@ class TokenService {
                     'token' => $newToken,
                     'date_expiration' => self::genExpirationDate()
                 ]);
-    
+
             // Vérifie si la mise à jour a été effectuée.
             if ($updated === 0) {
                 throw new \RuntimeException("Aucun enregistrement trouvé avec cet id_account et token.");
@@ -112,6 +116,7 @@ class TokenService {
             throw new \RuntimeException("Erreur lors de la régénération du token : " . $e->getMessage());
         }
     }
+
     /**
      * Regenerer un token pour un utilisateur a partir du token dans le header de la requete
      * @param int $id L'identifiant du compte de l'utilisateur
@@ -121,16 +126,16 @@ class TokenService {
     public static function regenerate(int $id, Request $request): string
     {
         $token = self::getBarerToken($request);
-        return self::regenerateToken($id,$token);
+        return self::regenerateToken($id, $token);
     }
 
     /**
      * Recuperer le model du dernier token valide cree.
-     * 
+     *
      * @param int $id_account L'identifiant pour un account d'un utilisateur.
      * @return Token|null Le model de token utilisable correspondant a l'id_account, ou null si aucun token valide n'a ete trouve.
      */
-    public static function getLastUsableToken($id_account)
+    public static function getLastUsableToken(int $id_account)
     {
         // Vérifie que l'identifiant est valide.
         if (empty($id_account) || !is_numeric($id_account)) {
@@ -155,20 +160,24 @@ class TokenService {
      * @param int $expiryTime Durée de validité en secondes (par défaut : 3600 secondes = 1 heure).
      * @return bool `true` si le token est valide, sinon `false`.
      */
-    public static function isValidBarerToken(string $id, string $token): bool {
-        $tokenModel = self::getLastUsableToken($id);
-        if( $tokenModel == NULL ||  !self::isTheSameToken($token,$tokenModel->token)){
+    public static function isValidBarerToken(int $idAccount, string $token): bool
+    {
+        $tokenModel = self::getLastUsableToken($idAccount);
+        if ($tokenModel == NULL || !self::isTheSameToken($token, $tokenModel->token)) {
             return false;
         }
         return true;
     }
 
-    public static function isTheSameToken($token,$token_ref){
+    public static function isTheSameToken($token, $token_ref)
+    {
         return $token == $token_ref;
     }
-    public static function isValid(string $id,Request $request): bool {
+
+    public static function isValid(int $idAccount, Request $request): bool
+    {
         $token = self::getBarerToken($request);
-        return self::isValidBarerToken($id,$token);
+        return self::isValidBarerToken($idAccount, $token);
     }
 
 }

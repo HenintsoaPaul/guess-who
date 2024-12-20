@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Account extends Model
 {
@@ -50,7 +51,8 @@ class Account extends Model
      * @return int The number of remaining attempt(s).
      * @throws \Exception
      */
-    public function increaseAttempt(): int {
+    public function increaseAttempt(): int
+    {
         $res = $this->update([
             'attempt' => $this->attempt + 1,
         ]);
@@ -60,6 +62,7 @@ class Account extends Model
 
         if ($this->attempt === $this->max_attempt) {
             $this->lockAccount();
+            DB::commit();
             throw new \Exception('Account locked!');
         }
 
@@ -69,7 +72,8 @@ class Account extends Model
     /**
      * @throws \Exception
      */
-    public function lockAccount() {
+    public function lockAccount()
+    {
         $a_state = new AccountState();
         $a_state->date_state = new \DateTime();
         $a_state->id_account = $this->id_account;
@@ -91,7 +95,8 @@ class Account extends Model
     /**
      * @throws \Exception
      */
-    public function unlockAccount() {
+    public function unlockAccount()
+    {
         $a_state = new AccountState();
         $a_state->date_state = new \DateTime();
         $a_state->id_account = $this->id_account;
@@ -104,9 +109,47 @@ class Account extends Model
 
         $res = $this->update([
             'id_type_account_state' => $a_state->id_type_account_state,
+            'attempt' => 0
         ]);
         if (!$res) {
             throw new \Exception('Failed to unlock account! Error on update column account.id_type_account_state.');
         }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function resetAttempt()
+    {
+        $res = $this->update([
+            'attempt' => 0
+        ]);
+        if (!$res) {
+            throw new \Exception('Failed to reset attempts! Error on update column account.attempt.');
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function resetPassword(string $newPassword): bool
+    {
+        $res = $this->update([
+            'password' => $newPassword
+        ]);
+        if (!$res) {
+            throw new \Exception('Failed to reset password! Error on update column account.password.');
+        }
+        return $res;
+    }
+
+    public static function getByEmail($email): Account
+    {
+        return self::where('email', $email)->firstOrFail();
+    }
+
+    public static function getById($id): Account
+    {
+        return self::where('id_account', $id)->firstOrFail();
     }
 }
