@@ -1,21 +1,12 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\PinController;
-use App\Http\Controllers\TokenController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PendingAuthController;
+use App\Http\Controllers\TokenController;
 
-/**
- * @OA\Info(
- *     title="API Guess Who",
- *     version="1.0.0",
- *     description="Documentation pour l'API Guess Who.",
- *     @OA\Contact(
- *         email="support@votre-site.com"
- *     )
- * )
- */
 
 /*
 |--------------------------------------------------------------------------
@@ -37,16 +28,18 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/login', [TokenController::class, 'login']);
 
 //Login
-Route::post('/login', [PinController::class, 'login']);
-Route::post('/validate-pin', [PinController::class, 'validatePin']);
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/validate-pin', [LoginController::class, 'validatePin']);
 
 //Unlock
-Route::post('/account/unlock', [AccountController::class, 'unloci']);
-Route::post('/account/change/password', [AccountController::class, 'changePassword']);
+Route::post('/account/unlock', [AccountController::class, 'unlock']);
+Route::post('/account/password', [AccountController::class, 'changePassword']);
+Route::post('/account/password/validate', [AccountController::class, 'validateChangePassword']);
 
 Route::get('/api/documentation', function () {
     return view('swagger.index');
 });
+
 
 // Register
 Route::get('/register', [RegisterController::class, 'controlInput']);

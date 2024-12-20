@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendEmail;
+use App\Models\Account;
 use App\Models\PendingAuth;
+use App\Models\Token;
 use App\Services\AuthService;
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
@@ -11,15 +13,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    private JsonResponseService $jsonResponse;
+    private JsonResponseService  $jsonResponse;
 
-    public function __construct(JsonResponseService $jsonResponse)
+    public function __construct(JsonResponseService $responseService)
     {
-        $this->jsonResponse = $jsonResponse;
+        $this->jsonResponse = $responseService;
     }
 
     /**
@@ -52,9 +55,8 @@ class LoginController extends Controller
      *     )
      * )
      */
-    public function login(Request $request): JsonResponse
+    public function login(Request $request)
     {
-        $credentials = null;
         DB::beginTransaction();
         try {
             $credentials = $request->validate([
@@ -64,19 +66,13 @@ class LoginController extends Controller
 
             $account = AuthService::authenticate($credentials['email'], $credentials['password']);
 
-            // generate pin
+            // send pin to email
             $pin = RandomService::newPin();
-
-            // send pin on email
             Mail::to($credentials['email'])->send(new SendEmail($pin));
 
             // insert pending_auth
-            $pendingAuth = PendingAuth::addNew($pin, $account->id_account);
-
-            $res = $pendingAuth->save();
-            if (!$res) {
-                throw new \Exception("Failed to insert pending_auth.");
-            }
+            $delai = null;
+            $pendingAuth = PendingAuth::addNew($pin, $account->id_account, $delai);
 
             DB::commit();
 
@@ -90,5 +86,85 @@ class LoginController extends Controller
             $unauthorized = 401;
             return $this->jsonResponse->error($exception->getMessage(), $credentials, $unauthorized);
         }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/validate-pin",
+     *     summary="Validation du PIN",
+     *     description="Valide le PIN envoyé par email et génère un token d'accès.",
+     *     operationId="validatePin",
+     *     tags={"Authentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "pin"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="pin", type="string", example="123456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="PIN validé et token généré.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="PIN validé. Token généré avec succès."),
+     *             @OA\Property(property="token", type="string", example="abc123def456ghi789"),
+     *             @OA\Property(property="expiration", type="string", format="date-time", example="2024-12-31T23:59:59")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Utilisateur non trouvé.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Utilisateur non trouvé.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="PIN invalide ou expiré.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="PIN invalide ou expiré.")
+     *         )
+     *     )
+     * )
+     */
+    public function validatePin(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'pin' => 'required|string',
+        ]);
+
+        $account = Account::where('email', $request->email)->first();
+        if (!$account) {
+            return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+        }
+
+        $pendingAuth = PendingAuth::where('id_account', $account->id_account)
+            ->where('date_expiration', '>', now())
+            ->first();
+
+        if (!$pendingAuth || $pendingAuth->pin !== $request->pin) {
+            return response()->json(['message' => 'PIN invalide ou expiré'], 401);
+        }
+
+        $pendingAuth->delete();
+
+        $account->resetAttempt();
+
+        // todo: ovaina Alex
+        $tokenString = Str::random(60);
+        $token = Token::create([
+            'token' => $tokenString,
+            'id_account' => $account->id_account,
+            'date_expiration' => now()->addDays(30),
+        ]);
+        // todo: ovaina Alex
+
+        return response()->json([
+            'message' => 'PIN validé. Token généré avec succès.',
+            'token' => $tokenString,
+            'expiration' => $token->date_expiration,
+        ]);
     }
 }

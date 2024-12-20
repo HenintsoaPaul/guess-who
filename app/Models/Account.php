@@ -132,7 +132,7 @@ class Account extends Model
     /**
      * @throws \Exception
      */
-    public function resetPassword(string $newPassword)
+    public function resetPassword(string $newPassword): bool
     {
         $res = $this->update([
             'password' => $newPassword
@@ -140,6 +140,7 @@ class Account extends Model
         if (!$res) {
             throw new \Exception('Failed to reset password! Error on update column account.password.');
         }
+        return $res;
     }
 
     public static function getByEmail($email): Account
