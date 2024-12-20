@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\PendingAuth;
-use Illuminate\Http\Request;
 
 class PendingAuthController extends Controller
 {

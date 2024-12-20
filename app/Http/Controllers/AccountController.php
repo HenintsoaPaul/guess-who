@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Services\JsonResponseService;
-use App\Services\RandomService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
-use PHPUnit\Exception;
 
 
 class AccountController extends Controller
@@ -59,19 +55,22 @@ class AccountController extends Controller
     public function changePassword(Request $request)
     {
         try {
-            // TODO: verify token
-            // ...
-            // TODO: verify token
-
-            $email = $request->validate([
-                'email' => 'required|email',
-                'password' => 'required',
+            $payload = $request->validate([
+                'token' => 'required',
+                'new_password' => 'required',
             ]);
+
+            // TODO : mila ovaina
+            $token = $payload['token'];
+            $mety = $token->isValid();
+            if (!$mety) {
+                return $this->jsonResponse->tokenError();
+            }
 
             DB::beginTransaction();
             try {
-                $account = Account::getByEmail($email);
-                $account->unlockAccount();
+                $account = $token->getAccount();
+                $account->changePassword($payload['new_password']);
                 DB::commit();
 
                 $data = [
@@ -80,10 +79,10 @@ class AccountController extends Controller
                 return $this->jsonResponse->success('Account unlocked.', $data);
             } catch (\Exception $e) {
                 DB::rollBack();
-                throw new \Exception("Account not found.");
+                throw new \Exception("Error on password update.");
             }
         } catch (ValidationException $e) {
-            return $this->jsonResponse->error('Invalid email.', $e->errors(), 422);
+            return $this->jsonResponse->error('Invalid payload.', $e->errors(), 422);
         }
     }
 }

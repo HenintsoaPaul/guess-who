@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;
 use App\Models\Token;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Services\RandomService;
-use App\Mail\SendEmail;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use OpenApi\Annotations as OA;
+use Illuminate\Support\Str;
 
 class PinController extends Controller
 {

@@ -29,4 +29,9 @@ class JsonResponseService
     {
         return $this->error('Les données sont invalides.', $e->errors(), 422);
     }
+
+    public function tokenError(): JsonResponse
+    {
+        return $this->error('Token invalid.', null, 401);
+    }
 }
