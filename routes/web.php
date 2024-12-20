@@ -24,3 +24,4 @@ Route::get('/', function () {
 
 
 Route::get('/register', [RegisterController::class, 'controlInput']);
+Route::get('/insertregister', [RegisterController::class, 'insertRegister']);
