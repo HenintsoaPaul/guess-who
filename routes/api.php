@@ -41,9 +41,9 @@ Route::post('/login', [PinController::class, 'login']);
 Route::post('/validate-pin', [PinController::class, 'validatePin']);
 
 //Unlock
-Route::post('/account/unlock', [AccountController::class, 'unloci']);
+Route::post('/account/unlock', [AccountController::class, 'unlock']);
 Route::post('/account/change/password', [AccountController::class, 'changePassword']);
-Route::post('/account/change/password/validate', [AccountController::class, 'changePassword']);
+Route::post('/account/change/password/validate', [AccountController::class, 'validateChangePassword']);
 
 Route::get('/api/documentation', function () {
     return view('swagger.index');

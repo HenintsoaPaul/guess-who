@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendEmail;
 use App\Models\Account;
+use App\Models\PendingPwdChange;
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
 use App\Services\TokenService;
@@ -68,7 +69,7 @@ class AccountController extends Controller
                 return $this->jsonResponse->tokenError();
             }
 
-            $account = null;
+            DB::beginTransaction();
             try {
                 $account = Account::getById($payload['id_account']);
 
@@ -77,32 +78,66 @@ class AccountController extends Controller
                     return $this->jsonResponse->tokenError();
                 }
 
-                DB::beginTransaction();
-
+                // Send pin to email
                 $pin = RandomService::newPin();
                 Mail::to($account->email)->send(new SendEmail($pin));
 
-                // todo: save in pending auth
-                // ...
+                // Save in pending auth
+                $delai = null;
+                $pendingPwdChange = PendingPwdChange::addNew($pin, $account->id_account, $payload['new_password'], $delai);
 
-                return $this->jsonResponse->success('Password change email validation sent.', null);
+                DB::commit();
+                $data = [
+                    'id' => $pendingPwdChange->id_pending_pwd_change,
+                    'id_account' => $pendingPwdChange->id_account,
+                    'pin' => $pendingPwdChange->pin
+                ];
+                return $this->jsonResponse->success('Password change email validation sent.', $data);
             } catch (\Exception $e) {
                 return $this->jsonResponse->error('Invalid account.', $e->errors(), 422);
+            }
+        } catch (ValidationException $e) {
+            return $this->jsonResponse->error('Invalid payload.', $e->errors(), 422);
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function validateChangePassword(Request $request)
+    {
+        try {
+            $payload = $request->validate([
+                'id' => 'required|numeric',
+                'pin' => 'required',
+            ]);
+            $token = TokenService::getBarerToken($request);
+            if (!$token) {
+                return $this->jsonResponse->tokenError();
             }
 
             DB::beginTransaction();
             try {
-                $account = $token->getAccount();
-                $account->changePassword($payload['new_password']);
+                $pendingPwdChange = PendingPwdChange::getById($payload['id']);
+
+                $account = Account::getById($pendingPwdChange->id_account);
+                if (!TokenService::isValidBarerToken($account->id_account, $token)) {
+                    return $this->jsonResponse->tokenError();
+                }
+
+                if ($payload['pin'] !== $pendingPwdChange->pin) {
+                    return $this->jsonResponse->error('Invalid pin.', $payload, 422);
+                }
+
+                $pendingPwdChange->validate($account);
                 DB::commit();
 
                 $data = [
-                    'id_account' => $account->id_account
+                    'id_account' => $pendingPwdChange->id_account,
                 ];
-                return $this->jsonResponse->success('Account unlocked.', $data);
+                return $this->jsonResponse->success('Password change email validation sent.', $data);
             } catch (\Exception $e) {
-                DB::rollBack();
-                throw new \Exception("Error on password update.");
+                return $this->jsonResponse->error('Invalid account.', $e->errors(), 422);
             }
         } catch (ValidationException $e) {
             return $this->jsonResponse->error('Invalid payload.', $e->errors(), 422);

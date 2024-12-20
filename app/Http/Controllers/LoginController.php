@@ -64,19 +64,13 @@ class LoginController extends Controller
 
             $account = AuthService::authenticate($credentials['email'], $credentials['password']);
 
-            // generate pin
+            // send pin to email
             $pin = RandomService::newPin();
-
-            // send pin on email
             Mail::to($credentials['email'])->send(new SendEmail($pin));
 
             // insert pending_auth
-            $pendingAuth = PendingAuth::addNew($pin, $account->id_account);
-
-            $res = $pendingAuth->save();
-            if (!$res) {
-                throw new \Exception("Failed to insert pending_auth.");
-            }
+            $delai = null;
+            $pendingAuth = PendingAuth::addNew($pin, $account->id_account, $delai);
 
             DB::commit();
 

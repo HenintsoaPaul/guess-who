@@ -62,6 +62,7 @@ CREATE TABLE pending_pwd_change(
    id_pending_pwd SERIAL,
    date_expiration TIMESTAMP NOT NULL,
    date_creation TIMESTAMP NOT NULL,
+   date_validation TIMESTAMP,
    pin VARCHAR(255)  NOT NULL,
    id_account INTEGER NOT NULL,
    new_password VARCHAR(255) NOT NULL,
