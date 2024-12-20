@@ -35,6 +35,8 @@ class PendingAuth extends Model
     }
 
     /**
+     * Creer une nouvelle instance. Puis fais un insert.
+     *
      * @throws \Exception
      */
     public static function addNew(string $pin, int $idAccount, \DateInterval $delai = null): PendingAuth {

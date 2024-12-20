@@ -129,8 +129,27 @@ class Account extends Model
         }
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function resetPassword(string $newPassword): bool
+    {
+        $res = $this->update([
+            'password' => $newPassword
+        ]);
+        if (!$res) {
+            throw new \Exception('Failed to reset password! Error on update column account.password.');
+        }
+        return $res;
+    }
+
     public static function getByEmail($email): Account
     {
         return self::where('email', $email)->firstOrFail();
+    }
+
+    public static function getById($id): Account
+    {
+        return self::where('id_account', $id)->firstOrFail();
     }
 }
