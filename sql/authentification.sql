@@ -57,3 +57,14 @@ CREATE TABLE pending_auth(
    PRIMARY KEY(id_pending_auth),
    FOREIGN KEY(id_account) REFERENCES account(id_account)
 );
+
+CREATE TABLE pending_pwd_change(
+   id_pending_pwd SERIAL,
+   date_expiration TIMESTAMP NOT NULL,
+   date_creation TIMESTAMP NOT NULL,
+   pin VARCHAR(255)  NOT NULL,
+   id_account INTEGER NOT NULL,
+   new_password VARCHAR(255) NOT NULL,
+   PRIMARY KEY(id_pending_auth),
+   FOREIGN KEY(id_account) REFERENCES account(id_account)
+);
