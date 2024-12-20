@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             TypeAccountStateSeeder::class,
+            PendingRegisterSeeder::class,
+            AccountSeeder::class,
         ]);
     }
 }
