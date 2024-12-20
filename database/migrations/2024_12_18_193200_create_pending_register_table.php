@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pending_registers', function (Blueprint $table) {
-            $table->id('id_pending_register'); 
+        Schema::create('pending_register', function (Blueprint $table) {
+            $table->id('id_pending_register');
             $table->string('email', 50);
             $table->string('password', 250);
             $table->timestamp('date_register');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pending_registers');
+        Schema::dropIfExists('pending_register');
     }
 };

@@ -1,0 +1,14 @@
+/vendor/
+/node_modules/
+/storage/*
+!/storage/app/public
+/public/storage
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
+*.log
+*.sqlite
+.idea
+*.swp
+.DS_Store
+Thumbs.db

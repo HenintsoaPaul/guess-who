@@ -11,7 +11,7 @@ class TypeAccountState extends Model
 
     protected $table = 'type_account_state';
     protected $primaryKey = 'id_type_account_state';
-    public $timestamps = false; 
+    public $timestamps = false;
     protected $fillable = [
         'val',
     ];

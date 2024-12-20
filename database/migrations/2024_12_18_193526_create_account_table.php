@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('account', function (Blueprint $table) {
             $table->id('id_account');
             $table->string('email', 50);
             $table->string('password', 250);
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique('id_pending_register');
-            $table->foreign('id_pending_register')->references('id_pending_register')->on('pending_registers');
-            $table->foreign('id_type_account_state')->references('id_type_account_state')->on('type_account_states');
+            $table->foreign('id_pending_register')->references('id_pending_register')->on('pending_register');
+            $table->foreign('id_type_account_state')->references('id_type_account_state')->on('type_account_state');
         });
     }
 
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('account');
     }
 };
