@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\TokenController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -49,7 +50,7 @@ Route::get('/api/documentation', function () {
 
 // Register
 Route::get('/register', [RegisterController::class, 'controlInput']);
-
+Route::post('/register/validation', [RegisterController::class , 'validation']);
 
 // TOKEN ROUTER
 Route::get('token', [TokenController::class, 'index']); // afficher un token généré

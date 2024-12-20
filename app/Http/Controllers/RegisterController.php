@@ -49,14 +49,15 @@ class RegisterController extends Controller
                 return $this->jsonResponse->error('L\'identifiant idRegister est requis.',['details'=>$data], 422);
             }
 
-            PendingRegisterService::validateAccountRegister($idRegister,$pin);
+            $account  = PendingRegisterService::validateAccountRegister($idRegister,$pin);
             
+            return $this->jsonResponse->success("Inscription valider",['account'=>$account]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return $this->jsonResponse->error('Les données sont invalides.',['details'=>$data],422);
+            return $this->jsonResponse->error('Les données sont invalides.',['details'=>$request],422);
         }
         catch (\Exception $err){
-            return $this->jsonResponse->error("Erreur lors de validation de votre inscription : ".$err->getMessage(),['details'=>$data],422);
+            return $this->jsonResponse->error("Erreur lors de validation de votre inscription : ".$err->getMessage(),['details'=>$request],422);
         }
     }
 }

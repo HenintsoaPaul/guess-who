@@ -2,18 +2,26 @@
 
 namespace App\Services;
 
-use App\Models\pending_Pendingregister;
-use App\Models\account;
+use App\Models\PendingRegister;
+use App\Models\Account;
 
 class PendingRegisterService
 {
     
     public static function validateAccountRegister(int $id_pending_register , string $pin){
         $pending_register = self::getPendingRegisterById($id_pending_register);
+        // Verifier que l'inscription a ete effectuer
+        if($pending_register == null ) {
+            throw new \Exception("Inscription invalid [".$id_pending_register."]");
+        }
+        // Verifier que l'inscription n'est pas encore valider
+        if($pending_register->date_validation != null){
+            throw new \Exception("Inscription deja valider");
+        }
         if( !self::verifyPin($pending_register,$pin)){
             throw new \Exception("Pin invalid");
         }
-        self::createAccountFromPendingRegister($pending_register);
+        $account = self::createAccountFromPendingRegister($pending_register);
         return $account;
     }
     /**
