@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class Account extends Model
 {
@@ -34,28 +34,6 @@ class Account extends Model
     }
 
     /**
-     * Méthode pour authentifier un utilisateur.
-     *
-     * @param string $email
-     * @param string $password
-     * @return Account|null|false
-     */
-    public static function authenticate($email, $password)
-    {
-        $account = self::where('email', $email)->first();
-
-        if (!$account) {
-            return null;
-        }
-
-        if (Hash::check($password, $account->password)) {
-            return $account; 
-        }
-
-        return false;
-    }
-
-    /**
      * Relation avec le modèle PendingRegister.
      * Un compte est lié à une inscription en attente.
      */
@@ -73,7 +51,8 @@ class Account extends Model
      * @return int The number of remaining attempt(s).
      * @throws \Exception
      */
-    public function increaseAttempt(): int {
+    public function increaseAttempt(): int
+    {
         $res = $this->update([
             'attempt' => $this->attempt + 1,
         ]);
@@ -83,6 +62,7 @@ class Account extends Model
 
         if ($this->attempt === $this->max_attempt) {
             $this->lockAccount();
+            DB::commit();
             throw new \Exception('Account locked!');
         }
 
@@ -92,7 +72,8 @@ class Account extends Model
     /**
      * @throws \Exception
      */
-    public function lockAccount() {
+    public function lockAccount()
+    {
         $a_state = new AccountState();
         $a_state->date_state = new \DateTime();
         $a_state->id_account = $this->id_account;
@@ -114,7 +95,8 @@ class Account extends Model
     /**
      * @throws \Exception
      */
-    public function unlockAccount() {
+    public function unlockAccount()
+    {
         $a_state = new AccountState();
         $a_state->date_state = new \DateTime();
         $a_state->id_account = $this->id_account;
@@ -127,9 +109,23 @@ class Account extends Model
 
         $res = $this->update([
             'id_type_account_state' => $a_state->id_type_account_state,
+            'attempt' => 0
         ]);
         if (!$res) {
             throw new \Exception('Failed to unlock account! Error on update column account.id_type_account_state.');
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function resetAttempt()
+    {
+        $res = $this->update([
+            'attempt' => 0
+        ]);
+        if (!$res) {
+            throw new \Exception('Failed to reset attempts! Error on update column account.attempt.');
         }
     }
 }
