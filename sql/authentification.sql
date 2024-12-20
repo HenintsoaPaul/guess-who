@@ -52,7 +52,7 @@ CREATE TABLE pending_auth(
    id_pending_auth SERIAL,
    date_expiration TIMESTAMP NOT NULL,
    date_creation TIMESTAMP NOT NULL,
-   pin VARCHAR(50)  NOT NULL,
+   pin VARCHAR(255)  NOT NULL,
    id_account INTEGER NOT NULL,
    PRIMARY KEY(id_pending_auth),
    FOREIGN KEY(id_account) REFERENCES account(id_account)

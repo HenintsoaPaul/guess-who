@@ -9,7 +9,7 @@ class Token extends Model
 {
     use HasFactory;
 
-    protected $table = 'tokens';
+    protected $table = 'token';
     protected $primaryKey = 'id_token';
     public $timestamps = false; 
 

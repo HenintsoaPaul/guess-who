@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class Account extends Model
 {
@@ -30,6 +31,28 @@ class Account extends Model
     public function typeAccountState()
     {
         return $this->belongsTo(TypeAccountState::class, 'id_type_account_state', 'id_type_account_state');
+    }
+
+    /**
+     * Méthode pour authentifier un utilisateur.
+     *
+     * @param string $email
+     * @param string $password
+     * @return Account|null|false
+     */
+    public static function authenticate($email, $password)
+    {
+        $account = self::where('email', $email)->first();
+
+        if (!$account) {
+            return null;
+        }
+
+        if (Hash::check($password, $account->password)) {
+            return $account; 
+        }
+
+        return false;
     }
 
     /**

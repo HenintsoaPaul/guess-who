@@ -13,6 +13,7 @@ class AccountState extends Model
     protected $primaryKey = 'id_account_state';
     public $timestamps = false;
 
+
     protected $fillable = [
         'date_state',
         'id_account',
