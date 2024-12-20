@@ -22,3 +22,4 @@ Route::get('/', function () {
 
 
 Route::get('/register', [RegisterController::class, 'controlInput']);
+Route::post('/register/validation', [RegisterController::class] , 'validation');
