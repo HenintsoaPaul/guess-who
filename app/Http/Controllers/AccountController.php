@@ -47,7 +47,7 @@ class AccountController extends Controller
                 return $this->jsonResponse->success('Account unlocked.', $data);
             } catch (\Exception $e) {
                 DB::rollBack();
-                throw new \Exception("Account not found.");
+                return $this->jsonResponse->success('Account not found.', $data);
             }
         } catch (ValidationException $e) {
             return $this->jsonResponse->error('Invalid email.', $e->errors(), 422);
