@@ -2,6 +2,16 @@
 
 namespace App\Http\Controllers;
 
+/**
+ * @OA\Info(
+ *     title="API Guess Who",
+ *     version="1.0.0",
+ *     description="Documentation pour l'API Guess Who.",
+ *     @OA\Contact(
+ *         email="support@votre-site.com"
+ *     )
+ * )
+ */
 use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;

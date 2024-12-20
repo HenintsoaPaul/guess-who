@@ -6,16 +6,6 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 
-/**
- * @OA\Info(
- *     title="API Guess Who",
- *     version="1.0.0",
- *     description="Documentation pour l'API Guess Who.",
- *     @OA\Contact(
- *         email="support@votre-site.com"
- *     )
- * )
- */
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +38,7 @@ Route::post('/account/change/password/validate', [AccountController::class, 'val
 Route::get('/api/documentation', function () {
     return view('swagger.index');
 });
+
 
 // Register
 Route::get('/register', [RegisterController::class, 'controlInput']);
