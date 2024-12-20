@@ -21,27 +21,25 @@ class PendingRegisterService
     /**
      * Vérification du pin
      *
-     * @param PendingRegister $Pendingregister
+     * @param PendingRegister $pendingRegister
      * @param string $pin
      * @return bool
      */
-    public function verifyPin(PendingRegister $Pendingregister, string $pin): bool
+    public function verifyPin(PendingRegister $pendingRegister, string $pin): bool
     {
-        return $Pendingregister->pin === $pin;
+        return $pendingRegister->pin === $pin;
     }
 
     /**
      * Créer un account à partir d'un Pendingregister
      *
-     * @param PendingRegister $Pendingregister
+     * @param PendingRegister $pendingRegister
      * @return Account
      * @throws \Exception
      */
-    public function createAccountFromPendingRegister(PendingRegister $Pendingregister): Account
+    public function createAccountFromPendingRegister(PendingRegister $pendingRegister): Account
     {
-        
-
-        
+        $account = $pendingRegister->validateAccount();
         return $account;
     }
 }

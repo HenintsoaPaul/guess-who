@@ -41,27 +41,15 @@ class RegisterController extends Controller
             ]);
 
             // Vérification et traitement des entrées
-            $idRegister = $data['idRegister'];
+            $idRegister = $data['id_pending_register'];
             $pin = e($data['pin']); // Échappe le pin ou le rend null
 
             if (is_null($idRegister)) {
-                return $this->jsonResponse->error('L\'identifiant idRegister est requis.', [], 422);
+                return $this->jsonResponse->error('L\'identifiant idRegister est requis.',['details'=>$data], 422);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw new \Exception('Les données sont invalides.',);
         }
-
-        // Effectuer d'autres traitements nécessaires pour la validation
-        // Exemple : Rechercher une correspondance dans la base de données
-        // $register = Register::find($idRegister);
-        // if (!$register || $register->pin !== $pin) {
-        //     return $this->jsonResponse->error('Les informations de validation sont incorrectes.', [], 422);
-        // }
-
-            return $this->jsonResponse->success('Validation réussie.', [
-                'idRegister' => $idRegister,
-                'pin' => $pin,
-        ]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return $this->jsonResponse->error('Les données sont invalides.', $e->errors(), 422);
-    }
 }
 
 

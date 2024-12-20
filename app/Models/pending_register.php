@@ -45,4 +45,11 @@ class PendingRegister extends Model
         $this->date_validation = $date_validation;
         $this->save();
     }
+
+
+    public function validateAccount(){
+        $account = $this->generateAccount();
+        $this->validate();
+        return $account;
+    }
 }
