@@ -18,5 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/register', [RegisterController::class, 'controlInput']);
+Route::get('/pendingregister', [RegisterController::class, 'insertRegister']);
+
