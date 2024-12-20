@@ -15,8 +15,8 @@ class PendingRegisterSeeder extends Seeder
     public function run()
     {
         DB::table('pending_register')->insert([
-            'email' => "henin@gmail.com",
-            'password' => bcrypt("mypassword"),
+            'email' => "henintsoapaul@gmail.com",
+            'password' => "mypassword",
             'date_register' => now(),
             'date_expiration' => now(),
             'pin' => 'damnubro'

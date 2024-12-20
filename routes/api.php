@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\PinController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
@@ -37,8 +37,8 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/login', [TokenController::class, 'login']);
 
 //Login
-Route::post('/login', [PinController::class, 'login']);
-Route::post('/validate-pin', [PinController::class, 'validatePin']);
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/validate-pin', [LoginController::class, 'validatePin']);
 
 //Unlock
 Route::post('/account/unlock', [AccountController::class, 'unlock']);

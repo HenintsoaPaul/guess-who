@@ -15,11 +15,11 @@ class AccountSeeder extends Seeder
     public function run()
     {
         DB::table('account')->insert([
-            "email" => "henin@gmail.com",
-            "password" => bcrypt("mypassword"),
+            "email" => "henintsoapaul@gmail.com",
+            "password" => "mypassword",
             "id_pending_register" => 1,
-            "id_type_account_state" => 1,
-            "attempt" => 2,
+            "id_type_account_state" => 2,
+            "attempt" => 3,
         ]);
     }
 }
