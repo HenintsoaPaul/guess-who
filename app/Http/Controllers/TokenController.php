@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Services\ApiResponseService;
 use App\Services\TokenService;
 
@@ -28,7 +26,7 @@ class TokenController extends Controller
     }
     public function generate($id_account)
     {
-        
+
         $status = 200;
         $data = array();
         $errors = [];
@@ -53,7 +51,7 @@ class TokenController extends Controller
 
     public function regenerate($id_account)
     {
-        
+
         $status = 200;
         $token = NULL;
         $data = array();

@@ -12,16 +12,15 @@ namespace App\Http\Controllers;
  *     )
  * )
  */
-
+use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;
 use App\Models\Token;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Services\RandomService;
-use App\Mail\SendEmail;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use OpenApi\Annotations as OA;
+use Illuminate\Support\Str;
 
 class PinController extends Controller
 {
@@ -111,7 +110,7 @@ class PinController extends Controller
      *     path="/api/validate-pin",
      *     summary="Validation du PIN",
      *     description="Valide le PIN envoyé par email et génère un token d'accès.",
-     *     operationId="validatePin",  
+     *     operationId="validatePin",
      *     tags={"Authentification"},
      *     @OA\RequestBody(
      *         required=true,
@@ -146,7 +145,7 @@ class PinController extends Controller
      *     )
      * )
      */
-    public function validatePin(Request $request)
+    public function validatePin(Request $request): JsonResponse
     {
         $request->validate([
             'email' => 'required|email',
@@ -168,12 +167,16 @@ class PinController extends Controller
 
         $pendingAuth->delete();
 
+        $account->resetAttempt();
+
+        // todo: ovaina Alex
         $tokenString = Str::random(60);
         $token = Token::create([
             'token' => $tokenString,
             'id_account' => $account->id_account,
             'date_expiration' => now()->addDays(30),
         ]);
+        // todo: ovaina Alex
 
         return response()->json([
             'message' => 'PIN validé. Token généré avec succès.',

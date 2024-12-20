@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; 
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -16,7 +16,7 @@ class RegisterController extends Controller
         $this->jsonResponse = $jsonResponse;
         $this->random = $random;
     }
-    
+
     public function controlInput(Request $request)
     {
         try {
@@ -28,7 +28,7 @@ class RegisterController extends Controller
             return $this->jsonResponse->error('Les données sont invalides.', $e->errors(), 422);
         }
 
-        return $this->jsonResponse->success('Vous avez recu votre code pin', $this->random->newPin());        
-    }    
+        return $this->jsonResponse->success('Vous avez recu votre code pin', $this->random->newPin());
+    }
 
 }

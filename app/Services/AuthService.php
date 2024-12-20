@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Account;
+use Illuminate\Support\Facades\DB;
+
 
 class AuthService
 {
@@ -30,13 +32,14 @@ class AuthService
             throw new \Exception('Max attempt reached');
         }
 
-        if (!$account->id_type_account_state === 2) {
+        if ($account->id_type_account_state === 2) {
             throw new \Exception('Account suspended!');
         }
 
         $ok_pass = PasswordEncoderService::verifyPassword($password, $account->password);
         if (!$ok_pass) {
             $reste = $account->increaseAttempt();
+            DB::commit();
             throw new \Exception("Wrong password! $reste attempts left!");
         }
 
