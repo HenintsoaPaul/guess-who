@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendEmail;
 use App\Models\PendingAuth;
 use App\Services\AuthService;
 use App\Services\JsonResponseService;
@@ -9,6 +10,7 @@ use App\Services\RandomService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -36,7 +38,7 @@ class LoginController extends Controller
             $pin = RandomService::newPin();
 
             // send pin on email
-            Mail::to($email)->send(new SendEmail($pin));
+            Mail::to($credentials['email'])->send(new SendEmail($pin));
 
             // insert pending_auth
             $pendingAuth = PendingAuth::addNew($pin, $account->id_account);
@@ -47,8 +49,9 @@ class LoginController extends Controller
             }
 
             DB::commit();
-            return $this->jsonResponse->success('Mety ilay controle', $pendingAuth);
 
+            $msg = "Pin sent to your email. Use the following 'id' to url '/login/validate'.";
+            return $this->jsonResponse->success($msg, $pendingAuth->id_pending_auth);
         } catch (ValidationException $e) {
             DB::rollBack();
             return $this->jsonResponse->validationError($e);

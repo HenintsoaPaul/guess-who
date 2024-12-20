@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TokenController;
+
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\PendingAuthController;
 
@@ -39,12 +39,9 @@ use App\Http\Controllers\PendingAuthController;
 //route validation
 Route::post('/login', [PinController::class, 'login']);
 Route::post('/validate-pin', [PinController::class, 'validatePin']);
+
 Route::get('/api/documentation', function () {
     return view('swagger.index');
-});
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user(); 
 });
 
 // TOKEN ROUTER
