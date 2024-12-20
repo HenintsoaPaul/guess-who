@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\PendingRegister;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Services\PendingRegisterService;
 use Illuminate\Http\Request;
 
 /**
@@ -59,7 +60,7 @@ class RegisterController extends Controller
             return $this->jsonResponse->error('Les données sont invalides.', $e->errors(), 422);
         }
 
-        return $this->jsonResponse->success('Vous avez recu votre code pin', $this->random->newPin());
+        return $this->jsonResponse->success('Vous avez recu votre code pin', $this->random->newPin());        
     }
 
     /**
@@ -130,5 +131,33 @@ class RegisterController extends Controller
         }
 
         return response()->json(['message' => 'Pending register created successfully.', 'data' => $pendingRegister], 201);
+    }
+    public function validation(Request $request)
+    {
+        try {
+            // Validation des entrées
+            $data = $request->validate([
+                'id_pending_register' => 'required|integer',
+                'pin' => 'required|string', // Le pin ne peut être null ou une chaîne
+            ]);
+
+            // Vérification et traitement des entrées
+            $idRegister = $data['id_pending_register'];
+            $pin = e($data['pin']); // Échappe le pin ou le rend null
+
+            if (is_null($idRegister)) {
+                return $this->jsonResponse->error('L\'identifiant idRegister est requis.',['details'=>$data], 422);
+            }
+
+            $account  = PendingRegisterService::validateAccountRegister($idRegister,$pin);
+            
+            return $this->jsonResponse->success("Inscription valider",['account'=>$account]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return $this->jsonResponse->error('Les données sont invalides.',['details'=>$request],422);
+        }
+        catch (\Exception $err){
+            return $this->jsonResponse->error("Erreur lors de validation de votre inscription : ".$err->getMessage(),['details'=>$request],422);
+        }
     }
 }
