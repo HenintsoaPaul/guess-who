@@ -30,4 +30,19 @@ class PendingRegister extends Model
     {
         return $this->hasOne(Account::class, 'id_pending_register', 'Id_pending_register');
     }
+
+    public function generateAccount() {
+        $account = new Account();
+        $account->email = $this->email;
+        $account->password = $this->password; // Assurez-vous de hasher le mot de passe avant stockage
+        $account->id_pending_register = $this->id_pending_register;
+        $account->save();
+
+        return $account;
+    }
+    public function validate($date_validation = null){
+        if($date_validation == null) {$date_validation = now();}
+        $this->date_validation = $date_validation;
+        $this->save();
+    }
 }
