@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<module.rh>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "mg.itu.company.module.rh.Application",
+            "projectName": "module.rh",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-GestionrhApplication<gestionrh>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "itu.gestionrh.GestionrhApplication",
+            "projectName": "gestionrh",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=53528 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=gestionrh"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<gestionrh>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "mg.itu.company.module.rh.Application",
+            "projectName": "gestionrh",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
