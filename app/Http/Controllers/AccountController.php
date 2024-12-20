@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Services\JsonResponseService;
+use App\Services\RandomService;
+use App\Services\TokenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 
@@ -56,15 +60,34 @@ class AccountController extends Controller
     {
         try {
             $payload = $request->validate([
-                'token' => 'required',
+                'id_account' => 'required|numeric',
                 'new_password' => 'required',
             ]);
-
-            // TODO : mila ovaina
-            $token = $payload['token'];
-            $mety = $token->isValid();
-            if (!$mety) {
+            $token = TokenService::getBarerToken($request);
+            if (!$token) {
                 return $this->jsonResponse->tokenError();
+            }
+
+            $account = null;
+            try {
+                $account = Account::getById($payload['id_account']);
+
+                $mety = TokenService::isValidBarerToken($account->id_account, $token);
+                if (!$mety) {
+                    return $this->jsonResponse->tokenError();
+                }
+
+                DB::beginTransaction();
+
+                $pin = RandomService::newPin();
+                Mail::to($account->email)->send(new SendEmail($pin));
+
+                // todo: save in pending auth
+                // ...
+
+                return $this->jsonResponse->success('Password change email validation sent.', null);
+            } catch (\Exception $e) {
+                return $this->jsonResponse->error('Invalid account.', $e->errors(), 422);
             }
 
             DB::beginTransaction();

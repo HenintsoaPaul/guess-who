@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PinController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,7 @@ Route::post('/validate-pin', [PinController::class, 'validatePin']);
 //Unlock
 Route::post('/account/unlock', [AccountController::class, 'unloci']);
 Route::post('/account/change/password', [AccountController::class, 'changePassword']);
+Route::post('/account/change/password/validate', [AccountController::class, 'changePassword']);
 
 Route::get('/api/documentation', function () {
     return view('swagger.index');

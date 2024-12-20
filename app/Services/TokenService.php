@@ -22,8 +22,7 @@ class TokenService
     {
         $fulltoken = $request->header('Authorization');
         // Get only the bearer token
-        $token = $request->bearerToken();
-        return $token;
+        return $request->bearerToken();
     }
 
     /**
