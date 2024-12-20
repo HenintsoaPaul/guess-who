@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request; 
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
+use App\Services\PendingRegisterService;
 
 class RegisterController extends Controller
 {
@@ -31,7 +32,7 @@ class RegisterController extends Controller
         return $this->jsonResponse->success('Vous avez recu votre code pin', $this->random->newPin());        
     }
 
-    public function controlInputValidationRegister(Request $request)
+    public function validation(Request $request)
     {
         try {
             // Validation des entrées
@@ -47,10 +48,17 @@ class RegisterController extends Controller
             if (is_null($idRegister)) {
                 return $this->jsonResponse->error('L\'identifiant idRegister est requis.',['details'=>$data], 422);
             }
+
+            PendingRegisterService::validateAccountRegister($idRegister,$pin);
+            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
-            throw new \Exception('Les données sont invalides.',);
+            return $this->jsonResponse->error('Les données sont invalides.',['details'=>$data],422);
         }
-}
+        catch (\Exception $err){
+            return $this->jsonResponse->error("Erreur lors de validation de votre inscription : ".$err->getMessage(),['details'=>$data],422);
+        }
+    }
 
 
 }
