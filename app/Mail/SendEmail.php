@@ -13,7 +13,7 @@ class SendEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $pinCode;
+    public string $pinCode;
 
     /**
      * Create a new message instance.
@@ -21,7 +21,7 @@ class SendEmail extends Mailable
      * @param string $pinCode
      * @return void
      */
-    public function __construct($pinCode)
+    public function __construct(string $pinCode)
     {
         $this->pinCode = $pinCode;
     }

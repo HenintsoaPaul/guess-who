@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; 
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
 use App\Services\PendingRegisterService;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -17,7 +17,7 @@ class RegisterController extends Controller
         $this->jsonResponse = $jsonResponse;
         $this->random = $random;
     }
-    
+
     public function controlInput(Request $request)
     {
         try {
@@ -59,6 +59,4 @@ class RegisterController extends Controller
             return $this->jsonResponse->error("Erreur lors de validation de votre inscription : ".$err->getMessage(),['details'=>$data],422);
         }
     }
-
-
 }

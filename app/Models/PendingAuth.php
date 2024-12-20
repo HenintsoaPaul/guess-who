@@ -9,9 +9,9 @@ class PendingAuth extends Model
 {
     use HasFactory;
 
-    protected $table = 'pending_auths';
+    protected $table = 'pending_auth';
     protected $primaryKey = 'id_pending_auth';
-    public $timestamps = false; 
+    public $timestamps = false;
 
     protected $fillable = [
         'date_expiration',
@@ -32,6 +32,26 @@ class PendingAuth extends Model
     public static function getById($id)
     {
         return self::find($id);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function addNew(string $pin, int $idAccount, \DateInterval $delai = null): PendingAuth {
+        $daty = new \DateTime();
+        $delai = $delai ?? new \DateInterval('PT90S'); // Utilisation de la valeur par défaut si $delai est null
+
+        $pendingAuth = new PendingAuth();
+        $pendingAuth->date_creation = $daty;
+        $pendingAuth->date_expiration = (clone $daty)->add($delai); // Clone $daty pour ne pas modifier l'original
+        $pendingAuth->pin = $pin;
+        $pendingAuth->id_account = $idAccount;
+
+        if (!$pendingAuth->save()) {
+            throw new \Exception("Failed to insert pending auth");
+        }
+
+        return $pendingAuth;
     }
 
 }
