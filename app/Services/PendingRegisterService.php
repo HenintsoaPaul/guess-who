@@ -7,13 +7,22 @@ use App\Models\account;
 
 class PendingRegisterService
 {
+    
+    public static function validateAccountRegister(int $id_pending_register , string $pin){
+        $pending_register = self::getPendingRegisterById($id_pending_register);
+        if( !self::verifyPin($pending_register,$pin)){
+            throw new \Exception("Pin invalid");
+        }
+        self::createAccountFromPendingRegister($pending_register);
+        return $account;
+    }
     /**
      * Récupérer un Pendingregister par son ID
      *
      * @param int $idPendingRegister
      * @return PendingRegister|null
      */
-    public function getPendingRegisterById(int $idPendingRegister): ?PendingRegister
+    public static function getPendingRegisterById(int $idPendingRegister): ?PendingRegister
     {
         return PendingRegister::find($idPendingRegister);
     }
@@ -25,7 +34,7 @@ class PendingRegisterService
      * @param string $pin
      * @return bool
      */
-    public function verifyPin(PendingRegister $pendingRegister, string $pin): bool
+    public static function verifyPin(PendingRegister $pendingRegister, string $pin): bool
     {
         return $pendingRegister->pin === $pin;
     }
@@ -37,7 +46,7 @@ class PendingRegisterService
      * @return Account
      * @throws \Exception
      */
-    public function createAccountFromPendingRegister(PendingRegister $pendingRegister): Account
+    public static function createAccountFromPendingRegister(PendingRegister $pendingRegister): Account
     {
         $account = $pendingRegister->validateAccount();
         return $account;
