@@ -5,10 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TokenController;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\PendingAuthController;
-
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\TokenController;
-use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\TokenController;
 
 
 /*
