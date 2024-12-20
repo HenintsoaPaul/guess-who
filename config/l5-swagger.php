@@ -45,8 +45,6 @@ return [
                  */
                 'annotations' => [
                     base_path('app'),
-                    // base_path('routes/api.php'),  
-                    // base_path('app/Http/Controllers'), 
                 ],
             ],
         ],

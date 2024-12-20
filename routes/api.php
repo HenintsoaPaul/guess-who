@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PendingAuthController;
+use App\Http\Controllers\TokenController;
 
 
 /*
@@ -42,7 +43,7 @@ Route::get('/api/documentation', function () {
 
 // Register
 Route::get('/register', [RegisterController::class, 'controlInput']);
-
+Route::post('/register/validation', [RegisterController::class , 'validation']);
 
 // TOKEN ROUTER
 Route::get('token', [TokenController::class, 'index']); // afficher un token généré
