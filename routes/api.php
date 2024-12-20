@@ -3,20 +3,8 @@
 use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TokenController;
-
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\PendingAuthController;
-
-/**
- * @OA\Info(
- *     title="API Guess Who",
- *     version="1.0.0",
- *     description="Documentation pour l'API Guess Who.",
- *     @OA\Contact(
- *         email="support@votre-site.com"
- *     )
- * )
- */
 
 /*
 |--------------------------------------------------------------------------
