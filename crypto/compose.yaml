@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    container_name: pg-container
+    environment:
+      POSTGRES_DB: crypto
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: itu16
+    ports:
+      - "912:5432"
+    volumes:
+      - pg_crypto_data:/var/lib/postgresql/data
+#      - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d crypto" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    container_name: crypto-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_URL: pg-container
+      DB_PORT: 5432
+      DB_NAME: crypto
+      DB_USERNAME: postgres
+      DB_PASSWORD: itu16
+    ports:
+      - "911:911"
+    depends_on:
+      db:
+          condition: service_healthy
+
+volumes:
+  pg_crypto_data:
