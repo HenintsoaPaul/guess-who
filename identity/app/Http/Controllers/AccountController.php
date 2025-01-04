@@ -47,7 +47,7 @@ class AccountController extends Controller
                 return $this->jsonResponse->success('Account unlocked.', $data);
             } catch (\Exception $e) {
                 DB::rollBack();
-                return $this->jsonResponse->success('Account not found.', $data);
+                throw $e;
             }
         } catch (ValidationException $e) {
             return $this->jsonResponse->error('Invalid email.', $e->errors(), 422);
@@ -57,7 +57,7 @@ class AccountController extends Controller
     /**
      * @throws \Exception
      */
-    public function changePassword(Request $request)
+    public function changePassword(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             $payload = $request->validate([
@@ -104,7 +104,7 @@ class AccountController extends Controller
     /**
      * @throws \Exception
      */
-    public function validateChangePassword(Request $request)
+    public function validateChangePassword(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             $payload = $request->validate([
