@@ -34,7 +34,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <scope>provided</scope> <!-- Désactive Thymeleaf, car vous utilisez JSP -->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -72,7 +71,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
