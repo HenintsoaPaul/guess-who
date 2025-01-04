@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 
 <%@ page import="java.util.List" %>
-<%@ page import="itu.gestionrh.model.TerminationType" %>
+<%@ page import="itu.crypto.model.TerminationType" %>
 
 <!DOCTYPE html>
 <html lang="en">

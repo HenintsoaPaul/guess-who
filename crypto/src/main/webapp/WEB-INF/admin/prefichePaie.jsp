@@ -1,9 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page import="itu.gestionrh.model.Contract" %>
-<%@ page import="itu.gestionrh.model.Employe" %>
-<%@ page import="itu.gestionrh.model.ContractType" %>
-<%@ page import="itu.gestionrh.model.Quarter" %>
-<%@ page import="itu.gestionrh.model.Role" %>
+<%@ page import="itu.crypto.model.Contract" %>
+<%@ page import="itu.crypto.model.Employe" %>
+<%@ page import="itu.crypto.model.ContractType" %>
+<%@ page import="itu.crypto.model.Quarter" %>
+<%@ page import="itu.crypto.model.Role" %>
 <%@ page import="java.util.List" %>
 
 <!DOCTYPE html>

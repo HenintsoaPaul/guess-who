@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ include file="importation/link_header.jsp" %>
 <%@ page import="java.util.List" %>
-<%@ page import="itu.gestionrh.model.TypeLeave" %>
+<%@ page import="itu.crypto.model.TypeLeave" %>
 
 <!DOCTYPE html>
 <html lang="en">
