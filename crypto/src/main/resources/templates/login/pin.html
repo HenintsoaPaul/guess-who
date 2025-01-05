@@ -21,10 +21,14 @@
             <div class="card border-primary">
                 <div class="card-body">
                     <h2 class="text-center mb-4">Confirmation de Login</h2>
-                    <form>
+
+                    <form th:action="@{/login/pin/auth}" th:object="${loginDTO}" method="POST">
+                        <input type="hidden" class="form-control" th:field="*{email}">
+
                         <div class="mb-3">
-                            <label for="email" class="form-label">PIN</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter your pin code">
+                            <label for="pin" class="form-label">PIN</label>
+                            <input type="password" class="form-control" id="pin" placeholder="Enter your pin code"
+                                   th:field="*{pin}">
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Login</button>

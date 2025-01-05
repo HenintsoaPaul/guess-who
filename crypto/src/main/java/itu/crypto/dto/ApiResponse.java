@@ -1,10 +1,12 @@
 package itu.crypto.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
 @Data
 @ToString
+@AllArgsConstructor
 public class ApiResponse<T> {
     private String status;
     private String message;

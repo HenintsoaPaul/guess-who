@@ -31,6 +31,17 @@ Run the following command in the terminal:
 }
 ```
 
+### Login -- Validate
+
+* Send `POST` request to `http://localhost:8000/api/login/validate`
+
+```json
+{
+    "email": "locked@gmail.com",
+    "pin": "yourpin"
+}
+```
+
 ### Modify Account Password -- Query
 
 * It sends an email containing pin for validation.
