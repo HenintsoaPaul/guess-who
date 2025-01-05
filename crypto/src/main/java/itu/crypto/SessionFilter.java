@@ -48,7 +48,7 @@ public class SessionFilter extends OncePerRequestFilter {
 	    // ...
 
 	    // Exemple : retourner une réponse d'erreur
-	    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token absent dans la session");
+	    sendErrorResponse(response, "Token absent dans la session");
 
 	    // Ne pas passer au filtre de chaîne
 	    return;
@@ -59,5 +59,17 @@ public class SessionFilter extends OncePerRequestFilter {
 
 	// Le token est présent, continuer le traitement
 	filterChain.doFilter(request, response);
+    }
+
+    // Utility to send custom error responses
+    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
+	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	response.setContentType("application/json");
+	response.setCharacterEncoding("UTF-8");
+	String errorJson = String.format("{\"timestamp\": \"%s\", \"status\": %d, \"message\": \"%s\"}",
+		java.time.Instant.now().toString(), HttpServletResponse.SC_UNAUTHORIZED, message);
+	response.getWriter().write(errorJson);
+	response.getWriter().flush();
+	response.getWriter().close();
     }
 }
