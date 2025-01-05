@@ -21,14 +21,24 @@
             <div class="card border-primary">
                 <div class="card-body">
                     <h2 class="text-center mb-4">Login</h2>
-                    <form>
+
+                    <div>
+                        <p th:if="${param.error}" class="text-danger">
+                            Invalid credentials. Please try again.
+                        </p>
+                    </div>
+                    
+                    <form th:action="@{/login/auth}" th:object="${account}" method="POST">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                            <input type="email" required class="form-control" id="email" placeholder="Enter your email"
+                                   th:field="*{email}">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                            <input type="password" required class="form-control" id="password"
+                                   placeholder="Enter your password"
+                                   th:field="*{password}">
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Login</button>
