@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="</head>ISO-8859-1">
+    <title>Crypto</title>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="jumbotron text-center bg-primary text-white p-5 rounded">
+        <h1 class="display-4">Welcome to Crypto!</h1>
+        <p class="lead">Please log in to continue.</p>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Login</h2>
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-primary text-white text-center p-4 mt-5">
+    <p>© 2023 Crustyz. All Rights Reserved.</p>
+</footer>
+</body>
+</html>
