@@ -31,7 +31,7 @@ Route::get('/api/documentation', function () {
 
 // Login
 Route::post('/login', [LoginController::class, 'login']);
-Route::post('/validate-pin', [LoginController::class, 'validatePin']);
+Route::post('/login/validate', [LoginController::class, 'validatePin']);
 
 // Account (unlock + password)
 Route::post('/account/unlock', [AccountController::class, 'unlock']);
