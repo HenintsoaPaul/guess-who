@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
@@ -29,6 +28,6 @@ public class Cours {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_crypto_currency", nullable = false)
-    private CryptoCurrency idCryptoCurrency;
+    private CryptoCurrency cryptoCurrency;
 
 }

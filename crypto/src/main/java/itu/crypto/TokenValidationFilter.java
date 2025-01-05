@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,6 +22,7 @@ public class TokenValidationFilter extends OncePerRequestFilter {
 
     private final RestTemplate restTemplate;
     private final CryptoConfigProperties cryptoConfigProperties;
+    private static final String VALIDATION_PATH = "/api/validate-token";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -32,37 +34,59 @@ public class TokenValidationFilter extends OncePerRequestFilter {
 	    try {
 		validateTokenWithLaravel(token);
 	    } catch (Exception e) {
-		System.out.println(e.getMessage());
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+		sendErrorResponse(response, e.getMessage());
 		return;
 	    }
 	} else {
-	    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header missing or invalid");
+	    sendErrorResponse(response, "Authorization header missing or invalid");
 	    return;
 	}
 
 	filterChain.doFilter(request, response);
     }
 
-    private void validateTokenWithLaravel(String token) throws Exception {
-	String laravelUrl = cryptoConfigProperties.getLaravelUrl();
-	if (laravelUrl == null || laravelUrl.isBlank()) {
-	    System.out.println("tss laravel url");
-	    throw new Exception("Laravel URL is not configured");
+    private void validateTokenWithLaravel(String token) {
+	String baseUrl = cryptoConfigProperties.getLaravelUrl();
+	if (baseUrl == null || baseUrl.isBlank()) {
+	    throw new IllegalStateException("Laravel URL is not configured");
 	}
 
+	HttpHeaders authHeaders = createAuthHeaders(token);
+	HttpEntity<Void> httpEntity = new HttpEntity<>(authHeaders);
+
+	String validationEndpoint = baseUrl + VALIDATION_PATH;
+	try {
+	    ResponseEntity<String> response = restTemplate.exchange(validationEndpoint, HttpMethod.GET, httpEntity, String.class);
+
+	    if (!response.getStatusCode().is2xxSuccessful() || !isTokenValid(response.getBody())) {
+		throw new IllegalArgumentException("Invalid token: Unsuccessful response or unexpected content.");
+	    }
+	} catch (RestClientException e) {
+	    System.out.println(e.getMessage());
+	    throw new IllegalArgumentException("Invalid token.");
+	}
+    }
+
+    private HttpHeaders createAuthHeaders(String token) {
 	HttpHeaders headers = new HttpHeaders();
 	headers.set("Authorization", "Bearer " + token);
-	var entity = new HttpEntity<>(headers);
+	return headers;
+    }
 
-	String apiEndPoint = laravelUrl + "/api/validate-token";
-	ResponseEntity<String> response = restTemplate.exchange(apiEndPoint, HttpMethod.GET, entity, String.class);
+    private boolean isTokenValid(String responseBody) {
+	return responseBody != null && responseBody.contains("valid");
+    }
 
-	if (response.getStatusCode().is2xxSuccessful() || response.getBody().contains("valid")) {
-	    // okay...
-	} else  {
-	    throw new Exception("Invalid token");
-	}
+    // Utility to send custom error responses
+    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
+	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	response.setContentType("application/json");
+	response.setCharacterEncoding("UTF-8");
+	String errorJson = String.format("{\"timestamp\": \"%s\", \"status\": %d, \"message\": \"%s\"}",
+		java.time.Instant.now().toString(), HttpServletResponse.SC_UNAUTHORIZED, message);
+	response.getWriter().write(errorJson);
+	response.getWriter().flush();
+	response.getWriter().close();
     }
 }
 
