@@ -1,12 +1,10 @@
 package itu.crypto.entity;
 
-import itu.crypto.entity.Account;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
@@ -30,14 +28,14 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_account_receiver")
-    private Account idAccountReceiver;
+    private Account accountReceiver;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_account_source", nullable = false)
-    private Account idAccountSource;
+    private Account accountSource;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_transaction_type", nullable = false)
-    private TransactionType idTransactionType;
+    private TransactionType transactionType;
 
 }

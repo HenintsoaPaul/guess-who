@@ -1,12 +1,10 @@
 package itu.crypto.entity;
 
-import itu.crypto.entity.Account;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 @NoArgsConstructor
 @Getter
@@ -25,10 +23,10 @@ public class Wallet {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_crypto_currency", nullable = false)
-    private CryptoCurrency idCryptoCurrency;
+    private CryptoCurrency cryptoCurrency;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
-    private Account idAccount;
+    private Account account;
 
 }

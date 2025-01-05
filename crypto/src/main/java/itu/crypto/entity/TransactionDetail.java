@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 @NoArgsConstructor
 @Getter
@@ -27,10 +26,10 @@ public class TransactionDetail {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_transaction", nullable = false)
-    private Transaction idTransaction;
+    private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_crypto_currency", nullable = false)
-    private CryptoCurrency idCryptoCurrency;
+    private CryptoCurrency cryptoCurrency;
 
 }
