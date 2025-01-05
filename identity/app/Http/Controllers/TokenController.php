@@ -24,7 +24,8 @@ class TokenController extends Controller
         }
         return ApiResponseService::apiResponse($status,$message,$data,$errors);
     }
-    public function generate($id_account)
+
+    public function generate($id_account): \Illuminate\Http\JsonResponse
     {
 
         $status = 200;

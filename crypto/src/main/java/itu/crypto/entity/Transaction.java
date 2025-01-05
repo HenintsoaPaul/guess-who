@@ -1,6 +1,6 @@
 package itu.crypto.entity;
 
-import itu.crypto.model.Account;
+import itu.crypto.entity.Account;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

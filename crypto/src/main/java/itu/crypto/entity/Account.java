@@ -1,6 +1,5 @@
 package itu.crypto.entity;
 
-import itu.crypto.model.Employe;
 import jakarta.persistence.*;
 
 @Entity
