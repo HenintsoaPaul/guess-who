@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 
@@ -24,9 +25,27 @@ public class TokenValidationFilter extends OncePerRequestFilter {
     private final CryptoConfigProperties cryptoConfigProperties;
     private static final String VALIDATION_PATH = "/api/validate-token";
 
+    // Check if a path matches a pattern (e.g., wildcard `/*`)
+    private boolean pathMatchesPattern(String path, String pattern) {
+	if (pattern.endsWith("/*")) { // Wildcard match
+	    return path.startsWith(pattern.substring(0, pattern.length() - 2));
+	}
+	return path.equals(pattern); // Exact match
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 	    throws ServletException, IOException {
+	// Check if the path is permitted for All
+	String requestPath = request.getServletPath();
+	List<String> excludedPaths = cryptoConfigProperties.getExcludedPaths();
+	boolean isExcluded = excludedPaths.stream().anyMatch(pattern -> pathMatchesPattern(requestPath, pattern));
+	if (isExcluded) {
+	    filterChain.doFilter(request, response);
+	    return;
+	}
+
+	// Proceed with token validation
 	String authorizationHeader = request.getHeader("Authorization");
 
 	if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
