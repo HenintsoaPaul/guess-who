@@ -25,35 +25,38 @@ public class LoginController {
 
     @PostMapping("/auth")
     public String authenticateFirstForm(Model model, @ModelAttribute("loginDTO") LoginDTO loginDTO) {
-	// send object to laravel
 	ApiResponse apiResponse = loginService.sendLoginDto(loginDTO);
 
 	if (apiResponse.isOk()) {
 	    // goto pin form
-	    model.addAttribute("dto", new LoginDTO(loginDTO.getEmail()));
+	    //	    model.addAttribute("dto", new LoginDTO(loginDTO.getEmail()));
+	    System.out.println("dto: " + loginDTO);
+	    model.addAttribute("dto", loginDTO);
+	    model.addAttribute("msg", apiResponse.getMessage());
 	    System.out.println(apiResponse.getData());
 	    return "login/pin";
 	} else {
 	    // goto email form
-	    System.out.println(apiResponse.getErrors());
-	    model.addAttribute("error", apiResponse.getMessage());
-	    return "login/index";
+	    System.out.println("errors: " + apiResponse.getErrors());
+	    System.out.println("msg: " + apiResponse.getMessage());
+
+	    model.addAttribute("msg", apiResponse.getMessage());
+	    model.addAttribute("errors", apiResponse.getErrors());
+	    return "redirect:/login/index";
 	}
     }
 
     @PostMapping("/pin/auth")
     public String authenticatePinForm(Model model, @ModelAttribute("loginDTO") LoginDTO loginDTO) {
-	// send object to laravel
-	ApiResponse apiResponse = loginService.sendPin( loginDTO );
+	ApiResponse apiResponse = loginService.sendPin(loginDTO);
 
 	if (apiResponse.isOk()) {
 	    // goto home page
-	    System.out.println(apiResponse.getData());
-	    return "index";
+	    return "redirect:/index";
 	} else {
 	    // goto pin form
-	    System.out.println(apiResponse.getErrors());
-	    model.addAttribute("error", apiResponse.getMessage());
+	    model.addAttribute("msg", apiResponse.getMessage());
+	    model.addAttribute("errors", apiResponse.getErrors());
 	    model.addAttribute("dto", loginDTO);
 	    return "login/pin";
 	}

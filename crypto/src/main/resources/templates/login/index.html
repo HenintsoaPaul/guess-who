@@ -23,8 +23,8 @@
                     <h2 class="text-center mb-4">Login</h2>
 
                     <div>
-                        <p th:if="${param.error}" class="text-danger">
-                            Invalid credentials. Please try again.
+                        <p th:if="${msg}" class="text-danger">
+                            <span th:text="${msg}"></span>
                         </p>
                     </div>
                     

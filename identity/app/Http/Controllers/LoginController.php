@@ -89,7 +89,7 @@ class LoginController extends Controller
 
             DB::commit();
 
-            $msg = "Pin sent to your email. Use the following 'id' to url '/login/validate'.";
+            $msg = "Pin sent to your email.";
             $data = [
                 'account' => $account->email,
                 'pin' =>  $pin,
