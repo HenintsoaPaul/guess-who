@@ -31,7 +31,7 @@ class TokenService
      * @param int $length Longueur du token généré (par défaut : 64).
      * @return string Le nouveau token.
      */
-    public static function newToken(int $length = 64): string
+    private static function newToken(int $length = 64): string
     {
         if ($length <= 0) {
             throw new \InvalidArgumentException("La longueur du token doit être un entier positif.");
@@ -65,7 +65,7 @@ class TokenService
         }
     }
 
-    public static function genExpirationDate()
+    private static function genExpirationDate()
     {
         return TimesService::generateDate(now(), 3600 * 2);
     }
