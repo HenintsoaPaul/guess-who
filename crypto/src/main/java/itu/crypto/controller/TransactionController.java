@@ -1,33 +1,51 @@
 package itu.crypto.controller;
 
+import itu.crypto.entity.Account;
+import itu.crypto.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import itu.crypto.dto.*;
 
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
-    @PostMapping("/deposit")
-    public ResponseEntity<String> deposit(@RequestBody DepositRequest request) {
+    @Autowired
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+    @PostMapping("/depot")
+    public String deposit(@RequestBody DepositRequest request) {
         try {
-            transactionService.depot(request.getAccount(), request.getMontant());
-            return ResponseEntity.ok("Dépôt effectué avec succès");
+            Account account = request.getAccount();
+            transactionService.Depot(
+                account,
+                request.getMontant(),
+                request.getDate(),
+                request.getQuantity()
+            );
+            return "Dépôt effectué avec succès pour le compte ID : " + account.getId();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return "Erreur lors du dépôt : " + e.getMessage();
         }
     }
 
     @PostMapping("/retrait")
-    public ResponseEntity<String> retrait(@RequestBody WithdrawalRequest request) {
+    public String withdraw(@RequestBody DepositRequest request) {
         try {
-            transactionService.retrait(request.getAccount(), request.getMontant());
-            return ResponseEntity.ok("Retrait effectué avec succès");
+            Account account = request.getAccount();
+            transactionService.Retait(
+                account,
+                request.getMontant(),
+                request.getDate(),
+                request.getQuantity()
+            );
+            return "Retrait effectué avec succès pour le compte ID : " + account.getId();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return "Erreur lors du retrait : " + e.getMessage();
         }
     }
-
 }
