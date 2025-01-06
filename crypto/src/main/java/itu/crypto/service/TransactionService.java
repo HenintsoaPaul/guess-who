@@ -1,30 +1,41 @@
 package itu.crypto.service;
 
-import itu.crypto.entity.Transaction;
-import itu.crypto.repository.CoursRepository;
-import itu.crypto.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Service
-@RequiredArgsConstructor
+import itu.crypto.entity.*;
+import itu.crypto.repository.*;
+import java.sql.*;
+
 public class TransactionService {
-    private final TransactionRepository transactionRepository;
+    @Autowired
+    private final AccountRepository accountRepository;
 
-    public List<Transaction> findAll() {
-	return transactionRepository.findAll();
+    @Autowired
+    private final MvFundRepository MvFundRepository;
+
+    public void Depot(Account account, double montant, Date date, int quantity ) {
+        double fund = account.getFund();
+
+        TypeMvFund type = new TypeMvFund("Depot");
+        MvFund mvFund = new MvFund(date, quantity, type, account);
+        MvFundRepository.save(mvFund);
+
+        account.setFund(account.getFund() + montant);
+
+        accountRepository.save(account);
     }
 
-    public Transaction findById(Integer id) throws Exception {
-	return transactionRepository.findById(id).orElseThrow(() -> new Exception("Invalid id:" + id));
-    }
+    public void Retait(Account account, double montant, Date date, int quantity ) {
+        double fund = account.getFund();
 
-    @Transactional
-    public Transaction save(Transaction transaction) {
-	System.out.println("TransactionService.save");
-	return null;
+        TypeMvFund type = new TypeMvFund("Retrait");
+        MvFund mvFund = new MvFund(date, quantity, type, account);
+        MvFundRepository.save(mvFund);
+
+        account.setFund(account.getFund() + montant);
+
+        accountRepository.save(account);
     }
 }

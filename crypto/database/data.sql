@@ -31,6 +31,10 @@ VALUES ('Depot'),
 INSERT INTO account (email, pseudo, password, fund)
 VALUES ('henintsoapaul@gmail.com', 'atlasss', 'mypassword', 500);
 
+INSERT INTO type_mv_fund (name)
+VALUES ('Depot'),
+       ('Retrait');
+
 -- wallet
 -- TODO: add triggers
 

@@ -7,17 +7,68 @@ import jakarta.persistence.*;
 public class Account {
 
     @Id
-    @Column(name = "id_account", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAccount;
+    private Long id;
 
-    @Column(name = "pseudo", nullable = false, length = 250)
-    private String pseudo;
-
-    @Column(name = "email", nullable = false, length = 250)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "fund", nullable = false)
+    @Column(name = "pseudo")
+    private String pseudo;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private double fund;
+
+    public Account() {}
+
+    public Account(String email, String pseudo, String password, double fund) {
+        this.email = email;
+        this.pseudo = pseudo;
+        this.password = password;
+        this.fund = fund;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public double getFund() {
+        return fund;
+    }
+
+    public void setFund(double fund) {
+        this.fund = fund;
+    }
 
 }

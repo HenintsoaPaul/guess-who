@@ -79,7 +79,6 @@ CREATE TABLE mv_fund(
    id_mv_fund SERIAL,
    date_mv TIMESTAMP,
    quantity INTEGER NOT NULL,
-   id_source INTEGER NOT NULL,
    id_type_mv_fund INTEGER NOT NULL,
    id_account INTEGER NOT NULL,
    PRIMARY KEY(id_mv_fund),
