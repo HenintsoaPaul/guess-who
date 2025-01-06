@@ -28,7 +28,7 @@
                         </p>
                     </div>
                     
-                    <form th:action="@{/login/auth}" th:object="${loginDTO}" method="POST">
+                    <form th:action="@{/login/auth}" th:object="${loginRequest}" method="POST">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
                             <input type="email" required class="form-control" id="email" placeholder="Enter your email"
