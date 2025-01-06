@@ -1,4 +1,4 @@
-INSERT INTO crypto_currency (name, symbol)
+INSERT INTO crypto (name, symbol)
 VALUES ('Bitcoin', 'BTC'),
        ('Ethereum', 'ETH'),
        ('Tether', 'USDT'),
@@ -10,26 +10,26 @@ VALUES ('Bitcoin', 'BTC'),
        ('Solana', 'SOL'),
        ('Chainlink', 'LINK');
 
-INSERT INTO cours (price, daty, id_crypto_currency)
-VALUES (50000.00, '2023-01-04', 1),
-       (3000.00, '2023-01-05', 2),
-       (100000.00, '2023-01-06', 3),
-       (20000.00, '2023-01-07', 4),
-       (150000.00, '2023-01-08', 5),
-       (8000.00, '2023-01-09', 6),
-       (40000.00, '2023-01-10', 7),
-       (25000.00, '2023-01-11', 8),
-       (70000.00, '2023-01-12', 9),
-       (180000.00, '2023-01-13', 10);
+INSERT INTO cours (date_cours, pu, id_crypto)
+VALUES ('2023-01-04', 50000.00, 1),
+       ('2023-01-05', 3000.00, 2),
+       ('2023-01-06', 100000.00, 3),
+       ('2023-01-07', 20000.00, 4),
+       ('2023-01-08', 150000.00, 5),
+       ('2023-01-09', 8000.00, 6),
+       ('2023-01-10', 40000.00, 7),
+       ('2023-01-11', 25000.00, 8),
+       ('2023-01-12', 70000.00, 9),
+       ('2023-01-13', 180000.00, 10);
 
-INSERT INTO transaction_type (name)
+INSERT INTO type_mv_wallet (name)
 VALUES ('Depot'),
        ('Retrait'),
        ('Vente'),
        ('Achat');
 
-INSERT INTO account (pseudo, email, password, fund)
-VALUES ('atlasss', 'henintsoapaul@gmail.com', 'mypassword', 500);
+INSERT INTO account (email, pseudo, password, fund)
+VALUES ('henintsoapaul@gmail.com', 'atlasss', 'mypassword', 500);
 
 -- wallet
 -- TODO: add triggers
