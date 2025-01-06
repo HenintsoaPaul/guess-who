@@ -1,8 +1,8 @@
 package itu.crypto.controller;
 
 import itu.crypto.dto.ApiResponse;
-import itu.crypto.dto.login.LoginDTO;
-import itu.crypto.service.LoginService;
+import itu.crypto.dto.AuthDTO;
+import itu.crypto.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,28 +13,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/login")
-public class LoginController {
-    private final LoginService loginService;
+@RequestMapping("/register")
+public class RegisterController {
+    private final AuthService authService;
 
     @GetMapping
     public String goToFirstForm(Model model) {
-	model.addAttribute("loginDTO", new LoginDTO());
-	return "login/index";
+	model.addAttribute("registerDTO", new AuthDTO());
+	return "register/index";
     }
 
     @PostMapping("/auth")
-    public String authenticateFirstForm(Model model, @ModelAttribute("loginDTO") LoginDTO loginDTO) {
-	ApiResponse apiResponse = loginService.sendLoginDto(loginDTO);
+    public String authenticateFirstForm(Model model, @ModelAttribute("registerDTO") AuthDTO registerDTO) {
+	ApiResponse apiResponse = authService.sendData(registerDTO);
 
 	if (apiResponse.isOk()) {
 	    // goto pin form
-	    //	    model.addAttribute("dto", new LoginDTO(loginDTO.getEmail()));
-	    System.out.println("dto: " + loginDTO);
-	    model.addAttribute("dto", loginDTO);
+	    //	    model.addAttribute("dto", new AuthDTO(registerDTO.getEmail()));
+	    System.out.println("dto: " + registerDTO);
+	    model.addAttribute("dto", registerDTO);
 	    model.addAttribute("msg", apiResponse.getMessage());
 	    System.out.println(apiResponse.getData());
-	    return "login/pin";
+	    return "register/pin";
 	} else {
 	    // goto email form
 	    System.out.println("errors: " + apiResponse.getErrors());
@@ -42,13 +42,13 @@ public class LoginController {
 
 	    model.addAttribute("msg", apiResponse.getMessage());
 	    model.addAttribute("errors", apiResponse.getErrors());
-	    return "redirect:/login/index";
+	    return "redirect:/register/index";
 	}
     }
 
     @PostMapping("/pin/auth")
-    public String authenticatePinForm(Model model, @ModelAttribute("loginDTO") LoginDTO loginDTO) {
-	ApiResponse apiResponse = loginService.sendPin(loginDTO);
+    public String authenticatePinForm(Model model, @ModelAttribute("registerDTO") AuthDTO registerDTO) {
+	ApiResponse apiResponse = authService.sendPin(registerDTO);
 
 	if (apiResponse.isOk()) {
 	    // get token from apiResponse
@@ -63,8 +63,8 @@ public class LoginController {
 	    // goto pin form
 	    model.addAttribute("msg", apiResponse.getMessage());
 	    model.addAttribute("errors", apiResponse.getErrors());
-	    model.addAttribute("dto", loginDTO);
-	    return "login/pin";
+	    model.addAttribute("dto", registerDTO);
+	    return "register/pin";
 	}
     }
 }
