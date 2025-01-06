@@ -1,33 +1,33 @@
 package itu.crypto.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.sql.*;
 
-import java.time.LocalDate;
-
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
 @Entity
 @Table(name = "cours")
 public class Cours {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cours", nullable = false)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "date_cours", nullable = false)
+    private Date date;
+
+    @Column(name = "pu", precision = 15, scale = 2, nullable = false)
     private double price;
 
-    @Column(name = "daty", nullable = false)
-    private LocalDate daty;
+    @ManyToOne
+    @JoinColumn(name = "id_crypto", nullable = false)
+    private Crypto crypto;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_crypto_currency", nullable = false)
-    private CryptoCurrency cryptoCurrency;
+
+    public Cours() {}
+
+    public Cours(Date date, double price, Crypto crypto) {
+        this.date = date;
+        this.price = price;
+        this.crypto = crypto;
+    }
 
 }
