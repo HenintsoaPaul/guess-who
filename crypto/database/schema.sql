@@ -11,7 +11,6 @@ CREATE TABLE account(
    id_account SERIAL,
    pseudo VARCHAR(250)  NOT NULL,
    email VARCHAR(250)  NOT NULL,
-   password VARCHAR(250)  NOT NULL,
    fund NUMERIC(15,2)  ,
    PRIMARY KEY(id_account)
 );
