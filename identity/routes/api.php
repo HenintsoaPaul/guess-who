@@ -40,7 +40,7 @@ Route::post('/account/password/validate', [AccountController::class, 'validateCh
 
 // Register
 Route::post('/register', [RegisterController::class, 'insertRegister']);
-Route::post('/register/validate', [RegisterController::class, 'validation']);
+Route::post('/register/validate', [RegisterController::class, 'validateRegister']);
 
 // Token
 Route::get('token', [TokenController::class, 'index']); // afficher un token généré
