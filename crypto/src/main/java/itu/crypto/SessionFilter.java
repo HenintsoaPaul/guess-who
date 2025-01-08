@@ -5,10 +5,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,17 +41,12 @@ public class SessionFilter extends OncePerRequestFilter {
 
 	// Vérifier si un token est présent dans la session
 	String token = (String) request.getSession().getAttribute("token");
-	System.out.println("current token: " + token);
-//	System.out.println("current token: " + token);
 
 	if (token == null || token.isEmpty()) {
 	    // Le token n'est pas présent, nous pouvons soit :
 	    // - Retourner une réponse d'erreur
 	    // - Rediriger vers une page d'authentification
-	    // - Continuer le traitement normal
-
-	    // Verifier la duree de vie de la session(token)
-	    // ...
+	    // - La verif du durree de vie se fait dans Laravel
 
 	    // Exemple : retourner une réponse d'erreur
 	    sendErrorResponse(response, "Token absent dans la session");
@@ -57,10 +56,36 @@ public class SessionFilter extends OncePerRequestFilter {
 	}
 	
 	// Ajouter le token dans le header de la requete
-	request.setAttribute("Authorization", "Bearer " + token);
+	System.out.println("----");
+	System.out.println("current token: " + token);
 
-	// Le token est présent, continuer le traitement
+	boolean isExpired = verifierDureeDeVie(request, response);
+	if (isExpired) {
+	    sendErrorResponse(response, "Token expired");
+	    return;
+	}
+
+	request.setAttribute("Authorization", "Bearer " + token);
 	filterChain.doFilter(request, response);
+    }
+
+    private boolean verifierDureeDeVie( HttpServletRequest request, HttpServletResponse response ) throws IOException {
+	String tokenExpiration = (String) request.getSession().getAttribute("token_expiration");
+
+	// Parse the string to Instant
+	Instant instant = Instant.parse(tokenExpiration);
+	// Convert Instant to LocalDateTime in a specific time zone
+	LocalDateTime d = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+
+	boolean isExpired = d.isBefore(LocalDateTime.now());
+	if (isExpired) {
+	    // Supprimer la session
+	    request.getSession().removeAttribute("token");
+	    request.getSession().removeAttribute("token_expiration");
+
+	    System.out.println("Token is expired. Expiration date: " + d + ", process date: " + LocalDateTime.now());
+	}
+	return isExpired;
     }
 
     // Utility to send custom error responses
