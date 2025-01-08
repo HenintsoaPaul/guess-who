@@ -15,4 +15,8 @@ public class SaleService {
     public List<Sale> findAll() {
         return saleRepository.findAll();
     }
+
+    public List<Sale> findAllByIdAccount(Integer idAccount) {
+        return saleRepository.findAllByIdAccount(idAccount);
+    }
 }
