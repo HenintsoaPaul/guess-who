@@ -81,6 +81,7 @@ public class SessionFilter extends OncePerRequestFilter {
 	if (isExpired) {
 	    // Supprimer la session
 	    System.out.println("Remove expired token...");
+	    request.getSession().removeAttribute("id_account");
 	    request.getSession().removeAttribute("token");
 	    request.getSession().removeAttribute("token_expiration");
 

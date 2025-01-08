@@ -3,6 +3,7 @@ package itu.crypto.controller;
 import itu.crypto.dto.ApiResponse;
 import itu.crypto.dto.login.LoginRequest;
 import itu.crypto.dto.login.LoginResponse;
+import itu.crypto.entity.Account;
 import itu.crypto.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,10 @@ public class LoginController {
 	    // get token from apiResponse
 	    System.out.println("msg: " + apiResponse.getMessage());
 	    System.out.println("data: " + apiResponse.getData());
+
+	    // Get user by email, then save in Session
+	    Account myAccount = loginService.getAccount(loginRequest);
+	    session.setAttribute("id_account", myAccount.getIdAccount());
 
 	    // save it in the Session
 	    LoginResponse loginResponse = new LoginResponse(apiResponse);
