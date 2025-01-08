@@ -25,6 +25,7 @@ public class Sale {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
+    @ToString.Exclude
     private Account account;
 
 }
