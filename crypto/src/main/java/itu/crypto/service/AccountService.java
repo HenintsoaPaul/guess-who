@@ -24,4 +24,8 @@ public class AccountService {
     public Account findFromToken(String token) {
         return null;
     }
+
+    public Account save(Account account) {
+        return accountRepository.save(account);
+    }
 }

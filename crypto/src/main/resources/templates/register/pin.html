@@ -20,7 +20,7 @@
         <div class="col-md-6">
             <div class="card border-primary">
                 <div class="card-body">
-                    <h2 class="text-center mb-4">Confirmation de Login</h2>
+                    <h2 class="text-center mb-4">Confirmation PIN d'inscription</h2>
 
                     <div>
                         <p th:if="${msg}" class="text-danger">
@@ -28,8 +28,9 @@
                         </p>
                     </div>
 
-                    <form th:action="@{/login/pin/auth}" th:object="${loginRequest}" method="POST">
+                    <form th:action="@{/register/pin/auth}" th:object="${registerRequest}" method="POST">
                         <input type="hidden" class="form-control" th:field="*{email}">
+                        <input type="hidden" class="form-control" th:field="*{pseudo}">
 
                         <div class="mb-3">
                             <label for="pin" class="form-label">PIN</label>
@@ -37,7 +38,7 @@
                                    th:field="*{pin}">
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                            <button type="submit" class="btn btn-primary">Validate Register</button>
                         </div>
                     </form>
                 </div>
