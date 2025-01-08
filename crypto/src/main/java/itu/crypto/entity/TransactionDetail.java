@@ -30,6 +30,6 @@ public class TransactionDetail {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_crypto_currency", nullable = false)
-    private CryptoCurrency cryptoCurrency;
+    private Crypto crypto;
 
 }
