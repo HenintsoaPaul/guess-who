@@ -22,9 +22,8 @@ use App\Services\RandomService;
 use App\Services\TokenService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -171,6 +170,8 @@ class LoginController extends Controller
             $account->resetAttempt();
 
             $tokenModel = TokenService::generate($account->id_account);
+
+            DB::commit();
 
             $msg = 'PIN validé. Token généré avec succès.';
             $data = [
