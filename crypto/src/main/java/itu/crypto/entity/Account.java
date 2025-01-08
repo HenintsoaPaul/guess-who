@@ -1,7 +1,9 @@
 package itu.crypto.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "account")
 public class Account {

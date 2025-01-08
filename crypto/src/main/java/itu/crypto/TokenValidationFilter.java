@@ -46,10 +46,13 @@ public class TokenValidationFilter extends OncePerRequestFilter {
 	}
 
 	// Proceed with token validation
-	String authorizationHeader = request.getHeader("Authorization");
+//	String authorizationHeader = request.getHeader("Authorization");
+	String authorizationHeader = (String) request.getAttribute("Authorization");
+	System.out.println("Authorization header: " + authorizationHeader);
 
 	if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 	    String token = authorizationHeader.substring(7);
+	    System.out.println("TokenFilter >> token: " + token);
 	    try {
 		validateTokenWithLaravel(token);
 	    } catch (Exception e) {
@@ -61,6 +64,7 @@ public class TokenValidationFilter extends OncePerRequestFilter {
 	    return;
 	}
 
+	System.out.println("---End Filter---");
 	filterChain.doFilter(request, response);
     }
 

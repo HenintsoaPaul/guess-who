@@ -16,15 +16,14 @@ namespace App\Http\Controllers;
 use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;
-use App\Models\Token;
 use App\Services\AuthService;
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
+use App\Services\TokenService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -79,7 +78,9 @@ class LoginController extends Controller
 
             // send pin to email
             $pin = RandomService::newPin();
-            Mail::to($credentials['email'])->send(new SendEmail($pin));
+            // TODO: uncomment this
+//            Mail::to($credentials['email'])->send(new SendEmail($pin));
+            // TODO: uncomment this
 
             // insert pending_auth
             $delai = null;
@@ -87,15 +88,20 @@ class LoginController extends Controller
 
             DB::commit();
 
-            $msg = "Pin sent to your email. Use the following 'id' to url '/login/validate'.";
-            return $this->jsonResponse->success($msg, $pendingAuth->id_pending_auth);
+            $msg = "Pin sent to your email.";
+            $data = [
+                'account' => $account->email,
+                'pin' =>  $pin,
+            ];
+//            return $this->jsonResponse->success($msg, $account->email);
+            return $this->jsonResponse->success($msg, $data);
         } catch (ValidationException $e) {
             DB::rollBack();
             return $this->jsonResponse->validationError($e);
         } catch (\Exception $exception) {
             DB::rollBack();
             $unauthorized = 401;
-            return $this->jsonResponse->error($exception->getMessage(), $credentials, $unauthorized);
+            return $this->jsonResponse->error($exception->getMessage(), null, $unauthorized);
         }
     }
 
@@ -141,41 +147,44 @@ class LoginController extends Controller
      */
     public function validatePin(Request $request): JsonResponse
     {
-        $request->validate([
-            'email' => 'required|email',
-            'pin' => 'required|string',
-        ]);
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'pin' => 'required|string',
+            ]);
 
-        $account = Account::where('email', $request->email)->first();
-        if (!$account) {
-            return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+            $account = Account::where('email', $request->email)->first();
+            if (!$account) {
+                throw new \Exception("Utilisateur non trouvé");
+            }
+
+            $pendingAuth = PendingAuth::where('id_account', $account->id_account)
+                ->where('date_expiration', '>', now())
+                ->first();
+            if (!$pendingAuth || $pendingAuth->pin !== $request->pin) {
+                throw new \Exception("PIN invalide ou expiré");
+            }
+            $pendingAuth->delete();
+
+            $account->resetAttempt();
+
+            $tokenModel = TokenService::generate($account->id_account);
+
+            DB::commit();
+
+            $msg = 'PIN validé. Token généré avec succès.';
+            $data = [
+                'token' => $tokenModel->token,
+                'expiration' => $tokenModel->date_expiration,
+            ];
+            return $this->jsonResponse->success($msg, $data);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return $this->jsonResponse->validationError($e);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->jsonResponse->error($exception->getMessage(), null, 401);
         }
-
-        $pendingAuth = PendingAuth::where('id_account', $account->id_account)
-            ->where('date_expiration', '>', now())
-            ->first();
-
-        if (!$pendingAuth || $pendingAuth->pin !== $request->pin) {
-            return response()->json(['message' => 'PIN invalide ou expiré'], 401);
-        }
-
-        $pendingAuth->delete();
-
-        $account->resetAttempt();
-
-        // todo: ovaina Alex
-        $tokenString = Str::random(60);
-        $token = Token::create([
-            'token' => $tokenString,
-            'id_account' => $account->id_account,
-            'date_expiration' => now()->addDays(30),
-        ]);
-        // todo: ovaina Alex
-
-        return response()->json([
-            'message' => 'PIN validé. Token généré avec succès.',
-            'token' => $tokenString,
-            'expiration' => $token->date_expiration,
-        ]);
     }
 }

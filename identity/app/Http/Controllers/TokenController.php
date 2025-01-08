@@ -44,7 +44,7 @@ class TokenController extends Controller
             $errors['details'] = [
                 'id_account'=>$id_account
             ];
-            $status = 400;
+            $status = 399;
             $message = $e->getMessage();
         }
         return ApiResponseService::apiResponse($status,$message,$data,$errors);
@@ -71,7 +71,7 @@ class TokenController extends Controller
                 'id_account'=>$id_account,
                 'token'=>$token
             ];
-            $status = 400;
+            $status = 399;
             $message = $e->getMessage();
         }
         return ApiResponseService::apiResponse($status,$message,$data,$errors);
