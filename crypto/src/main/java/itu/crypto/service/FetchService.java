@@ -20,51 +20,55 @@ public class FetchService {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String ERROR_STATUS = "error";
 
-    public ApiResponse fetchUrl(String url, Object payload) {
-        System.out.println("Payload: " + payload);
+    public ApiResponse fetchUrl(String url, Object payload, boolean log) {
+	if (log) {
+	    System.out.println("Payload: " + payload);
+	}
 
-        String apiUrl = buildApiUrl(url);
-        RestTemplate restTemplate = configureRestTemplate();
+	String apiUrl = buildApiUrl(url);
+	RestTemplate restTemplate = configureRestTemplate();
 
-        try {
-            String responseBody = restTemplate.postForObject(apiUrl, payload, String.class);
-            System.out.println("Response: " + responseBody);
-            return deserializeResponse(responseBody);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return handleApiError(ex);
-        }
+	try {
+	    String responseBody = restTemplate.postForObject(apiUrl, payload, String.class);
+	    if (log) {
+		System.out.println("Response body: " + responseBody);
+	    }
+	    return deserializeResponse(responseBody);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	    return handleApiError(ex);
+	}
     }
 
     private RestTemplate configureRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
-            @Override
-            public void handleError(ClientHttpResponse response) {
-                // Suppresses default error handling
-            }
-        });
-        return restTemplate;
+	RestTemplate restTemplate = new RestTemplate();
+	restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+	    @Override
+	    public void handleError(ClientHttpResponse response) {
+		// Suppresses default error handling
+	    }
+	});
+	return restTemplate;
     }
 
     private ApiResponse handleApiError(Exception ex) {
-        if (ex instanceof HttpClientErrorException) {
-            String responseBody = ((HttpClientErrorException) ex).getResponseBodyAsString();
-            System.out.println("Error Response Body: " + responseBody);
-            try {
-                return deserializeResponse(responseBody);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        }
-        return new ApiResponse(ERROR_STATUS, ex.getMessage(), null, null);
+	if (ex instanceof HttpClientErrorException) {
+	    String responseBody = ((HttpClientErrorException) ex).getResponseBodyAsString();
+	    System.out.println("Error Response Body: " + responseBody);
+	    try {
+		return deserializeResponse(responseBody);
+	    } catch (IOException ioException) {
+		ioException.printStackTrace();
+	    }
+	}
+	return new ApiResponse(ERROR_STATUS, ex.getMessage(), null, null);
     }
 
     private ApiResponse deserializeResponse(String responseBody) throws IOException {
-        return OBJECT_MAPPER.readValue(responseBody, ApiResponse.class);
+	return OBJECT_MAPPER.readValue(responseBody, ApiResponse.class);
     }
 
     private String buildApiUrl(String endpoint) {
-        return cryptoConfigProperties.getLaravelUrl() + endpoint;
+	return cryptoConfigProperties.getLaravelUrl() + endpoint;
     }
 }

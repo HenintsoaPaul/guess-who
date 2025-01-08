@@ -14,11 +14,11 @@ public class RegisterService {
     private final AccountService accountService;
 
     public ApiResponse sendData(RegisterRequest authDTO) {
-	return fetchService.fetchUrl("/api/register", authDTO);
+	return fetchService.fetchUrl("/api/register", authDTO, false);
     }
 
     public ApiResponse sendPin(RegisterRequest authDTO) {
-	return fetchService.fetchUrl("/api/register/validate", authDTO);
+	return fetchService.fetchUrl("/api/register/validate", authDTO, false);
     }
 
     @Transactional

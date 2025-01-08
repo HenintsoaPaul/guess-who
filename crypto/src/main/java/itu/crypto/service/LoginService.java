@@ -11,10 +11,10 @@ public class LoginService {
     private final FetchService fetchService;
 
     public ApiResponse sendLoginDto(LoginRequest loginRequest) {
-	return fetchService.fetchUrl("/api/login", loginRequest);
+	return fetchService.fetchUrl("/api/login", loginRequest, false);
     }
 
     public ApiResponse sendPin(LoginRequest loginRequest) {
-	return fetchService.fetchUrl("/api/login/validate", loginRequest);
+	return fetchService.fetchUrl("/api/login/validate", loginRequest, false);
     }
 }
