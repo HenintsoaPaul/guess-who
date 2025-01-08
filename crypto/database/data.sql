@@ -28,8 +28,8 @@ VALUES ('Depot'),
        ('Vente'),
        ('Achat');
 
-INSERT INTO account (pseudo, email, fund)
-VALUES ('atlasss', 'henintsoapaul@gmail.com', 500);
+INSERT INTO account (email, pseudo, password, fund)
+VALUES ('henintsoapaul@gmail.com', 'atlasss', 'mypassword', 500);
 
 -- wallet
 -- TODO: add triggers
