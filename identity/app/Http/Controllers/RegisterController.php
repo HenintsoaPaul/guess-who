@@ -7,6 +7,7 @@ use App\Services\RandomService;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\PendingRegister;
+use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Services\PendingRegisterService;
@@ -40,7 +41,7 @@ class RegisterController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=422,
+     *         response=399,
      *         description="Données invalides",
      *         @OA\JsonContent(
      *             @OA\Property(property="error", type="string", example="Les données sont invalides."),
@@ -57,10 +58,10 @@ class RegisterController extends Controller
                 'password' => 'required|string|min:1',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return $this->jsonResponse->error('Les données sont invalides.', $e->errors(), 422);
+            return $this->jsonResponse->error('Les données sont invalides.', $e->errors(), 399);
         }
 
-        return $this->jsonResponse->success('Vous avez recu votre code pin', $this->random->newPin());        
+        return $this->jsonResponse->success('Vous avez recu votre code pin', $this->random->newPin());
     }
 
     /**
@@ -83,7 +84,7 @@ class RegisterController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=422,
+     *         response=399,
      *         description="Données invalides",
      *         @OA\JsonContent(
      *             @OA\Property(property="error", type="string", example="Les données sont invalides."),
@@ -108,7 +109,7 @@ class RegisterController extends Controller
                 'password' => 'required|string|min:1',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => 'Les données sont invalides.', 'details' => $e->errors()], 422);
+            return response()->json(['error' => 'Les données sont invalides.', 'details' => $e->errors()], 399);
         }
 
         $pin = $this->random->newPin();
@@ -122,42 +123,104 @@ class RegisterController extends Controller
 
         DB::beginTransaction();
         try {
+            // Verifier hoe mbola tsy misy mampiasa ilay email
+            $d = Account::where('email', $requestData['email'])->first();
+            if ($d != null) {
+                throw new \Exception('Email already used by an account.');
+            }
+
+            // Verifier hoe efa nandefasana PIN ilay olona
+            $pendingRegister = PendingRegister::where('email', $requestData['email'])->first();
+            if ($pendingRegister != null) {
+                if ($pendingRegister->isExpired()) {
+                    $pendingRegister->delete();
+                }
+                else {
+                    throw new \Exception('PIN already sent to your email. Verify your emails please.');
+                    // todo: mamerina mamorona pin hoanle efa mi-exist
+                    // ...
+                }
+            }
+
             $pendingRegister = PendingRegister::create($validated);
+
+            // TODO: Alefa email hoe firy ny delai de validation nle pin
+            // todo: uncomment email
             Mail::to($requestData['email'])->send(new SendEmail($pin));
+
             DB::commit();
+
+            $data = [
+                'email' => $pendingRegister->email,
+                'pin' => $pendingRegister->pin,
+                'date_expiration' => $pendingRegister->date_expiration
+            ];
+            return $this->jsonResponse->success("Pending register created successfully.", $data);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['error' => 'Une erreur est survenue lors de l\'enregistrement.', 'details' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Une erreur est survenue lors de l\'enregistrement.', 'details' => $e->getMessage()], 399);
         }
-
-        return response()->json(['message' => 'Pending register created successfully.', 'data' => $pendingRegister], 201);
     }
+
+//    public function validation(Request $request)
+//    {
+//        try {
+//            // Validation des entrées
+//            $data = $request->validate([
+//                'id_pending_register' => 'required|integer',
+//                'pin' => 'required|string', // Le pin ne peut être null ou une chaîne
+//            ]);
+//        } catch (\Illuminate\Validation\ValidationException $e) {
+//            return $this->jsonResponse->error('Les données sont invalides.', [], 399);
+//        }
+//
+//        DB::beginTransaction();
+//        try {
+//            // Vérification et traitement des entrées
+//            $idRegister = $data['id_pending_register'];
+//            $pin = e($data['pin']); // Échappe le pin ou le rend null
+//
+//            if (is_null($idRegister)) {
+//                return $this->jsonResponse->error('L\'identifiant idRegister est requis.', ['details' => $data], 399);
+//            }
+//
+//            $account = PendingRegisterService::validateAccountRegister($idRegister, $pin);
+//
+//            DB::commit();
+//            return $this->jsonResponse->success("Inscription valider", []);
+//
+//        } catch (\Exception $err) {
+//            DB::rollBack();
+//            return $this->jsonResponse->error("Erreur lors de validation de votre inscription : " . $err->getMessage(), [], 399);
+//        }
+//    }
+
     public function validation(Request $request)
     {
         try {
             // Validation des entrées
-            $data = $request->validate([
-                'id_pending_register' => 'required|integer',
+            $payload = $request->validate([
+                'email' => 'required|email',
                 'pin' => 'required|string', // Le pin ne peut être null ou une chaîne
             ]);
-
-            // Vérification et traitement des entrées
-            $idRegister = $data['id_pending_register'];
-            $pin = e($data['pin']); // Échappe le pin ou le rend null
-
-            if (is_null($idRegister)) {
-                return $this->jsonResponse->error('L\'identifiant idRegister est requis.',['details'=>$data], 422);
-            }
-
-            $account  = PendingRegisterService::validateAccountRegister($idRegister,$pin);
-            
-            return $this->jsonResponse->success("Inscription valider",[]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return $this->jsonResponse->error('Les données sont invalides.',[],422);
+            return $this->jsonResponse->error('Les données sont invalides.', [], 399);
         }
-        catch (\Exception $err){
-            return $this->jsonResponse->error("Erreur lors de validation de votre inscription : ".$err->getMessage(),[],422);
+
+        DB::beginTransaction();
+        try {
+            // Vérification et traitement des entrées
+            $email = $payload['email'];
+            $pin = e($payload['pin']); // Échappe le pin ou le rend null
+
+            $account = PendingRegisterService::validateAccountRegister($email, $pin);
+
+            DB::commit();
+            return $this->jsonResponse->success("Inscription valider", ['account' => $account]);
+
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return $this->jsonResponse->error("Erreur lors de validation de votre inscription : " . $err->getMessage(), [], 399);
         }
     }
 }

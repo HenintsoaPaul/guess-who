@@ -39,8 +39,8 @@ Route::post('/account/password', [AccountController::class, 'changePassword']);
 Route::post('/account/password/validate', [AccountController::class, 'validateChangePassword']);
 
 // Register
-Route::get('/register', [RegisterController::class, 'controlInput']);
-Route::post('/register/validation', [RegisterController::class, 'validation']);
+Route::post('/register', [RegisterController::class, 'insertRegister']);
+Route::post('/register/validate', [RegisterController::class, 'validation']);
 
 // Token
 Route::get('token', [TokenController::class, 'index']); // afficher un token généré
