@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
+use App\Services\TokenService;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\PendingRegister;
@@ -187,7 +188,7 @@ class RegisterController extends Controller
             DB::commit();
             $data = [
                 'token' => $tokenModel->token,
-                'expiration' => $tokenModel->token_expiration
+                'expiration' => $tokenModel->date_expiration
             ];
             return $this->jsonResponse->success("Inscription valider", $data);
 

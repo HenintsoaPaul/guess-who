@@ -54,7 +54,7 @@ public class SessionFilter extends OncePerRequestFilter {
 	    // Ne pas passer au filtre de chaîne
 	    return;
 	}
-	
+
 	// Ajouter le token dans le header de la requete
 	System.out.println("----");
 	System.out.println("current token: " + token);
@@ -69,7 +69,7 @@ public class SessionFilter extends OncePerRequestFilter {
 	filterChain.doFilter(request, response);
     }
 
-    private boolean verifierDureeDeVie( HttpServletRequest request, HttpServletResponse response ) throws IOException {
+    private boolean verifierDureeDeVie(HttpServletRequest request, HttpServletResponse response) throws IOException {
 	String tokenExpiration = (String) request.getSession().getAttribute("token_expiration");
 
 	// Parse the string to Instant
@@ -80,10 +80,11 @@ public class SessionFilter extends OncePerRequestFilter {
 	boolean isExpired = d.isBefore(LocalDateTime.now());
 	if (isExpired) {
 	    // Supprimer la session
+	    System.out.println("Remove expired token...");
 	    request.getSession().removeAttribute("token");
 	    request.getSession().removeAttribute("token_expiration");
 
-	    System.out.println("Token is expired. Expiration date: " + d + ", process date: " + LocalDateTime.now());
+	    System.out.println("Token is expired. Expiration date: " + d + " | current date: " + LocalDateTime.now());
 	}
 	return isExpired;
     }

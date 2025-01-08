@@ -29,8 +29,13 @@
                     </div>
 
                     <form th:action="@{/register/pin/auth}" th:object="${registerRequest}" method="POST">
-                        <input type="hidden" class="form-control" th:field="*{email}">
                         <input type="hidden" class="form-control" th:field="*{pseudo}">
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email"
+                                   th:field="*{email}">
+                        </div>
 
                         <div class="mb-3">
                             <label for="pin" class="form-label">PIN</label>
