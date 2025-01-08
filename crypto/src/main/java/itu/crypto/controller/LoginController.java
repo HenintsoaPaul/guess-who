@@ -5,6 +5,7 @@ import itu.crypto.dto.login.LoginRequest;
 import itu.crypto.dto.login.LoginResponse;
 import itu.crypto.entity.Account;
 import itu.crypto.service.LoginService;
+import itu.crypto.service.SessionService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/login")
 public class LoginController {
     private final LoginService loginService;
+    private final SessionService sessionService;
 
     @GetMapping
     public String goToFirstForm(Model model) {
@@ -49,7 +51,8 @@ public class LoginController {
     }
 
     @PostMapping("/pin/auth")
-    public String authenticatePinForm(Model model, @ModelAttribute("loginRequest") LoginRequest loginRequest, HttpSession session) {
+    public String authenticatePinForm(Model model, @ModelAttribute("loginRequest") LoginRequest loginRequest,
+	    HttpSession session) {
 	ApiResponse apiResponse = loginService.sendPin(loginRequest);
 
 	if (apiResponse.isOk()) {
@@ -59,14 +62,18 @@ public class LoginController {
 
 	    // Get user by email, then save in Session
 	    Account myAccount = loginService.getAccount(loginRequest);
-	    session.setAttribute("id_account", myAccount.getIdAccount());
+	    System.out.println("myAccount: " + myAccount);
 
 	    // save it in the Session
 	    LoginResponse loginResponse = new LoginResponse(apiResponse);
 	    System.out.println("loginResponse: " + loginResponse);
+
 	    String token = loginResponse.getToken();
-	    session.setAttribute("token", token);
-	    session.setAttribute("token_expiration", loginResponse.getExpiration());
+	    String tokenExpiration = loginResponse.getExpiration();
+
+	    // Init new Session
+	    sessionService.viderSession(session);
+	    sessionService.initSession(session, myAccount.getIdAccount(), token, tokenExpiration);
 
 	    // goto home page
 	    return "index";
