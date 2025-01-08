@@ -28,7 +28,7 @@
                         </p>
                     </div>
 
-                    <form th:action="@{/login/pin/auth}" th:object="${loginDTO}" method="POST">
+                    <form th:action="@{/login/pin/auth}" th:object="${loginRequest}" method="POST">
                         <input type="hidden" class="form-control" th:field="*{email}">
 
                         <div class="mb-3">

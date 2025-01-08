@@ -1,8 +1,10 @@
 package itu.crypto.controller;
 
 import itu.crypto.dto.ApiResponse;
-import itu.crypto.dto.login.LoginDTO;
+import itu.crypto.dto.login.LoginRequest;
+import itu.crypto.dto.login.LoginResponse;
 import itu.crypto.service.LoginService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,36 +21,35 @@ public class LoginController {
 
     @GetMapping
     public String goToFirstForm(Model model) {
-	model.addAttribute("loginDTO", new LoginDTO());
+	model.addAttribute("loginRequest", new LoginRequest());
 	return "login/index";
     }
 
     @PostMapping("/auth")
-    public String authenticateFirstForm(Model model, @ModelAttribute("loginDTO") LoginDTO loginDTO) {
-	ApiResponse apiResponse = loginService.sendLoginDto(loginDTO);
+    public String authenticateFirstForm(Model model, @ModelAttribute("loginRequest") LoginRequest loginRequest) {
+	ApiResponse apiResponse = loginService.sendLoginDto(loginRequest);
 
 	if (apiResponse.isOk()) {
 	    // goto pin form
-	    //	    model.addAttribute("dto", new LoginDTO(loginDTO.getEmail()));
-	    System.out.println("dto: " + loginDTO);
-	    model.addAttribute("dto", loginDTO);
+	    model.addAttribute("dto", loginRequest);
 	    model.addAttribute("msg", apiResponse.getMessage());
+
+	    // todo: fafana rehefa mande ilay email
 	    System.out.println(apiResponse.getData());
+	    // todo: fafana rehefa mande ilay email
+
 	    return "login/pin";
 	} else {
-	    // goto email form
-	    System.out.println("errors: " + apiResponse.getErrors());
-	    System.out.println("msg: " + apiResponse.getMessage());
-
+	    // back to email form
 	    model.addAttribute("msg", apiResponse.getMessage());
-	    model.addAttribute("errors", apiResponse.getErrors());
-	    return "redirect:/login/index";
+	    model.addAttribute("loginRequest", new LoginRequest());
+	    return "login/index";
 	}
     }
 
     @PostMapping("/pin/auth")
-    public String authenticatePinForm(Model model, @ModelAttribute("loginDTO") LoginDTO loginDTO) {
-	ApiResponse apiResponse = loginService.sendPin(loginDTO);
+    public String authenticatePinForm(Model model, @ModelAttribute("loginRequest") LoginRequest loginRequest, HttpSession session) {
+	ApiResponse apiResponse = loginService.sendPin(loginRequest);
 
 	if (apiResponse.isOk()) {
 	    // get token from apiResponse
@@ -56,14 +57,18 @@ public class LoginController {
 	    System.out.println("data: " + apiResponse.getData());
 
 	    // save it in the Session
+	    LoginResponse loginResponse = new LoginResponse(apiResponse);
+	    System.out.println("loginResponse: " + loginResponse);
+	    String token = loginResponse.getToken();
+	    session.setAttribute("token", token);
+	    session.setAttribute("token_expiration", loginResponse.getExpiration());
 
 	    // goto home page
-	    return "redirect:/index";
+	    return "index";
 	} else {
-	    // goto pin form
+	    // back to pin form
 	    model.addAttribute("msg", apiResponse.getMessage());
-	    model.addAttribute("errors", apiResponse.getErrors());
-	    model.addAttribute("dto", loginDTO);
+	    model.addAttribute("dto", loginRequest);
 	    return "login/pin";
 	}
     }

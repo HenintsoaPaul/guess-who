@@ -37,6 +37,8 @@ public class SessionFilter extends OncePerRequestFilter {
 
 	// Vérifier si un token est présent dans la session
 	String token = (String) request.getSession().getAttribute("token");
+	System.out.println("current token: " + token);
+//	System.out.println("current token: " + token);
 
 	if (token == null || token.isEmpty()) {
 	    // Le token n'est pas présent, nous pouvons soit :
