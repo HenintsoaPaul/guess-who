@@ -1,12 +1,9 @@
 package itu.crypto.service;
 
 import itu.crypto.entity.Account;
-import itu.crypto.entity.Cours;
 import itu.crypto.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

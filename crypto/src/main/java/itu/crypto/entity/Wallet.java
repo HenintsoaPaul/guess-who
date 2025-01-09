@@ -19,7 +19,7 @@ public class Wallet {
     private Integer id;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private Double quantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_crypto_currency", nullable = false)
