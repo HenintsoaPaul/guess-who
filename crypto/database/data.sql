@@ -28,6 +28,14 @@ VALUES ('Depot'),
        ('Vente'),
        ('Achat');
 
+INSERT INTO cours (date_cours, pu, id_crypto) VALUES
+('2025-01-01 10:00:00', 35000.00, 1),
+('2025-01-01 10:00:00', 2000.00, 2),  
+('2025-01-01 10:00:00', 0.50, 3),    
+('2025-01-05 15:00:00', 36000.00, 1), 
+('2025-01-05 15:00:00', 2100.00, 2),  
+('2025-01-05 15:00:00', 0.55, 3);     
+
 INSERT INTO account (email, pseudo, password, fund)
 VALUES ('henintsoapaul@gmail.com', 'atlasss', 'mypassword', 500);
 

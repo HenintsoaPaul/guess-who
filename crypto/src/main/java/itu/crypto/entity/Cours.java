@@ -9,13 +9,14 @@ public class Cours {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cours", nullable = false)
     private Long id;
 
     @Column(name = "date_cours", nullable = false)
     private Date date;
 
-    @Column(name = "pu", precision = 15, scale = 2, nullable = false)
-    private double price;
+    @Column(name = "pu", nullable = false)
+    private double pu;
 
     @ManyToOne
     @JoinColumn(name = "id_crypto", nullable = false)
@@ -24,10 +25,14 @@ public class Cours {
 
     public Cours() {}
 
-    public Cours(Date date, double price, Crypto crypto) {
+    public Cours(Date date, double pu, Crypto crypto) {
         this.date = date;
-        this.price = price;
+        this.pu = pu;
         this.crypto = crypto;
+    }
+
+    public double getPu() {
+        return pu;
     }
 
 }

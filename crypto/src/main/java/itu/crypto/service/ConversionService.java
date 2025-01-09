@@ -1,47 +1,41 @@
 package itu.crypto.service;
 
+import itu.crypto.entity.Cours;
+import itu.crypto.entity.Crypto;
+import itu.crypto.repository.CoursRepository;
+import itu.crypto.repository.CryptoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import itu.crypto.entity.*;
-import itu.crypto.repository.*;
 
 @Service
 public class ConversionService {
 
-    @Autowired
-    private CryptoRepository cryptoRepository;
+    private final CryptoRepository cryptoRepository;
+    private final CoursRepository coursRepository;
 
     @Autowired
-    private DollarRepository dollarRepository;
-
-    public void convertCryptoToDollar(Crypto crypto, int quantity) {
-        Dollar dollar = new Dollar();
-        dollar.setAmount(amount);
-        dollar.setCurrency("USD"); 
-        dollar.setTimestamp(LocalDateTime.now()); 
-        
-        dollarRepository.save(dollar);
-        
-        crypto.setAmount(crypto.getAmount() - amount);
-        cryptoRepository.save(crypto);
+    public ConversionService(CryptoRepository cryptoRepository, CoursRepository coursRepository) {
+        this.cryptoRepository = cryptoRepository;
+        this.coursRepository = coursRepository;
     }
 
-    public void convertDollarToCrypto(Dollar dollar, double amount) {
-        Crypto crypto = new Crypto();
-        crypto.setAmount(amount);
-        crypto.setCurrency("CRYPTO"); 
-        crypto.setTimestamp(LocalDateTime.now()); 
-        
-        cryptoRepository.save(crypto);
-        
-        dollar.setAmount(dollar.getAmount() - amount);
-        dollarRepository.save(dollar);
+    public double convertCryptoToDollar(String symbol, double amountCrypto) {
+        Crypto crypto = cryptoRepository.findBySymbol(symbol)
+                .orElseThrow(() -> new IllegalArgumentException("Cryptomonnaie introuvable : " + symbol));
+
+        Cours latestCours = coursRepository.findLatestCoursByIdCrypto(crypto.getId())
+                .orElseThrow(() -> new IllegalStateException("Cours introuvable pour : " + symbol));
+
+        return amountCrypto * latestCours.getPu();  
     }
 
-    public double getExchangeRate() {
-        // Cette méthode devrait retourner le taux de change actuel entre Crypto et Dollar
-        // Dans une implémentation réelle, vous pourriez utiliser des API d'échange ou stocker les données historiques
-        return 1.0; // Exemple : 1 Crypto = 1 Dollar
+    public double convertDollarToCrypto(String symbol, double amountDollar) {
+        Crypto crypto = cryptoRepository.findBySymbol(symbol)
+                .orElseThrow(() -> new IllegalArgumentException("Cryptomonnaie introuvable : " + symbol));
+
+        Cours latestCours = coursRepository.findLatestCoursByIdCrypto(crypto.getId())
+                .orElseThrow(() -> new IllegalStateException("Cours introuvable pour : " + symbol));
+
+        return amountDollar / latestCours.getPu();  
     }
 }

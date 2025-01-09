@@ -8,7 +8,8 @@ public class Crypto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_crypto", nullable = false)
+    private Long idCrypto;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -24,11 +25,11 @@ public class Crypto {
     }
 
     public Long getId() {
-        return id;
+        return idCrypto;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.idCrypto = id;
     }
 
     public String getName() {
