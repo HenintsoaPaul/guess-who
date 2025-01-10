@@ -15,20 +15,79 @@ class PendingRegisterSeeder extends Seeder
     public function run()
     {
         DB::table('pending_register')->insert([
-            'email' => "locked@gmail.com",
+            'email' => "alice@gmail.com",
             'password' => "mypassword",
             'date_register' => now(),
             'date_expiration' => now()->addDays(30),
             'date_validation' => now(),
-            'pin' => 'dadan'
+            'pin' => '123456'
         ]);
-
         DB::table('pending_register')->insert([
-            'email' => "henintsoapaul@gmail.com",
+            'email' => "bob@gmail.com",
             'password' => "mypassword",
             'date_register' => now(),
             'date_expiration' => now()->addDays(30),
-            'pin' => 'damnubro'
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "charlie@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "diana@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "eve@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "frank@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "grace@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "hank@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "ivy@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "jack@gmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
         ]);
     }
 }
