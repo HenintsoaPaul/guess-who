@@ -1,14 +1,6 @@
-INSERT INTO crypto_currency (name, symbol) VALUES
-('Bitcoin', 'BTC'),
-('Ethereum', 'ETH'),
-('Tether', 'USDT'),
-('XRP', 'XRP'),
-('USD Coin', 'USDC'),
-('Binance Coin', 'BNB'),
-('Cardano', 'ADA'),
-('Polkadot', 'DOT'),
-('Solana', 'SOL'),
-('Chainlink', 'LINK');
+INSERT INTO commission (name, val) VALUES
+('Commission Vente', 10),
+('Commission Achat', 5);
 
 INSERT INTO cours (price, daty, id_crypto_currency) VALUES
 (50000.00, '2023-01-04', 1),
