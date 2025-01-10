@@ -15,20 +15,79 @@ class PendingRegisterSeeder extends Seeder
     public function run()
     {
         DB::table('pending_register')->insert([
-            'email' => "locked@gmail.com",
+            'email' => "rocruxappafra-4143@yopmail.com",
             'password' => "mypassword",
             'date_register' => now(),
             'date_expiration' => now()->addDays(30),
             'date_validation' => now(),
-            'pin' => 'dadan'
+            'pin' => '123456'
         ]);
-
         DB::table('pending_register')->insert([
-            'email' => "henintsoapaul@gmail.com",
+            'email' => "frucodillefeu-1226@yopmail.com",
             'password' => "mypassword",
             'date_register' => now(),
             'date_expiration' => now()->addDays(30),
-            'pin' => 'damnubro'
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "giyoibrappoihou-3938@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "barauxinulli-4329@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "meiwoussadate-5662@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "boifoissecoullu-3728@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "yettennevuffu-9049@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "baviwagrouye-6787@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "bappoppotameu-6100@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'date_validation' => now(),
+            'pin' => '123456'
+        ]);
+        DB::table('pending_register')->insert([
+            'email' => "nopeummeuxoigrau-1855@yopmail.com",
+            'password' => "mypassword",
+            'date_register' => now(),
+            'date_expiration' => now()->addDays(30),
+            'pin' => '123456'
         ]);
     }
 }
