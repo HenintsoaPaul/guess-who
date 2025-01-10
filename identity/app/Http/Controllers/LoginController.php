@@ -2,17 +2,7 @@
 
 namespace App\Http\Controllers;
 
-/**
- * @OA\Info(
- *     title="API Guess Who",
- *     version="1.0.0",
- *     description="Documentation pour l'API Guess Who.",
- *     @OA\Contact(
- *         email="support@votre-site.com"
- *     )
- * )
- */
-
+use App\Http\Controllers\ApiController; 
 use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;
@@ -39,6 +29,8 @@ class LoginController extends Controller
      * @OA\Post(
      *     path="/api/login",
      *     summary="Login user",
+     *     description="Login utilisateur",
+     *     tags={"Authentification"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -107,7 +99,7 @@ class LoginController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/validate-pin",
+     *     path="/api/login/validate",
      *     summary="Validation du PIN",
      *     description="Valide le PIN envoyé par email et génère un token d'accès.",
      *     operationId="validatePin",
