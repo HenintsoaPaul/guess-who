@@ -4,3 +4,7 @@
     [x] recuperer la liste des ctyptos
     [x] pour chaque crypto cree un nouveau cours
     [x] enrgistrer les cours
+[x] recupere le cours actuelle
+    [x] recuperer le dernier cours pour chaque crypto
+        [x] grouper par crypto
+        [x] recuperer le cours la plus recente
