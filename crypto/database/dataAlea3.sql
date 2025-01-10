@@ -1,18 +1,18 @@
 ------ 10 utilisateurs
-INSERT INTO account (pseudo, email, password, fund) VALUES
-('Alice', 'alice@example.com', 'password123', 10000),
-('Bob', 'bob@example.com', 'password123', 12000),
-('Charlie', 'charlie@example.com', 'password123', 15000),
-('Diana', 'diana@example.com', 'password123', 8000),
-('Eve', 'eve@example.com', 'password123', 9000),
-('Frank', 'frank@example.com', 'password123', 7000),
-('Grace', 'grace@example.com', 'password123', 9500),
-('Hank', 'hank@example.com', 'password123', 11000),
-('Ivy', 'ivy@example.com', 'password123', 10500),
-('Jack', 'jack@example.com', 'password123', 11500);
+INSERT INTO account (pseudo, email, fund) VALUES
+('Alice', 'alice@example.com', 10000),
+('Bob', 'bob@example.com', 12000),
+('Charlie', 'charlie@example.com', 15000),
+('Diana', 'diana@example.com', 8000),
+('Eve', 'eve@example.com', 9000),
+('Frank', 'frank@example.com', 7000),
+('Grace', 'grace@example.com', 9500),
+('Hank', 'hank@example.com', 11000),
+('Ivy', 'ivy@example.com', 10500),
+('Jack', 'jack@example.com', 11500);
 
 ---- Cryptomonnaie 
-INSERT INTO crypto_currency (name, symbol) VALUES
+INSERT INTO crypto (name, symbol) VALUES
 ('Bitcoin', 'BTC'),
 ('Ethereum', 'ETH'),
 ('Tether', 'USDT'),
@@ -30,7 +30,7 @@ INSERT INTO transaction_type (name) VALUES
 ('Vente');
 
 ------ cours des cryptomonnaie
-INSERT INTO cours (price, daty, id_crypto_currency) VALUES
+INSERT INTO cours (price, daty, id_crypto) VALUES
 -- Cours pour Bitcoin (BTC)
 (43000, CURRENT_DATE - 4, 1),
 (43500, CURRENT_DATE - 3, 1),
@@ -156,7 +156,7 @@ INSERT INTO transaction (trans_date, trans_price, id_account_receiver, id_accoun
 (CURRENT_DATE, 1.02, 10, 7, 1); -- Achat de 500 USDT
 
 ----- DetailTransaction 
-INSERT INTO transaction_detail (quantity, detail_price, id_transaction, id_crypto_currency) VALUES
+INSERT INTO transaction_detail (quantity, detail_price, id_transaction, id_crypto) VALUES
 -- Détails pour Alice
 (1, 45000, 1, 1), -- 1 BTC vendu
 (1, 3200, 2, 2), -- 1 ETH acheté
