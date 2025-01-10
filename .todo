@@ -1,0 +1,6 @@
+## Metier Cours
+
+[x] genere de nouvelles cours
+    [x] recuperer la liste des ctyptos
+    [x] pour chaque crypto cree un nouveau cours
+    [x] enrgistrer les cours
