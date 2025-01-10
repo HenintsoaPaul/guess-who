@@ -28,14 +28,14 @@ public class SaleController {
 	return "sales/index";
     }
 
-	@GetMapping("/dispo")
-    public String goToListAchatDispo(Model model, HttpSession session) {
-	Integer idAccount = (Integer) session.getAttribute("id_account");
-	List<Sale> mySales = saleService.findAllSaleDetails(idAccount);
+	// @GetMapping("/dispo")
+    // public String goToListAchatDispo(Model model, HttpSession session) {
+	// Integer idAccount = (Integer) session.getAttribute("id_account");
+	// List<Sale> mySales = saleService.findAllSaleDetails(idAccount);
 
-	model.addAttribute("sales", mySales);
-	return "sales/index";
-    }
+	// model.addAttribute("sales", mySales);
+	// return "sales/index";
+    // }
 
     @GetMapping("/{id}")
     public String goToDetail(Model model, @PathVariable Integer id) {
