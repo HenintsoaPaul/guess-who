@@ -1,2 +1,3 @@
-# GestionRH
-Projet creation d'une application pour le processus RH
+# Crypto
+
+Plateforme d'echange de crypto-monnaie

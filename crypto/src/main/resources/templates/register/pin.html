@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Crypto</title>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="jumbotron text-center bg-primary text-white p-5 rounded">
+        <h1 class="display-4">Welcome Back!</h1>
+        <p class="lead">Please log in to continue.</p>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Confirmation PIN d'inscription</h2>
+
+                    <div>
+                        <p th:if="${msg}" class="text-danger">
+                            <span th:text="${msg}"></span>
+                        </p>
+                    </div>
+
+                    <form th:action="@{/register/pin/auth}" th:object="${registerRequest}" method="POST">
+                        <input type="hidden" class="form-control" th:field="*{pseudo}">
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email"
+                                   th:field="*{email}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pin" class="form-label">PIN</label>
+                            <input type="password" class="form-control" id="pin" placeholder="Enter your pin code"
+                                   th:field="*{pin}">
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Validate Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-primary text-white text-center p-4 mt-5">
+    <p>© 2025 Crypto. All Rights Reserved.</p>
+</footer>
+</body>
+</html>

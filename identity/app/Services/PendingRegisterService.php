@@ -7,23 +7,33 @@ use App\Models\Account;
 
 class PendingRegisterService
 {
-    
-    public static function validateAccountRegister(int $id_pending_register , string $pin){
-        $pending_register = self::getPendingRegisterById($id_pending_register);
+
+    /**
+     * @throws \Exception
+     */
+    public static function validateAccountRegister(string $email, string $pin): Account
+    {
+        $pending_register = PendingRegister::where('email', $email)->first();
         // Verifier que l'inscription a ete effectuer
-        if($pending_register == null ) {
-            throw new \Exception("Inscription invalid [".$id_pending_register."]");
+        if ($pending_register == null) {
+            throw new \Exception("PendingRegister introuvable. Veuillez vous enregister.");
         }
         // Verifier que l'inscription n'est pas encore valider
-        if($pending_register->date_validation != null){
-            throw new \Exception("Inscription deja valider");
+        if ($pending_register->date_validation != null) {
+            throw new \Exception("Inscription deja valider.");
         }
-        if( !self::verifyPin($pending_register,$pin)){
+        // Verifier que l'inscription n'est pas encore expiree
+        if ($pending_register->isExpired()) {
+            throw new \Exception("Inscription expiree. Enregistrez-vous de nouveau pour reinitialiser.");
+        }
+
+        if (!self::verifyPin($pending_register, $pin)) {
             throw new \Exception("Pin invalid");
         }
         $account = self::createAccountFromPendingRegister($pending_register);
         return $account;
     }
+
     /**
      * Récupérer un Pendingregister par son ID
      *

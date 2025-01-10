@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Crypto</title>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <div>
+        <h3 class="text-center">Vente</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${sale.getId()}">1</td>
+                <td th:text="${sale.getDateSale()}">Today</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h3 class="text-center">Details de la Vente</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Crypto</th>
+                <th>Quantite Vendu</th>
+                <th>Quantite Reste</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sd : ${saleDetails}">
+                <td th:text="${sd.getId()}">1</td>
+                <td th:text="${sd.getCrypto().getName()}">###</td>
+                <td th:text="${sd.getQuantity()}">###</td>
+                <td th:text="${sd.getQuantityLeft()}">###</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer class="bg-primary text-white text-center p-4 mt-5">
+    <p>© . All Rights Reserved.</p>
+</footer>
+</body>
+</html>

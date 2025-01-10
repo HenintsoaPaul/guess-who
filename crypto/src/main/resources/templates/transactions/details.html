@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Crypto</title>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h3 class="text-center">Transaction</h3>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${transaction.getId()}">1</td>
+            <td th:text="${transaction.getTransactionType().getName()}">Name</td>
+
+            <td th:text="${transaction.getTransDate()}">2023-01-01</td>
+            <td th:text="${transaction.getTransPrice()}">$100.00</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container mt-4">
+    <h3 class="text-center">Details</h3>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Crypto</th>
+            <th>Quantity</th>
+            <th>Prix total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="td : ${transactionDetails}">
+            <td th:text="${ td.getId()}">1</td>
+            <td th:text="${ td.getCryptoCurrency().getName()}">2023-01-01</td>
+            <td th:text="${ td.getQuantity()}">Sample Description</td>
+            <td th:text="${ td.getDetailPrice()}">$100.00</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer class="bg-primary text-white text-center p-4 mt-5">
+    <p>© 2025 Crypto. All Rights Reserved.</p>
+</footer>
+</body>
+</html>

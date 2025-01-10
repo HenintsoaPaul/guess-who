@@ -1,14 +1,16 @@
 package itu.crypto.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import itu.crypto.service.LoginService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
+@RequiredArgsConstructor
 public class HomeController {
-
-    @GetMapping("/")
-    public ModelAndView index() {
-        return new ModelAndView("index");  // Recherche index.jsp dans /WEB-INF/jsp/
+    @GetMapping
+    public String goToHome(Model model) {
+	return "index";
     }
 }

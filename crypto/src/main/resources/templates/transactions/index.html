@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Crypto</title>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <h3 class="text-center">Transaction List</h3>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${transactions}">
+            <td th:text="${transaction.getId()}">1</td>
+            <td th:text="${transaction.getTransactionType().getName()}">Name</td>
+
+            <td th:text="${transaction.getTransDate()}">2023-01-01</td>
+            <td th:text="${transaction.getTransPrice()}">$100.00</td>
+
+            <td>
+                <a th:href="@{/transactions/{id}(id=${transaction.getId()})}" class="btn btn-primary btn-sm">View
+                    Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer class="bg-primary text-white text-center p-4 mt-5">
+    <p>© . All Rights Reserved.</p>
+</footer>
+</body>
+</html>

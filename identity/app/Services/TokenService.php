@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\TimesService;
 use App\Models\Token;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,7 @@ class TokenService
      * @param int $length Longueur du token généré (par défaut : 64).
      * @return string Le nouveau token.
      */
-    public static function newToken(int $length = 64): string
+    private static function newToken(int $length = 64): string
     {
         if ($length <= 0) {
             throw new \InvalidArgumentException("La longueur du token doit être un entier positif.");
@@ -67,7 +68,27 @@ class TokenService
 
     public static function genExpirationDate()
     {
-        return TimesService::generateDate(now(), 3600 * 2);
+        $oneMinute = 60;
+        $oneHourInSecond = $oneMinute * 60;
+        $threeHours = $oneHourInSecond * 3;
+
+        $delay = $oneMinute * 5;
+        $delayInSecond = $delay + $threeHours;
+        return TimesService::generateDate(now(), $delayInSecond);
+    }
+
+    /**
+     * @return Carbon
+     */
+    public static function genExpirationDateForAuth(): Carbon
+    {
+        $oneMinute = 60;
+        $oneHourInSecond = $oneMinute * 60;
+        $threeHours = $oneHourInSecond * 3;
+
+        $delay = 90;
+        $delayInSecond = $delay + $threeHours;
+        return TimesService::generateDate(now(), $delayInSecond);
     }
 
     /**
