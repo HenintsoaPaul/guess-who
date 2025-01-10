@@ -24,9 +24,9 @@ public class CoursService {
      *
      * @return a list of the latest courses for each crypto.
      */
-    public List<Cours> findCurrentCours() {
-        return coursRepository.findLatestCoursForEachCrypto();
-    }
+    // public List<Cours> findCurrentCours() {
+    //     return coursRepository.findLatestCoursForEachCrypto();
+    // }
 
     /**
      * Generates a list of Cours objects for all available Crypto entities.

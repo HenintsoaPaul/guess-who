@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Historique Utilisateurs</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <h3 class="text-center">Historique des Utilisateurs</h3>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+        <tr>
+            <th>Utilisateur</th>
+            <th>Total Achat</th>
+            <th>Total Vente</th>
+            <th>Valeur Portefeuille</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${historique}">
+            <td th:text="${entry.user}">Utilisateur</td>
+            <td th:text="${entry.total_achat}">0.0</td>
+            <td th:text="${entry.total_vente}">0.0</td>
+            <td th:text="${entry.valeur_portefeuil}">0.0</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer class="bg-primary text-white text-center p-4 mt-5">
+    <p>&copy; Crypto. All Rights Reserved.</p>
+</footer>
+</body>
+</html>

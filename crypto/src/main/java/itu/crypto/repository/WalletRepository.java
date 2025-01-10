@@ -14,15 +14,17 @@ public interface WalletRepository extends JpaRepository<Wallet, Integer> {
     //    Wallet findWallet(Account account , Crypto crypto);
 
     @Query(value = "SELECT " +
-        "p.name, "+
-        "ca.rubrique, " +
-        "d.name " +
-    "FROM Product p " +
-    "JOIN age_product ap ON p.id_product = ap.id_product " +
-    "JOIN categorie_age ca ON ap.id_categorie_age  = ca.id_categorie_age " +
-    "JOIN disease_product dp ON p.id_product = dp.id_product " +
-    "JOIN disease d ON dp.id_disease = d.id_disease",
+        "a.pseudo, " +
+        "COALESCE(SUM(p.quantity), 0) AS totalAchat, " +
+        "COALESCE(SUM(sd.quantity), 0) AS totalVente, " +
+        "a.fund " +
+    "FROM account a " +
+    "LEFT JOIN purchase p ON p.id_account = a.id_account " +
+    "LEFT JOIN sale s ON s.id_account = a.id_account " +
+    "LEFT JOIN sale_detail sd ON sd.id_sale = s.id_sale " +
+    "GROUP BY a.pseudo, a.fund",
     nativeQuery = true)
-    List<Object[]> findAllProductDetails();
+    List<Object[]> findHistoriqueAllUser();
+
 
 }
