@@ -30,6 +30,16 @@
             "projectName": "gestionrh",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CryptoApplication<crypto>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "itu.crypto.CryptoApplication",
+            "projectName": "crypto",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
