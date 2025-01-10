@@ -28,16 +28,20 @@ VALUES ('Depot'),
        ('Vente'),
        ('Achat');
 
-INSERT INTO account (pseudo, email, fund)
-VALUES ('atlasss', 'henintsoapaul@gmail.com', 500);
+INSERT INTO account (email, pseudo, fund)
+VALUES ('henintsoapaul@gmail.com', 'atlasss', 500);
 
 -- wallet
 -- TODO: add triggers
 
--- transaction
-INSERT INTO transaction (trans_date, trans_price, id_account_receiver, id_account_source, id_transaction_type)
-VALUES ('2023-01-04', 50000, 1, 1, 1);
+-- sale
+INSERT INTO sale (date_sale, id_account)
+VALUES ('2023-01-04', 1),
+       ('2023-01-05', 1);
 
--- transaction_detail
-INSERT INTO transaction_detail (quantity, detail_price, id_transaction, id_crypto_currency)
-values (0, 50000, 1, 1);
+-- sale_detail
+INSERT INTO sale_detail (quantity, quantity_left, id_crypto, id_sale)
+values (5, 5, 1, 1),
+       (4, 4, 2, 1),
+       (5, 5, 1, 2),
+       (4, 4, 2, 2);

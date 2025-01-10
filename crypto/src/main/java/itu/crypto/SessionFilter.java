@@ -1,11 +1,10 @@
 package itu.crypto;
 
+import itu.crypto.service.SessionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SessionFilter extends OncePerRequestFilter {
     private final CryptoConfigProperties cryptoConfigProperties;
+    private final SessionService sessionService;
 
     private boolean pathMatchesPattern(String path, String pattern) {
 	if (pattern.endsWith("/*")) { // Wildcard match
@@ -80,9 +80,7 @@ public class SessionFilter extends OncePerRequestFilter {
 	boolean isExpired = d.isBefore(LocalDateTime.now());
 	if (isExpired) {
 	    // Supprimer la session
-	    System.out.println("Remove expired token...");
-	    request.getSession().removeAttribute("token");
-	    request.getSession().removeAttribute("token_expiration");
+	    sessionService.viderSession(request.getSession());
 
 	    System.out.println("Token is expired. Expiration date: " + d + " | current date: " + LocalDateTime.now());
 	}

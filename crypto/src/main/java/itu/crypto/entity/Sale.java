@@ -13,21 +13,19 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Entity
-@Table(name = "cours")
-public class Cours {
+@Table(name = "sale")
+public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cours", nullable = false)
+    @Column(name = "id_sale", nullable = false)
     private Integer id;
 
-    @Column(name = "pu", nullable = false)
-    private double pu;
-
-    @Column(name = "date_cours", nullable = false)
-    private LocalDate dateCours;
+    @Column(name = "date_sale")
+    private LocalDate dateSale;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_crypto", nullable = false)
-    private Crypto crypto;
+    @JoinColumn(name = "id_account", nullable = false)
+    @ToString.Exclude
+    private Account account;
 
 }

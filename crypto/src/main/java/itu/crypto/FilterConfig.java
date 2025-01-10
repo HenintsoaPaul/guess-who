@@ -1,5 +1,6 @@
 package itu.crypto;
 
+import itu.crypto.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +12,11 @@ import org.springframework.web.client.RestTemplate;
 public class FilterConfig {
     private final RestTemplate restTemplate = new RestTemplate();
     private final CryptoConfigProperties cryptoConfigProperties;
+    private final SessionService sessionService;
 
     @Bean
     public FilterRegistrationBean<SessionFilter> sessionFilter() {
-	SessionFilter filter = new SessionFilter(cryptoConfigProperties);
+	SessionFilter filter = new SessionFilter(cryptoConfigProperties, sessionService);
 	FilterRegistrationBean<SessionFilter> registrationBean = new FilterRegistrationBean<>(filter);
 
 	registrationBean.addUrlPatterns("/*"); // Appliquer à toutes les URLs ou spécifiez un chemin particulier.

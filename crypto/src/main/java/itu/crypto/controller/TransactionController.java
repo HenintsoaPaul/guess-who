@@ -1,7 +1,7 @@
 package itu.crypto.controller;
 
 import itu.crypto.entity.Transaction;
-import itu.crypto.repository.CryptoCurrencyRepository;
+import itu.crypto.repository.CryptoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final TransactionDetailService transactionDetailService;
     private final CoursService coursService;
-    private final CryptoCurrencyRepository cryptoCurrencyRepository;
+    private final CryptoRepository cryptoRepository;
 
     @GetMapping("/test")
     public String secureEndpoint() {
