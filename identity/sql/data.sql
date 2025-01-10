@@ -1,20 +1,27 @@
-INSERT INTO pending_register (email, password, date_register, date_expiration, date_validation, pin)
-VALUES
-('testuser1@example.com', 'hashed_password_1', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
-('antema.fy01@gmail.com', 'hashed_password_1', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234');
-
 INSERT INTO type_account_state (val)
-VALUES
-('Active'),
-('Suspended');
+VALUES ('Active'),
+       ('Suspended');
 
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+INSERT INTO pending_register (email, password, date_register, date_expiration, date_validation, pin)
+VALUES ('alice@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('bob@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('charlie@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('diana@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('eve@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('frank@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('grace@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('hank@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('ivy@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234'),
+       ('jack@example.com', 'mypassword', NOW(), NOW() + INTERVAL '30 days', NOW(), '1234');
+
 INSERT INTO account (email, password, attempt, max_attempt, id_pending_register, id_type_account_state)
-VALUES
-('user1@example.com', crypt('hashed_password_1', gen_salt('bf')), 0, 3, 1, 1),
-('antema.fy01@gmail.com', crypt('hashed_password_1', gen_salt('bf')), 0, 3, 2, 1);
-
-INSERT INTO pending_auth (date_expiration, date_creation, pin, id_account)
-VALUES
-(NOW() + INTERVAL '30 days', NOW(), '12345', 1),
-(NOW() + INTERVAL '20 days', NOW(), '67890', 2);
+VALUES ('Alice', 'alice@example.com', 'mypassword', 3, 0, 1, 10000),
+       ('Bob', 'bob@example.com', 'mypassword', 3, 0, 2, 12000),
+       ('Charlie', 'charlie@example.com', 'mypassword', 3, 0, 3, 15000),
+       ('Diana', 'diana@example.com', 'mypassword', 3, 0, 4, 8000),
+       ('Eve', 'eve@example.com', 'mypassword', 3, 0, 5, 9000),
+       ('Frank', 'frank@example.com', 'mypassword', 3, 0, 6, 7000),
+       ('Grace', 'grace@example.com', 'mypassword', 3, 0, 7, 9500),
+       ('Hank', 'hank@example.com', 'mypassword', 3, 0, 8, 11000),
+       ('Ivy', 'ivy@example.com', 'mypassword', 3, 0, 9, 10500),
+       ('Jack', 'jack@example.com', 'mypassword', 3, 0, 10, 11500);
