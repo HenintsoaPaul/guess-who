@@ -1,0 +1,19 @@
+-Transaction :
+  -Depot :
+          -Affichage : fund actuelle, fund a deposse
+          -Metier : 
+                    -insert mv_fund
+                    -getfondactuelle + fund a deposse
+
+  -Retrait :
+          -Affichage : fund actuelle, fund a deposse
+          -Metier : 
+                    -insert mv_fund
+                    -getfondactuelle - fund a deposse
+
+-Conversion :
+  -Metier : 
+            -CryptoToDollar
+              -getcours()$ * quantite
+            -DollarToCrypto
+              -
