@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\ApiController; 
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
 use App\Services\TokenService;
@@ -14,10 +15,6 @@ use Illuminate\Support\Facades\DB;
 use App\Services\PendingRegisterService;
 use Illuminate\Http\Request;
 
-/**
- * @OA\Info(title="API Guess Who", version="1.0")
- * @OA\Server(url="http://localhost:8000")
- */
 class RegisterController extends Controller
 {
     protected $jsonResponse;

@@ -2,12 +2,10 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\RegisterController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PendingAuthController;
 use App\Http\Controllers\TokenController;
-use Illuminate\Support\Str;
 
 
 /*
@@ -47,7 +45,6 @@ Route::get('token', [TokenController::class, 'index']); // afficher un token gé
 Route::get('token/gen/{id_account}', [TokenController::class, 'generate']); // générer un token pour un account
 Route::get('token/regen/{id_account}', [TokenController::class, 'regenerate']); // régénérer un token pour un account
 
-//Todo: MBOLA TSY METY
 Route::get('/validate-token', function (Request $request) {
     $token = $request->header('Authorization');
 
