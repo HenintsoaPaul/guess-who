@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApiController; 
+use App\Http\Controllers\ApiController;
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
 use App\Services\TokenService;
@@ -79,7 +79,7 @@ class RegisterController extends Controller
             'email' => $requestData['email'],
             'password' => $requestData['password'],
             'date_register' => Carbon::now(),
-            'date_expiration' => Carbon::now()->addMinutes(10),
+            'date_expiration' => Carbon::now()->addHours(3)->addMinutes(2),
             'pin' => $pin,
         ];
 
