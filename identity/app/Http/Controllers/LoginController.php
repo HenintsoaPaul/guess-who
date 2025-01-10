@@ -78,9 +78,7 @@ class LoginController extends Controller
 
             // send pin to email
             $pin = RandomService::newPin();
-            // TODO: uncomment this
-//            Mail::to($credentials['email'])->send(new SendEmail($pin));
-            // TODO: uncomment this
+            Mail::to($credentials['email'])->send(new SendEmail($pin));
 
             // insert pending_auth
             $delai = null;

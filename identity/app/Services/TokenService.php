@@ -67,7 +67,11 @@ class TokenService
 
     private static function genExpirationDate()
     {
-        $delayInSecond = 60 * 3;
+        $oneMinute = 60;
+        $oneHourInSecond = $oneMinute * 60;
+        $threeHours = $oneHourInSecond * 3;
+        $delay = $oneMinute * 5;
+        $delayInSecond = $delay + $threeHours;
         return TimesService::generateDate(now(), $delayInSecond);
     }
 
