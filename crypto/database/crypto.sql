@@ -5,6 +5,13 @@ CREATE TABLE crypto(
    PRIMARY KEY(id_crypto)
 );
 
+CREATE TABLE commission(
+   id_commission SERIAL,
+   name VARCHAR(50)  NOT NULL,
+   val NUMERIC(15,2)   NOT NULL,
+   PRIMARY KEY(id_commission)
+);
+
 CREATE TABLE cours(
    id_cours SERIAL,
    date_cours TIMESTAMP NOT NULL,
@@ -24,7 +31,6 @@ CREATE TABLE account(
    id_account SERIAL,
    email VARCHAR(50)  NOT NULL,
    pseudo VARCHAR(50) ,
-   password VARCHAR(250)  NOT NULL,
    fund NUMERIC(15,2)   NOT NULL,
    PRIMARY KEY(id_account)
 );
