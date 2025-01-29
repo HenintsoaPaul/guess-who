@@ -3,16 +3,13 @@ package itu.crypto.service.transaction;
 import itu.crypto.entity.Account;
 import itu.crypto.entity.Crypto;
 import itu.crypto.entity.MvWallet;
-import itu.crypto.repository.CryptoRepository;
 import itu.crypto.repository.transaction.MvWalletRepository;
 import itu.crypto.service.AccountService;
 import itu.crypto.service.CryptoService;
-import itu.crypto.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 @Service

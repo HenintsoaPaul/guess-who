@@ -24,8 +24,10 @@ public class CoursService {
      *
      * @return a list of the latest courses for each crypto.
      */
-    public List<Cours> findCurrentCours() {
-        return coursRepository.findLatestCoursForEachCrypto();
+    @Deprecated
+    public List<Cours> findCurrentCours() throws Exception {
+//        return coursRepository.findLatestCoursForEachCrypto();
+        throw new Exception("Not Impleemented");
     }
 
     /**

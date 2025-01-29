@@ -24,4 +24,8 @@ public class Crypto {
     @Column(name = "symbol", nullable = false, length = 5)
     private String symbol;
 
+    public String sout() {
+        return name + " (" + symbol + ")";
+    }
+
 }

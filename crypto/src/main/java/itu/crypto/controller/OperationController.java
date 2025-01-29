@@ -38,11 +38,9 @@ public class OperationController {
         }
         if (idCrypto != null) {
             mvWallets.retainAll(mvWalletService.findByIdCrypto(idCrypto));
-            model.addAttribute("idCrypto", idCrypto);
         }
         if (idAccount != null) {
             mvWallets.retainAll(mvWalletService.findByIdAccount(idAccount));
-            model.addAttribute("idAccount", idAccount);
         }
 
         model.addAttribute("mvWallets", mvWallets);
