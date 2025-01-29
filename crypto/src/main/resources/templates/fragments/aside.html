@@ -1,0 +1,208 @@
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-heading">Pages</li>
+
+        <!-- Form navs -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#sales-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cart"></i>
+                <span>Ventes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="sales-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/sales}">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/sales/add}">
+                        <i class="bi bi-circle"></i>
+                        <span>Ajout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#commission-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cart"></i>
+                <span>Commissions</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="commission-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/commissions }">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Stocks -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#stocks-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-archive"></i>
+                <span>Etat de stocks</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="stocks-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/stocks/ingredients}">
+                        <i class="bi bi-circle"></i>
+                        <span>Stock d'Ingredients</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/stocks/products}">
+                        <i class="bi bi-circle"></i>
+                        <span>Stock de Produits</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Production -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#productions-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-box"></i>
+                <span>Productions</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="productions-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/products/productions}">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/products/productions/add}">
+                        <i class="bi bi-circle"></i>
+                        <span>Ajout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Categories -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#productCategories-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-box"></i>
+                <span>Categories</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="productCategories-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/products/categories}">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/products/categories/add}">
+                        <i class="bi bi-circle"></i>
+                        <span>Ajout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Prix -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#productPrices-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-box"></i>
+                <span>Prix Produits</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="productPrices-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/products/prices}">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/products/prices/add}">
+                        <i class="bi bi-circle"></i>
+                        <span>Ajout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Produits -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#products-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-amazon"></i>
+                <span>Produits</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="products-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/products}">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/products/productions/add}">
+                        <i class="bi bi-circle"></i>
+                        <span>Ajout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Ingredients -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#ingredients-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-activity"></i>
+                <span>Ingredients</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="ingredients-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/ingredients}">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/ingredients/add}">
+                        <i class="bi bi-circle"></i>
+                        <span>Ajout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Unites -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#units-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-unity"></i>
+                <span>Unites</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="units-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{/units}">
+                        <i class="bi bi-circle"></i>
+                        <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/units/add}">
+                        <i class="bi bi-circle"></i>
+                        <span>Ajout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
+
+</aside>
