@@ -135,3 +135,13 @@ CREATE TABLE mv_wallet
     FOREIGN KEY (id_wallet) REFERENCES wallet (id_wallet),
     FOREIGN KEY (id_type_mv_wallet) REFERENCES type_mv_wallet (id_type_mv_wallet)
 );
+
+CREATE TABLE crypto_fav
+(
+    id_crypto  INTEGER,
+    id_account INTEGER,
+    date_fav   TIMESTAMP,
+    PRIMARY KEY (id_crypto, id_account),
+    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
