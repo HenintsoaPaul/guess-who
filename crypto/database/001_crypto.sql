@@ -83,7 +83,6 @@ CREATE TABLE wallet
     id_crypto  INTEGER NOT NULL,
     id_account INTEGER NOT NULL,
     PRIMARY KEY (id_wallet),
-    UNIQUE (id_account),
     FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
     FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
