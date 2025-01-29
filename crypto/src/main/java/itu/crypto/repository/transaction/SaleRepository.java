@@ -1,4 +1,4 @@
-package itu.crypto.repository;
+package itu.crypto.repository.transaction;
 
 import itu.crypto.entity.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
