@@ -27,8 +27,12 @@ public class Purchase {
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_account", nullable = false)
-    private Account account;
+    @JoinColumn(name = "id_account_purchaser", nullable = false)
+    private Account accountPurchaser;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_account_seller", nullable = false)
+    private Account accountSeller;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_sale_detail", nullable = false)

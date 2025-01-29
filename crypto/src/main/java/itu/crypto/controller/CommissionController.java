@@ -1,20 +1,10 @@
 package itu.crypto.controller;
 
-import itu.crypto.dto.SaleFormData;
-import itu.crypto.entity.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
 import itu.crypto.repository.CommissionRepository;
-import itu.crypto.repository.CryptoRepository;
-import itu.crypto.service.AccountService;
-import itu.crypto.service.SaleService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,12 +18,7 @@ public class CommissionController {
 	return "commissions/index";
     }
 
-//    @GetMapping("/{id}")
-//    public String goToUpdate(Model model, @PathVariable Integer id) {
-////	Sale sale = saleService.findById(id);
-////	List<SaleDetail> saleDetails = saleService.findAllSaleDetails(sale);
-//
-//
+
 ////	model.addAttribute("", sale);
 ////	model.addAttribute("saleDetails", saleDetails);
 //

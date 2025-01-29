@@ -1,0 +1,88 @@
+<div th:replace="~{fragments/_layout}"></div>
+
+<main id="main" class="main">
+    <!-- User detail -->
+    <div class="my-2">
+        <h2>Details de l'utilisateur</h2>
+        <div>
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Email</th>
+                    <th>Fonds (Ar)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${account.getPseudo()}"></td>
+                    <td th:text="${account.getEmail()}"></td>
+                    <td th:text="${account.getFund()}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <p>blabla ...</p>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="my-2">
+        <form th:action="@{/operations/account}" method="GET" class="form-inline mb-3">
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+            <input type="hidden" name="idAccount" th:value="${idAccount}">
+
+            <div class="row g-10">
+                <!-- Filter by date -->
+                <div class="row g-10">
+                    <div class="col-4 card px-3 py-3">
+                        <label>Date Min :</label>
+                        <input type="date" name="dateMin" th:value="${dateMin}">
+                    </div>
+                    <div class="col-4 card px-3 py-3">
+                        <label>Date Max :</label>
+                        <input type="date" name="dateMax" th:value="${dateMax}">
+                    </div>
+                </div>
+
+                <!-- Filter by crypto -->
+                <div class="row g-10">
+                    <div class="col-4 card px-3 py-3">
+                        <label>Crypto :</label>
+                        <select name="idCrypto" id="cryptos" class="form-control mb-4 col-4">
+                            <option value="">Choisir crypto</option>
+                            <option th:each="cry:${cryptos}"
+                                    th:value="${cry.getId()}"
+                                    th:text="${cry.getName()}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Data -->
+    <div class="container mt-4">
+        <h3 class="text-center">Historique des operations de l'utilisateurs</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Crypto</th>
+                <th>Date</th>
+                <th>Quantite</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mvt : ${mvWallets}">
+                <td th:text="${mvt.getId()}"></td>
+                <td th:text="${mvt.getWallet().getCrypto().sout()}"></td>
+                <td th:text="${mvt.getDateMv()}"></td>
+                <td th:text="${mvt.getQuantity()}"></td>
+                <td th:text="${mvt.getTypeMvWallet().getName()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</html>
