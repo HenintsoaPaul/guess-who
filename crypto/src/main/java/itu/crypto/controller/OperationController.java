@@ -19,6 +19,8 @@ public class OperationController {
 
     @GetMapping
     public String getAll(Model model,
+                         @RequestParam(required = false) Integer idCrypto,
+                         @RequestParam(required = false) Integer idAccount,
                          @RequestParam(required = false) String dateMin,
                          @RequestParam(required = false) String dateMax) {
         List<MvWallet> mvWallets = mvWalletService.findAll();
@@ -27,13 +29,25 @@ public class OperationController {
         if (dateMin != null && !dateMin.isEmpty()) {
             dd = LocalDate.parse(dateMin, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             mvWallets.retainAll(mvWalletService.findAllAfterDateMin(dd));
+            model.addAttribute("dateMin", dateMin);
         }
         if (dateMax != null && !dateMax.isEmpty()) {
             dd = LocalDate.parse(dateMax, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             mvWallets.retainAll(mvWalletService.findAllBeforeDateMax(dd));
+            model.addAttribute("dateMax", dateMax);
+        }
+        if (idCrypto != null) {
+            mvWallets.retainAll(mvWalletService.findByIdCrypto(idCrypto));
+            model.addAttribute("idCrypto", idCrypto);
+        }
+        if (idAccount != null) {
+            mvWallets.retainAll(mvWalletService.findByIdAccount(idAccount));
+            model.addAttribute("idAccount", idAccount);
         }
 
         model.addAttribute("mvWallets", mvWallets);
+        model.addAttribute("cryptos", mvWalletService.findAllCrypto());
+        model.addAttribute("accounts", mvWalletService.findAllAccount());
         return "operations/index";
     }
 

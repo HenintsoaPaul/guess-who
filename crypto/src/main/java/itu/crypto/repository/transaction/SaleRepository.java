@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
-    @Query("SELECT s FROM Sale s WHERE s.account.idAccount = :idAccount")
+    @Query("SELECT s FROM Sale s WHERE s.account.id = :idAccount")
     List<Sale> findAllByIdAccount(Integer idAccount);
 }
