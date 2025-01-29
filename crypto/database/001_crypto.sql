@@ -1,39 +1,3 @@
-CREATE TABLE commission_type
-(
-    id_commission_type SERIAL,
-    name               TEXT NOT NULL,
-    symbol             VARCHAR(5),
-    PRIMARY KEY (id_commission_type),
-    UNIQUE (name),
-    UNIQUE (symbol)
-);
-
-CREATE TABLE commission
-(
-    id_commission      SERIAL,
-    val                NUMERIC(15, 2) NOT NULL,
-    daty               DATE           NOT NULL,
-    id_commission_type INTEGER        NOT NULL,
-    PRIMARY KEY (id_commission),
-    FOREIGN KEY (id_commission_type) REFERENCES commission_type (id_commission_type)
-);
-
-CREATE TABLE type_mv_fund
-(
-    id_type_mv_fund SERIAL,
-    name            VARCHAR(250) NOT NULL,
-    PRIMARY KEY (id_type_mv_fund),
-    UNIQUE (name)
-);
-
-CREATE TABLE type_mv_wallet
-(
-    id_type_mv_wallet SERIAL,
-    name              VARCHAR(250) NOT NULL,
-    PRIMARY KEY (id_type_mv_wallet),
-    UNIQUE (name)
-);
-
 CREATE TABLE crypto
 (
     id_crypto SERIAL,
@@ -57,16 +21,34 @@ CREATE TABLE cours
 (
     id_cours   SERIAL,
     pu         NUMERIC(15, 2) NOT NULL,
-    date_cours DATE           NOT NULL,
+    date_cours TIMESTAMP      NOT NULL,
     id_crypto  INTEGER        NOT NULL,
     PRIMARY KEY (id_cours),
     FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto)
 );
 
+CREATE TABLE commission_type
+(
+    id_commission_type SERIAL,
+    name               TEXT NOT NULL,
+    symbol             VARCHAR(5),
+    PRIMARY KEY (id_commission_type),
+    UNIQUE (name),
+    UNIQUE (symbol)
+);
+
+CREATE TABLE type_mv_fund
+(
+    id_type_mv_fund SERIAL,
+    name            VARCHAR(250) NOT NULL,
+    PRIMARY KEY (id_type_mv_fund),
+    UNIQUE (name)
+);
+
 CREATE TABLE mv_fund
 (
     id_mv_fund      SERIAL,
-    date_mv         DATE           NOT NULL,
+    date_mv         TIMESTAMP      NOT NULL,
     amount          NUMERIC(15, 2) NOT NULL,
     id_source       INTEGER,
     id_type_mv_fund INTEGER        NOT NULL,
@@ -76,34 +58,19 @@ CREATE TABLE mv_fund
     FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
-CREATE TABLE wallet
+CREATE TABLE type_mv_wallet
 (
-    id_wallet  SERIAL,
-    quantity   INTEGER,
-    id_crypto  INTEGER NOT NULL,
-    id_account INTEGER NOT NULL,
-    PRIMARY KEY (id_wallet),
-    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
-    FOREIGN KEY (id_account) REFERENCES account (id_account)
-);
-
-CREATE TABLE mv_wallet
-(
-    id_mv_wallet      SERIAL,
-    date_mv           DATE    NOT NULL,
-    quantity_crypto   INTEGER NOT NULL,
-    id_wallet         INTEGER NOT NULL,
-    id_type_mv_wallet INTEGER NOT NULL,
-    PRIMARY KEY (id_mv_wallet),
-    FOREIGN KEY (id_wallet) REFERENCES wallet (id_wallet),
-    FOREIGN KEY (id_type_mv_wallet) REFERENCES type_mv_wallet (id_type_mv_wallet)
+    id_type_mv_wallet SERIAL,
+    name              VARCHAR(250) NOT NULL,
+    PRIMARY KEY (id_type_mv_wallet),
+    UNIQUE (name)
 );
 
 CREATE TABLE sale
 (
     id_sale    SERIAL,
-    date_sale  DATE    NOT NULL,
-    id_account INTEGER NOT NULL,
+    date_sale  TIMESTAMP NOT NULL,
+    id_account INTEGER   NOT NULL,
     PRIMARY KEY (id_sale),
     FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
@@ -120,10 +87,21 @@ CREATE TABLE sale_detail
     FOREIGN KEY (id_sale) REFERENCES sale (id_sale)
 );
 
+CREATE TABLE wallet
+(
+    id_wallet  SERIAL,
+    quantity   INTEGER,
+    id_crypto  INTEGER NOT NULL,
+    id_account INTEGER NOT NULL,
+    PRIMARY KEY (id_wallet),
+    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
 CREATE TABLE purchase
 (
     id_purchase          SERIAL,
-    date_purchase        DATE           NOT NULL,
+    date_purchase        TIMESTAMP      NOT NULL,
     total_price          NUMERIC(15, 2) NOT NULL,
     unit_price           NUMERIC(15, 2) NOT NULL,
     quantity_crypto      INTEGER        NOT NULL,
@@ -134,4 +112,26 @@ CREATE TABLE purchase
     FOREIGN KEY (id_sale_detail) REFERENCES sale_detail (id_sale_detail),
     FOREIGN KEY (id_account_seller) REFERENCES account (id_account),
     FOREIGN KEY (id_account_purchaser) REFERENCES account (id_account)
+);
+
+CREATE TABLE commission
+(
+    id_commission      SERIAL,
+    val                NUMERIC(15, 2) NOT NULL,
+    daty               TIMESTAMP      NOT NULL,
+    id_commission_type INTEGER        NOT NULL,
+    PRIMARY KEY (id_commission),
+    FOREIGN KEY (id_commission_type) REFERENCES commission_type (id_commission_type)
+);
+
+CREATE TABLE mv_wallet
+(
+    id_mv_wallet      SERIAL,
+    date_mv           TIMESTAMP NOT NULL,
+    quantity_crypto   INTEGER   NOT NULL,
+    id_wallet         INTEGER   NOT NULL,
+    id_type_mv_wallet INTEGER   NOT NULL,
+    PRIMARY KEY (id_mv_wallet),
+    FOREIGN KEY (id_wallet) REFERENCES wallet (id_wallet),
+    FOREIGN KEY (id_type_mv_wallet) REFERENCES type_mv_wallet (id_type_mv_wallet)
 );
