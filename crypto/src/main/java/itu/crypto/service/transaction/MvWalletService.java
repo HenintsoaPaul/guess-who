@@ -43,11 +43,11 @@ public class MvWalletService {
         return mvWalletRepository.findAllBeforeDateMax(dateMax);
     }
 
-    public List<MvWallet> findByIdCrypto(Integer idCrypto) {
+    public List<MvWallet> findAllByIdCrypto(Integer idCrypto) {
         return mvWalletRepository.findAllByIdCrypto(idCrypto);
     }
 
-    public List<MvWallet> findByIdAccount(Integer idAccount) {
+    public List<MvWallet> findAllByIdAccount(Integer idAccount) {
         return mvWalletRepository.findAllByIdAccount(idAccount);
     }
 }
