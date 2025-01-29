@@ -1,7 +1,6 @@
 package itu.crypto.service;
 
 import itu.crypto.entity.Account;
-import itu.crypto.entity.Cours;
 import itu.crypto.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,5 +33,9 @@ public class AccountService {
 
     public Account findById(Integer id) {
 	return accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Account not found"));
+    }
+
+    public List<Account> findAll() {
+        return accountRepository.findAll();
     }
 }

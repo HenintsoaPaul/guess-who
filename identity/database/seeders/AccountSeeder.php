@@ -15,70 +15,70 @@ class AccountSeeder extends Seeder
     public function run()
     {
         DB::table('account')->insert([
-            "email" => "alice@gmail.com",
+            "email" => "rocruxappafra-4143@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 1,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "bob@gmail.com",
+            "email" => "frucodillefeu-1226@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 2,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "charlie@gmail.com",
+            "email" => "giyoibrappoihou-3938@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 3,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "diana@gmail.com",
+            "email" => "barauxinulli-4329@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 4,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "eve@gmail.com",
+            "email" => "meiwoussadate-5662@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 5,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "frank@gmail.com",
+            "email" => "boifoissecoullu-3728@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 6,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "grace@gmail.com",
+            "email" => "yettennevuffu-9049@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 7,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "hank@gmail.com",
+            "email" => "baviwagrouye-6787@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 8,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "ivy@gmail.com",
+            "email" => "bappoppotameu-6100@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 9,
             "id_type_account_state" => 1,
             "attempt" => 0,
         ]);
         DB::table('account')->insert([
-            "email" => "jack@gmail.com",
+            "email" => "nopeummeuxoigrau-1855@yopmail.com",
             "password" => "mypassword",
             "id_pending_register" => 10,
             "id_type_account_state" => 1,

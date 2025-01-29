@@ -11,7 +11,7 @@ public class Account {
     @Id
     @Column(name = "id_account", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAccount;
+    private Integer id;
 
     @Column(name = "pseudo", nullable = false, length = 250)
     private String pseudo;

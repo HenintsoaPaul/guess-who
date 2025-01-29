@@ -73,7 +73,7 @@ public class LoginController {
 
 	    // Init new Session
 	    sessionService.viderSession(session);
-	    sessionService.initSession(session, myAccount.getIdAccount(), token, tokenExpiration);
+	    sessionService.initSession(session, myAccount.getId(), token, tokenExpiration);
 
 	    // goto home page
 	    return "index";
