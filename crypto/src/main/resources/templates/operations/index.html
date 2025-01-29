@@ -2,7 +2,25 @@
 
 <main id="main" class="main">
     <!-- Filtres -->
-    <div></div>
+    <div class="my-2">
+        <form th:action="@{/operations}" method="GET" class="form-inline mb-3">
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+
+            <div class="row g-10">
+                <!-- Filter by date -->
+                <div class="row g-10">
+                    <div class="col-4 card px-3 py-3">
+                        <label>Date Min :</label>
+                        <input type="date" name="dateMin">
+                    </div>
+                    <div class="col-4 card px-3 py-3">
+                        <label>Date Max :</label>
+                        <input type="date" name="dateMax">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 
     <!-- Data -->
     <div class="container mt-4">
