@@ -42,6 +42,7 @@ public class OperationController {
         model.addAttribute("cryptos", mvWalletService.findAllCrypto());
         model.addAttribute("mvWallets", mvWalletService.findAllByIdAccount(id));
         model.addAttribute("idAccount", id);
+        model.addAttribute("account", mvWalletService.findAccountById(id));
         return "operations/by-account";
     }
 
@@ -58,6 +59,8 @@ public class OperationController {
         model.addAttribute("cryptos", mvWalletService.findAllCrypto());
         model.addAttribute("mvWallets", mvWallets);
         model.addAttribute("idAccount", idAccount);
+        model.addAttribute("account", mvWalletService.findAccountById(idAccount));
+
         return "operations/by-account";
     }
 

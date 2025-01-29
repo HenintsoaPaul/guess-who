@@ -31,6 +31,10 @@ public class MvWalletService {
         return accountService.findAll();
     }
 
+    public Account findAccountById(Integer id) {
+        return accountService.findById(id);
+    }
+
     public MvWallet findById(Integer id) throws Exception {
         return mvWalletRepository.findById(id).orElseThrow(() -> new Exception("MvWallet not found"));
     }

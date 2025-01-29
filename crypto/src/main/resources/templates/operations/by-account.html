@@ -5,6 +5,22 @@
     <div class="my-2">
         <h2>Details de l'utilisateur</h2>
         <div>
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Email</th>
+                    <th>Fonds (Ar)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${account.getPseudo()}"></td>
+                    <td th:text="${account.getEmail()}"></td>
+                    <td th:text="${account.getFund()}"></td>
+                </tr>
+                </tbody>
+            </table>
             <p>blabla ...</p>
         </div>
     </div>
