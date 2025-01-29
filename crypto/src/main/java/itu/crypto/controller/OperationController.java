@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/operations")
 public class OperationController {
-//    private final TransactionService transactionService;
     private final MvWalletService mvWalletService;
 
     @GetMapping
@@ -22,7 +21,6 @@ public class OperationController {
     @GetMapping("/{id}")
     public String detail(Model model, @PathVariable Integer id) throws Exception {
         model.addAttribute("mvWallet", mvWalletService.findById(id));
-//        model.addAttribute("transactionDetails", transactionDetailService.findAllByTransaction(trans));
         return "operations/by-user";
     }
 }

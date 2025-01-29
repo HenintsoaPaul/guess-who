@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Crypto</title>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+
+<!-- Filtres -->
+<div></div>
+
+<!-- Data -->
+<div class="container mt-4">
+    <h3 class="text-center">Historique des operations</h3>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Utilisateur</th>
+            <th>Date</th>
+            <th>Quantite</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mvt : ${mvWallets}">
+            <td th:text="${mvt.getId()}"></td>
+            <td th:text="${mvt.getWallet().getAccount().getPseudo()}"></td>
+            <td th:text="${mvt.getDateMv()}"></td>
+            <td th:text="${mvt.getQuantity()}"></td>
+            <td th:text="${mvt.getTypeMvWallet().getName()}"></td>
+
+            <td>
+                <a th:href="@{/operations/{id}(id=${mvt.getId()})}" class="btn btn-primary btn-sm">Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer class="bg-primary text-white text-center p-4 mt-5">
+    <p>© . All Rights Reserved.</p>
+</footer>
+</body>
+</html>
