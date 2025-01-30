@@ -1,14 +1,14 @@
-package itu.crypto.entity;
+package itu.crypto.entity.commission;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString
 @Entity
 @Table(name = "commission")
@@ -18,10 +18,14 @@ public class Commission {
     @Column(name = "id_commission", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 250)
-    private String name;
-
     @Column(name = "val", nullable = false, length = 250)
-    private double val;
+    private Double val;
+
+    @Column(name = "daty", nullable = false, length = 250)
+    private LocalDate addDate;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_commission_type", nullable = false)
+    private CommissionType commissionType;
 
 }
