@@ -12,17 +12,17 @@ import java.time.LocalDateTime;
 @Data
 @ToString
 @Entity
-@Table(name = "commission")
-public class Commission {
+@Table(name = "commission_rate")
+public class CommissionRate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_commission", nullable = false)
+    @Column(name = "id_commission_rate", nullable = false)
     private Integer id;
 
-    @Column(name = "val", nullable = false, length = 250)
-    private Double val;
+    @Column(name = "rate", nullable = false)
+    private Double rate;
 
-    @Column(name = "daty", nullable = false, length = 250)
+    @Column(name = "add_date", nullable = false, length = 250)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime addDate;
 

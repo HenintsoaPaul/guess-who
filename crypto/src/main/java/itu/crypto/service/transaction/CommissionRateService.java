@@ -1,8 +1,8 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.entity.commission.Commission;
+import itu.crypto.entity.commission.CommissionRate;
 import itu.crypto.entity.commission.CommissionType;
-import itu.crypto.repository.transaction.CommissionRepository;
+import itu.crypto.repository.transaction.CommissionRateRepository;
 import itu.crypto.repository.transaction.CommissionTypeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,27 +13,27 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CommissionService {
+public class CommissionRateService {
 
-    private final CommissionRepository commissionRepository;
+    private final CommissionRateRepository commissionRateRepository;
     private final CommissionTypeRepository commissionTypeRepository;
 
-    public List<Commission> findAll() {
-        return commissionRepository.findAll();
+    public List<CommissionRate> findAll() {
+        return commissionRateRepository.findAll();
     }
 
     public List<CommissionType> findAllTypes() {
         return commissionTypeRepository.findAll();
     }
 
-    public List<Commission> findCurrentCommissions() {
+    public List<CommissionRate> findCurrentCommissions() {
         return commissionTypeRepository.findAll().stream()
-                .map(ct -> commissionRepository.findLatestByType(ct.getId()))
+                .map(ct -> commissionRateRepository.findLatestByType(ct.getId()))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void save(Commission commission) throws Exception {
-        commissionRepository.save(commission);
+    public void save(CommissionRate commissionRate) throws Exception {
+        commissionRateRepository.save(commissionRate);
     }
 }
