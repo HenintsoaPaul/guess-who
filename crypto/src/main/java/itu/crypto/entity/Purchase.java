@@ -1,16 +1,12 @@
 package itu.crypto.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString
 @Entity
 @Table(name = "purchase")
@@ -21,10 +17,16 @@ public class Purchase {
     private Integer id;
 
     @Column(name = "date_purchase")
-    private LocalDate datePurchase;
+    private LocalDateTime datePurchase;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    @Column(name = "unit_price")
+    private Double unitPrice;
+
+    @Column(name = "quantity_crypto")
+    private Integer quantityCrypto;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_account_purchaser", nullable = false)
