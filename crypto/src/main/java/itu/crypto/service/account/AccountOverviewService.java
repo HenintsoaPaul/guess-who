@@ -48,9 +48,6 @@ public class AccountOverviewService {
     }
 
     public List<AccountOverview> findAllAccountOverview(LocalDateTime from, LocalDateTime to) {
-        System.out.println("from: " + from);
-        System.out.println("to: " + to);
-
         List<Purchase> purchases = (from == null && to == null) ?
                 purchaseService.findAll() : purchaseService.findAllByDatePurchaseInRange(from, to);
 
