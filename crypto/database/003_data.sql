@@ -161,3 +161,20 @@ VALUES (1000, 800, 1, 1),
 INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller, id_sale_detail)
 VALUES ('2025-01-09 11:30:00', 500, 500, 1, 1, 2, 1),
        ('2025-01-10 12:30:00', 600, 600, 1, 2, 1, 2);
+
+----Insert wallet
+INSERT INTO wallet (quantity, id_crypto, id_account)
+VALUES 
+(1000, 1, 1),
+(500, 2, 1),
+(2000, 3, 2),
+(3000, 4, 3),
+(400, 5, 4),
+(600, 6, 5),
+(700, 7, 6),
+(800, 8, 7),
+(900, 9, 8),
+(1100, 10, 9);
+
+-- Add more entries as needed
+
