@@ -1,0 +1,46 @@
+<div th:replace="~{fragments/_layout}"></div>
+
+<main id="main" class="main">
+    <h2>Modification Taux de Commission</h2>
+
+    <form th:action="@{/commissions/save}" th:object="${commission}" method="POST" id="commissionForm">
+        <div>
+            <label class="col-md-3 control-label">Date de modification: </label>
+            <input type="date" required
+                   th:field="*{addDate}"
+                   class="form-control mb-4 col-4">
+        </div>
+
+        <div>
+            <label class="col-md-3 control-label">Taux [0-1]: </label>
+            <input type="number" required min="0" max="1"
+                   th:field="*{val}"
+                   class="form-control mb-4 col-4">
+        </div>
+
+        <div class="form-group">
+            <label for="commissionList" class="col-md-3 control-label">Type commission</label>
+            <div th:if="${commissionTypes != null and not #lists.isEmpty(commissionTypes)}" class="col-md-5">
+                <select required
+                        th:field="*{commissionType}"
+                        id="commissionList"
+                        class="form-control mb-4 col-4">
+                    <option th:each="ct:${commissionTypes}"
+                            th:value="${ct.getId()}"
+                            th:text="${ct.getName()}"></option>
+                </select>
+            </div>
+            <div th:if="${commissionTypes == null and #lists.isEmpty(commissionTypes)}">
+                <p>Aucun Type Commission!</p>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success col-2">Valider</button>
+    </form>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+
+</html>

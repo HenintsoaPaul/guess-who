@@ -1,40 +1,29 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="ISO-8859-1">
-    <title>Crypto</title>
-    <link rel="stylesheet"
-          th:href="@{/css/bootstrap.css}">
-</head>
-<body>
-<div class="container mt-4">
-    <h3 class="text-center">Nos commissions</h3>
-    <table class="table table-bordered table-striped mt-3">
-        <thead class="thead-dark">
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Valeur</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="commission : ${commissions}">
-            <td th:text="${commission.getId()}">1</td>
-            <td th:text="${commission.getName()}">Name</td>
-            <td th:text="${commission.getVal()}">0</td>
+<div th:replace="~{fragments/_layout}"></div>
 
-            <td>
-                <a th:href="@{/commissions/{id}(id=${commission.getId()})}" class="btn btn-primary btn-sm">
-                   Changer tarif
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<main id="main" class="main">
 
-<footer class="bg-primary text-white text-center p-4 mt-5">
-    <p>© . All Rights Reserved.</p>
-</footer>
+    <div class="container mt-4">
+        <h3 class="text-center">Nos commissions</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Valeur</th>
+                <th>Date derniere modification</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="commission : ${commissions}">
+                <td th:text="${commission.getId()}">1</td>
+                <td th:text="${commission.getCommissionType().getName()}">Name</td>
+                <td th:text="${commission.getVal()}">0</td>
+                <td th:text="${commission.getAddDate()}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
 </body>
 </html>
