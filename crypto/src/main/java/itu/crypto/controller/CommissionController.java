@@ -16,6 +16,7 @@ public class CommissionController {
     @GetMapping
     public String goToList(Model model) {
         model.addAttribute("commissions", commissionService.findAll());
+        model.addAttribute("currentCommissions", commissionService.findCurrentCommissions());
         return "commissions/index";
     }
 

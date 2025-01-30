@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,14 @@ public class CommissionService {
         return commissionTypeRepository.findAll();
     }
 
+    public List<Commission> findCurrentCommissions() {
+        return commissionTypeRepository.findAll().stream()
+                .map(ct -> commissionRepository.findLatestByType(ct.getId()))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void save(Commission commission) throws Exception {
-        throw new Exception("Not implemented");
+        commissionRepository.save(commission);
     }
 }
