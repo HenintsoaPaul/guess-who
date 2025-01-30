@@ -1,4 +1,4 @@
-# Étape 1 : Utilisation de Maven pour construire le projet
+ # Étape 1 : Utilisation de Maven pour construire le projet
 FROM maven:3.8.5-openjdk-17 AS build
 
 # Définit le répertoire de travail
