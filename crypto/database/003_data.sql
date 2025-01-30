@@ -2,7 +2,7 @@ INSERT INTO commission_type (name, symbol)
 VALUES ('Commission Vente', 'CV'),
        ('Commission Achat', 'CA');
 
-INSERT INTO commission (val, daty, id_commission_type)
+INSERT INTO commission_rate (rate, add_date, id_commission_type)
 VALUES (0.1, '2020-01-01', 1),
        (0.05,'2020-01-01', 2);
 
