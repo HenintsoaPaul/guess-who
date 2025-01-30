@@ -1,14 +1,10 @@
 package itu.crypto.entity.commission;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString
 @Entity
 @Table(name = "commission_type")
