@@ -6,14 +6,14 @@
     <form th:action="@{/commissions/save}" th:object="${commission}" method="POST" id="commissionForm">
         <div>
             <label class="col-md-3 control-label">Date de modification: </label>
-            <input type="date" required
+            <input type="datetime-local" required
                    th:field="*{addDate}"
                    class="form-control mb-4 col-4">
         </div>
 
         <div>
             <label class="col-md-3 control-label">Taux [0-1]: </label>
-            <input type="number" required min="0" max="1"
+            <input type="number" required min="0" max="1" step="0.01"
                    th:field="*{val}"
                    class="form-control mb-4 col-4">
         </div>

@@ -3,7 +3,27 @@
 <main id="main" class="main">
 
     <div class="container mt-4">
-        <h3 class="text-center">Nos commissions</h3>
+        <h3 class="text-center">Nos commissions actuelles</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Valeur</th>
+                <th>Date derniere modification</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="commission : ${currentCommissions}">
+                <td th:text="${commission.getCommissionType().getName()}">Name</td>
+                <td th:text="${commission.getVal()}">0</td>
+                <td th:text="${commission.getAddDate()}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="container mt-4">
+        <h3 class="text-center">Historique des modifications de commissions</h3>
         <table class="table table-bordered table-striped mt-3">
             <thead class="thead-dark">
             <tr>
