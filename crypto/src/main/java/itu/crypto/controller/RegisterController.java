@@ -3,7 +3,7 @@ package itu.crypto.controller;
 import itu.crypto.dto.ApiResponse;
 import itu.crypto.dto.register.RegisterResponse;
 import itu.crypto.dto.register.RegisterRequest;
-import itu.crypto.service.RegisterService;
+import itu.crypto.service.account.RegisterService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

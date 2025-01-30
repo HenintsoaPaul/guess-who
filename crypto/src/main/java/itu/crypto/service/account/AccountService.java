@@ -1,4 +1,4 @@
-package itu.crypto.service;
+package itu.crypto.service.account;
 
 import itu.crypto.entity.Account;
 import itu.crypto.repository.AccountRepository;
@@ -20,19 +20,19 @@ public class AccountService {
      */
     @Deprecated
     public Account findFromToken(String token) {
-	return null;
+        return null;
     }
 
     public Account save(Account account) {
-	return accountRepository.save(account);
+        return accountRepository.save(account);
     }
 
     public Account findByEmail(String email) {
-	return accountRepository.findAccountByEmail(email);
+        return accountRepository.findAccountByEmail(email);
     }
 
     public Account findById(Integer id) {
-	return accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Account not found"));
+        return accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Account not found"));
     }
 
     public List<Account> findAll() {

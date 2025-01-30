@@ -1,8 +1,9 @@
-package itu.crypto.service;
+package itu.crypto.service.account;
 
 import itu.crypto.dto.ApiResponse;
 import itu.crypto.dto.login.LoginRequest;
 import itu.crypto.entity.Account;
+import itu.crypto.service.FetchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +14,14 @@ public class LoginService {
     private final AccountService accountService;
 
     public ApiResponse sendLoginDto(LoginRequest loginRequest) {
-	return fetchService.fetchUrl("/api/login", loginRequest, false);
+        return fetchService.fetchUrl("/api/login", loginRequest, false);
     }
 
     public ApiResponse sendPin(LoginRequest loginRequest) {
-	return fetchService.fetchUrl("/api/login/validate", loginRequest, false);
+        return fetchService.fetchUrl("/api/login/validate", loginRequest, false);
     }
 
     public Account getAccount(LoginRequest loginRequest) {
-	return this.accountService.findByEmail(loginRequest.getEmail());
+        return this.accountService.findByEmail(loginRequest.getEmail());
     }
 }

@@ -4,7 +4,7 @@ import itu.crypto.dto.ApiResponse;
 import itu.crypto.dto.login.LoginRequest;
 import itu.crypto.dto.login.LoginResponse;
 import itu.crypto.entity.Account;
-import itu.crypto.service.LoginService;
+import itu.crypto.service.account.LoginService;
 import itu.crypto.service.SessionService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
