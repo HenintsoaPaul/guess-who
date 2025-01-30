@@ -23,4 +23,16 @@ public class WalletController {
         return ResponseEntity.ok(wallets);
     }
 
+    @GetMapping("/wallets/{id}/history")
+    public ResponseEntity<List<WalletDTO>> getPurchaseHistory(@PathVariable int id) {
+        try {
+            List<WalletDTO> results = walletService.getPurchaseHistory(id);
+                        
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch purchase history", e);
+        }
+    }
+
+
 }
