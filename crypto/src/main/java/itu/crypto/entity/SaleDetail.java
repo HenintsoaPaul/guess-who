@@ -18,7 +18,7 @@ public class SaleDetail {
     @Column(name = "id_sale_detail", nullable = false)
     private Integer id;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity_crypto")
     private Integer quantity;
 
     @Column(name = "quantity_left")

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,23 @@ public class PurchaseService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Recuperer les ventes comprises dans l'intervalle de date.
+     * {@code dateMin} et {@code dateMax} sont des bornes nullables.
+     */
+    public List<Purchase> findAllByDatePurchaseInRange(String dateMin, String dateMax) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime dmin = (dateMin == null || dateMin.isEmpty()) ? null : LocalDateTime.parse(dateMin + " 00:00:00", formatter),
+                dmax = (dateMax == null || dateMax.isEmpty()) ? null : LocalDateTime.parse(dateMax + " 23:59:59", formatter);
+
+        return findAllByDatePurchaseInRange(dmin, dmax);
+    }
+
+    /**
+     * Recuperer les ventes comprises dans l'intervalle de date.
+     * {@code dateMin} et {@code dateMax} sont des bornes nullables.
+     */
     public List<Purchase> findAllByDatePurchaseInRange(LocalDateTime minDate, LocalDateTime maxDate) {
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM purchase p WHERE 1=1");
         Map<String, Object> parameters = new HashMap<>();

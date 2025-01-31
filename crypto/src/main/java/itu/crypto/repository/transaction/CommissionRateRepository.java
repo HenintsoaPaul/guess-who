@@ -8,7 +8,7 @@ public interface CommissionRateRepository extends JpaRepository<CommissionRate, 
 
     @Query(value = """
             select c from CommissionRate c
-                        where c.commissionType.id = :idCommissionType 
+                        where c.commissionType.id = :idCommissionType
                                     order by c.addDate desc limit 1
             """)
     CommissionRate findLatestByType(Integer idCommissionType);
