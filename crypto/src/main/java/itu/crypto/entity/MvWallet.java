@@ -20,7 +20,7 @@ public class MvWallet {
     @Column(name = "id_mv_wallet", nullable = false)
     private Integer id;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity_crypto")
     private Integer quantity;
 
     @Column(name = "date_mv")

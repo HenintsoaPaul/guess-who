@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\TimesService;
 use App\Models\Token;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -65,13 +66,28 @@ class TokenService
         }
     }
 
-    private static function genExpirationDate()
+    public static function genExpirationDate()
     {
         $oneMinute = 60;
         $oneHourInSecond = $oneMinute * 60;
         $threeHours = $oneHourInSecond * 3;
+
         $delay = $oneMinute * 5;
-        $delayInSecond = $delay + $threeHours * 60 * 70;
+        $delayInSecond = $delay + $threeHours;
+        return TimesService::generateDate(now(), $delayInSecond);
+    }
+
+    /**
+     * @return Carbon
+     */
+    public static function genExpirationDateForAuth(): Carbon
+    {
+        $oneMinute = 60;
+        $oneHourInSecond = $oneMinute * 60;
+        $threeHours = $oneHourInSecond * 3;
+
+        $delay = 90;
+        $delayInSecond = $delay + $threeHours;
         return TimesService::generateDate(now(), $delayInSecond);
     }
 

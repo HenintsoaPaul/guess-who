@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Graphique des Cryptomonnaies</h1>
+
+    <label for="cryptoSelect">Choisissez une cryptomonnaie :</label>
+    <select id="cryptoSelect">
+        <option value="" disabled selected>Sélectionnez une cryptomonnaie</option>
+    </select>
+
+    <canvas id="cryptoChart" width="400" height="200"></canvas>
+
+    <script>
+        $(document).ready(function () {
+            const cryptoSelect = $("#cryptoSelect");
+            const ctx = document.getElementById('cryptoChart').getContext('2d');
+            let chart;
+
+            // Charger les cryptomonnaies
+            $.ajax({
+                url: "/crypto/all",
+                method: "GET",
+                success: function (cryptos) {
+                    cryptos.forEach(crypto => {
+                        cryptoSelect.append(`<option value="${crypto.idCrypto}">${crypto.name}</option>`);
+                    });
+                }
+            });
+
+            // Charger les cours pour une crypto
+            cryptoSelect.change(function () {
+                const idCrypto = $(this).val();
+
+                $.ajax({
+                    url: `/crypto/cours/${idCrypto}`,
+                    method: "GET",
+                    success: function (cours) {
+                        const labels = cours.map(c => new Date(c.dateCours).toLocaleDateString());
+                        const data = cours.map(c => c.pu);
+
+                        // Détruire le graphique existant si nécessaire
+                        if (chart) {
+                            chart.destroy();
+                        }
+
+                        // Créer un nouveau graphique
+                        chart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Prix Unitaire',
+                                    data: data,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    tension: 0.1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        display: true
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Date'
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: 'Prix Unitaire (PU)'
+                                        },
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +22,10 @@ public class CoursService {
      *
      * @return a list of the latest courses for each crypto.
      */
-    public List<Cours> findCurrentCours() {
-        return coursRepository.findLatestCoursForEachCrypto();
+    @Deprecated
+    public List<Cours> findCurrentCours() throws Exception {
+//        return coursRepository.findLatestCoursForEachCrypto();
+        throw new Exception("Not Impleemented");
     }
 
     /**

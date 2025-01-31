@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,13 +40,12 @@ class PendingAuth extends Model
      *
      * @throws \Exception
      */
-    public static function addNew(string $pin, int $idAccount, \DateInterval $delai = null): PendingAuth {
-        $daty = new \DateTime();
-        $delai = $delai ?? new \DateInterval('PT90S'); // Utilisation de la valeur par défaut si $delai est null
+    public static function addNew(string $pin, int $idAccount, Carbon $delai): PendingAuth {
+//        $delai = $delai ?? new \DateInterval('PT90S'); // Utilisation de la valeur par défaut si $delai est null
 
         $pendingAuth = new PendingAuth();
-        $pendingAuth->date_creation = $daty;
-        $pendingAuth->date_expiration = (clone $daty)->add($delai); // Clone $daty pour ne pas modifier l'original
+        $pendingAuth->date_creation = new \DateTime();
+        $pendingAuth->date_expiration = $delai;
         $pendingAuth->pin = $pin;
         $pendingAuth->id_account = $idAccount;
 

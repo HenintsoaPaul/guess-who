@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApiController; 
+use App\Http\Controllers\ApiController;
 use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;
@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -73,7 +74,7 @@ class LoginController extends Controller
             Mail::to($credentials['email'])->send(new SendEmail($pin));
 
             // insert pending_auth
-            $delai = null;
+            $delai = TokenService::genExpirationDateForAuth();
             $pendingAuth = PendingAuth::addNew($pin, $account->id_account, $delai);
 
             DB::commit();
@@ -83,7 +84,6 @@ class LoginController extends Controller
                 'account' => $account->email,
                 'pin' =>  $pin,
             ];
-//            return $this->jsonResponse->success($msg, $account->email);
             return $this->jsonResponse->success($msg, $data);
         } catch (ValidationException $e) {
             DB::rollBack();
