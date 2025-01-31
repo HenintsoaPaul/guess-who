@@ -2,6 +2,7 @@ package itu.crypto.service;
 
 import itu.crypto.entity.Cours;
 import itu.crypto.entity.Crypto;
+import itu.crypto.enums.CoursAnalysisType;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.CryptoRepository;
 import jakarta.persistence.EntityManager;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -105,17 +103,50 @@ public class CoursService {
         return cryptoRepository.findAll();
     }
 
-//    public List<Cours> getAnalysis(CoursAnalysisType analysisType, List<Cours> cours) {
-//        if (analysisType == CoursAnalysisType.MAX_COURS) {
-//            return findMaxCoursForeachCrypto(cours);
-//        } else if (analysisType == CoursAnalysisType.MIN_COURS) {
-//            return findMinCoursForeachCrypto(cours);
-//        } else if (analysisType == CoursAnalysisType.AVG_COURS) {
+    public List<Cours> getAnalysis(CoursAnalysisType analysisType, List<Cours> cours) {
+        if (analysisType == CoursAnalysisType.MAX_COURS) {
+            return findMaxCoursForeachCrypto(cours);
+        } else if (analysisType == CoursAnalysisType.MIN_COURS) {
+            return findMinCoursForeachCrypto(cours);
+        } else if (analysisType == CoursAnalysisType.AVG_COURS) {
 //            return findAvgCoursForeachCrypto(cours);
-//        } else if (analysisType == CoursAnalysisType.ECART_TYPE_COMMISSION) {
+        } else if (analysisType == CoursAnalysisType.ECART_TYPE_COMMISSION) {
 //            return findEcartTypeCoursForeachCrypto(cours);
-//        } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COMMISSION) {
+        } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COMMISSION) {
 //            return findFirstQuartileCoursForeachCrypto(cours);
-//        }
+        }
+        return cours;
+    }
+
+//    private List<Cours> findAvgCoursForeachCrypto(List<Cours> cours) {
+//        List<Crypto> cryptos = cours.stream()
+//                .map(Cours::getCrypto)
+//                .distinct()
+//                .toList();
+//        return cryptos.stream()
+//                .map(c -> findAvgCoursCrypto(cours, c))
+//                .toList();
 //    }
+//
+//    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) {
+//        List<Cours> temp = cours.stream()
+//                .filter(c -> c.getCrypto().equals(crypto))
+//                .toList();
+//        double somme = temp.stream()
+//                .mapToDouble(Cours::getPu)
+//                .sum();
+//        return new Cours(somme / temp.size(), null, crypto);
+//    }
+
+    private List<Cours> findMaxCoursForeachCrypto(List<Cours> cours) {
+        List<Cours> cbdd = coursRepository.findMaxCoursForeachCrypto(cours);
+        cours.retainAll(cbdd);
+        return cours;
+    }
+
+    private List<Cours> findMinCoursForeachCrypto(List<Cours> cours) {
+        List<Cours> cbdd = coursRepository.findMinCoursForeachCrypto(cours);
+        cours.retainAll(cbdd);
+        return cours;
+    }
 }

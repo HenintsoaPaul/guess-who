@@ -32,10 +32,14 @@ public class CoursController {
                     .toList();
         }
 
-        if (analysisType == null) analysisType = CoursAnalysisType.MAX_COURS;
-//        List<Cours> analyses = coursService.getAnalysis(analysisType, cours);
-//        model.addAttribute("analyses", analyses);
-        model.addAttribute("analyses", cours);
+        if (analysisType == null) {
+            analysisType = CoursAnalysisType.MAX_COURS;
+            model.addAttribute("analyses", cours);
+        } else {
+            List<Cours> analyses = coursService.getAnalysis(analysisType, cours);
+            model.addAttribute("analyses", analyses);
+        }
+
 
         model.addAttribute("cryptos", coursService.findAllCrypto());
         model.addAttribute("analyseTypes", CoursAnalysisType.values());
