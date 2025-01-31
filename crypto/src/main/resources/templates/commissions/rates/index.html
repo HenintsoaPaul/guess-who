@@ -1,0 +1,50 @@
+<div th:replace="~{fragments/_layout}"></div>
+
+<main id="main" class="main">
+    <!--  Taux commissions actuelles  -->
+    <div class="container mt-4">
+        <h3 class="text-center">Nos commissions actuelles</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Valeur</th>
+                <th>Date derniere modification</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cr : ${currentCommissionRates}">
+                <td th:text="${cr.getCommissionType().getName()}">Name</td>
+                <td th:text="${cr.getRate()}">0</td>
+                <td th:text="${cr.getAddDate()}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <!--  Historique des changements de taux  -->
+    <div class="container mt-4" id="histo-commission-rate">
+        <h3 class="text-center">Historique des modifications des taux de commissions</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Taux</th>
+                <th>Date derniere modification</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cr : ${commissionsRates}">
+                <td th:text="${cr.getId()}">1</td>
+                <td th:text="${cr.getCommissionType().getName()}">Name</td>
+                <td th:text="${cr.getRate()}">0</td>
+                <td th:text="${cr.getAddDate()}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>

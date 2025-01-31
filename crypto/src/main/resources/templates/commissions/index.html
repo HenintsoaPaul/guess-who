@@ -1,40 +1,102 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="ISO-8859-1">
-    <title>Crypto</title>
-    <link rel="stylesheet"
-          th:href="@{/css/bootstrap.css}">
-</head>
-<body>
-<div class="container mt-4">
-    <h3 class="text-center">Nos commissions</h3>
-    <table class="table table-bordered table-striped mt-3">
-        <thead class="thead-dark">
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Valeur</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="commission : ${commissions}">
-            <td th:text="${commission.getId()}">1</td>
-            <td th:text="${commission.getName()}">Name</td>
-            <td th:text="${commission.getVal()}">0</td>
+<div th:replace="~{fragments/_layout}"></div>
 
-            <td>
-                <a th:href="@{/commissions/{id}(id=${commission.getId()})}" class="btn btn-primary btn-sm">
-                   Changer tarif
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<main id="main" class="main">
+    <!--  Analyses des commissions du site  -->
+    <div id="analyse-site">
+        <!-- Filtres -->
+        <div class="my-2">
+            <form th:action="@{/commissions}" method="GET" class="form-inline mb-3">
+                <button type="submit" class="btn btn-primary">Analyser</button>
+                <div class="row g-10">
+                    <!-- Filter by Type Analyse -->
+                    <div class="row g-10">
+                        <div class="col-4 card px-3 py-3">
+                            <label>Type Analyse :</label>
+                            <select name="typeAnalyse">
+                                <option th:each="ap : ${analyseTypes}"
+                                        th:value="${ap}"
+                                        th:text="${ap.getLabel()}"></option>
+                            </select>
+                        </div>
+                    </div>
 
-<footer class="bg-primary text-white text-center p-4 mt-5">
-    <p>© . All Rights Reserved.</p>
-</footer>
+                    <!-- Filter by date -->
+                    <div class="row g-10">
+                        <div class="col-4 card px-3 py-3">
+                            <label>Date Min :</label>
+                            <input type="date" name="dateMin" th:value="${dateMin}">
+                        </div>
+                        <div class="col-4 card px-3 py-3">
+                            <label>Date Max :</label>
+                            <input type="date" name="dateMax" th:value="${dateMax}">
+                        </div>
+                    </div>
+
+                    <!-- Filter by crypto -->
+                    <div class="row g-10">
+                        <div class="col-4 card px-3 py-3">
+                            <label>Crypto :</label>
+                            <select name="idCrypto" id="cryptos" class="form-control mb-4 col-4">
+                                <option value="-1">Tous les cryptos</option>
+                                <option th:each="cry:${cryptos}"
+                                        th:value="${cry.getId()}"
+                                        th:text="${cry.getName()}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Data -->
+        <div class="container mt-4">
+            <section th:if="${analyses != null && analyses.size() > 0}" id="section-analyse-ok">
+                <h3 class="text-center">
+                    Analayse par "<span th:text="${analyseType.getLabel()}"></span>"
+                </h3>
+                <table class="table table-bordered table-striped mt-3">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Type</th>
+                        <th>Valeur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="anal : ${analyses}">
+                        <td th:text="${anal.getCommissionType().getLabel()}"></td>
+                        <td th:text="${anal.getValue()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+                <!-- Details -->
+                <div>
+                    <div th:each=" analyse : ${analyses} ">
+                        <h4 class="text-center">
+                            Details <span th:text="${analyse.getCommissionType().getLabel()}"></span>
+                        </h4>
+                        <table class="table table-bordered table-striped mt-3">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Crypto</th>
+                                <th>Montant commissionnee</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="anal : ${analyse.getCommissionPurchases()}">
+                                <td th:text="${anal.getPurchase().getSaleDetail().getCrypto().getName()}"></td>
+                                <td th:text="${anal.getAmount()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section th:else id="section-analyse-not-ok">
+                <p>Aucune analyse disponible</p>
+            </section>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>

@@ -23,8 +23,8 @@ public class MvFund {
     @Column(name = "date_mv")
     private LocalDate dateMv;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "amount")
+    private Double amount;
 
     @Column(name = "id_source")
     private Integer idSource;

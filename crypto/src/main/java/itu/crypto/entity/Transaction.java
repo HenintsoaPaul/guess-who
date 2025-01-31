@@ -15,7 +15,6 @@ public class Transaction {
     private double transPrice;
     private Account accountReceiver;
     private Account accountSource;
-    private TransactionType transactionType;
 
     public Transaction(Purchase purchase) {
         this.id = purchase.getId();

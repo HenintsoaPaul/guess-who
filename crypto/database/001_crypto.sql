@@ -114,13 +114,13 @@ CREATE TABLE purchase
     FOREIGN KEY (id_account_purchaser) REFERENCES account (id_account)
 );
 
-CREATE TABLE commission
+CREATE TABLE commission_rate
 (
-    id_commission      SERIAL,
-    val                NUMERIC(15, 2) NOT NULL,
-    daty               TIMESTAMP      NOT NULL,
+    id_commission_rate SERIAL,
+    rate               NUMERIC(15, 2) NOT NULL,
+    add_date           TIMESTAMP      NOT NULL,
     id_commission_type INTEGER        NOT NULL,
-    PRIMARY KEY (id_commission),
+    PRIMARY KEY (id_commission_rate),
     FOREIGN KEY (id_commission_type) REFERENCES commission_type (id_commission_type)
 );
 
@@ -134,6 +134,17 @@ CREATE TABLE mv_wallet
     PRIMARY KEY (id_mv_wallet),
     FOREIGN KEY (id_wallet) REFERENCES wallet (id_wallet),
     FOREIGN KEY (id_type_mv_wallet) REFERENCES type_mv_wallet (id_type_mv_wallet)
+);
+
+CREATE TABLE commission_purchase
+(
+    id_commission_purchase SERIAL,
+    amount                 NUMERIC(15, 2) NOT NULL,
+    id_purchase            INTEGER        NOT NULL,
+    id_commission_rate     INTEGER        NOT NULL,
+    PRIMARY KEY (id_commission_purchase),
+    FOREIGN KEY (id_purchase) REFERENCES purchase (id_purchase),
+    FOREIGN KEY (id_commission_rate) REFERENCES commission_rate (id_commission_rate)
 );
 
 CREATE TABLE crypto_fav
