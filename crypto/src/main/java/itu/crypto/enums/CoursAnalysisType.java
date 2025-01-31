@@ -7,8 +7,8 @@ public enum CoursAnalysisType {
     MAX_COURS("Max des cours"),
     MIN_COURS("Min des cours"),
     AVG_COURS("Moyenne des cours"),
-    ECART_TYPE_COMMISSION("Ecart-type des cours"),
-    FIRST_QUARTILE_COMMISSION("1er quartile des cours");
+    ECART_TYPE_COURS("Ecart-type des cours"),
+    FIRST_QUARTILE_COURS("1er quartile des cours");
 
     private final String label;
 

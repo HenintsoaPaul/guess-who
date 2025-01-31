@@ -111,9 +111,9 @@ public class CoursService {
             return findMinCoursForeachCrypto(cours);
         } else if (analysisType == CoursAnalysisType.AVG_COURS) {
             return findAvgCoursForeachCrypto(cours);
-        } else if (analysisType == CoursAnalysisType.ECART_TYPE_COMMISSION) {
+        } else if (analysisType == CoursAnalysisType.ECART_TYPE_COURS) {
             return findEcartTypeCoursForeachCrypto(cours);
-        } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COMMISSION) {
+        } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COURS) {
             return findFirstQuartileCoursForeachCrypto(cours);
         }
         return cours;
