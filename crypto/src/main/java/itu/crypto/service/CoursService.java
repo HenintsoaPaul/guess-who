@@ -21,6 +21,7 @@ public class CoursService {
 
     private final CoursRepository coursRepository;
     private final CryptoRepository cryptoRepository;
+    private final CryptoService cryptoService;
 
     /**
      * Retrieves the latest course for each crypto.
@@ -111,31 +112,96 @@ public class CoursService {
         } else if (analysisType == CoursAnalysisType.AVG_COURS) {
             return findAvgCoursForeachCrypto(cours);
         } else if (analysisType == CoursAnalysisType.ECART_TYPE_COMMISSION) {
-//            return findEcartTypeCoursForeachCrypto(cours);
+            return findEcartTypeCoursForeachCrypto(cours);
         } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COMMISSION) {
-//            return findFirstQuartileCoursForeachCrypto(cours);
+            return findFirstQuartileCoursForeachCrypto(cours);
         }
         return cours;
     }
 
-    private List<Cours> findAvgCoursForeachCrypto(List<Cours> cours) {
-        List<Crypto> cryptos = cours.stream()
-                .map(Cours::getCrypto)
-                .distinct()
-                .toList();
+//    private Cours findFirstQuartileCoursCrypto(List<Cours> cours, Crypto crypto) {
+//        List<Cours> temp = cours.stream()
+//                .filter(c -> c.getCrypto().equals(crypto))
+//                .toList();
+//
+//        // Trier les prix
+//        List<Double> sortedPrices = temp.stream()
+//                .mapToDouble(Cours::getPu)
+//                .sorted()
+//                .boxed()
+//                .toList();
+//
+//        int index = sortedPrices.size() / 4;
+//        double prix = sortedPrices.get(index);
+//        // Si l'index est exactement au milieu de deux valeurs
+//        if (sortedPrices.size() % 4 == 0) {
+//            prix = (sortedPrices.get(index - 1) + sortedPrices.get(index)) / 2;
+//        }
+//        return new Cours(prix, null, crypto);
+//    }
+//
+//    private List<Cours> findFirstQuartileCoursForeachCrypto(List<Cours> cours) {
+//        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
+//        return cryptos.stream()
+//                .map(c -> {
+//                    try {
+//                        return findFirstQuartileCoursCrypto(cours, c);
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                })
+//                .toList();
+//    }
+
+    private List<Cours> findEcartTypeCoursForeachCrypto(List<Cours> cours) {
+        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
         return cryptos.stream()
-                .map(c -> findAvgCoursCrypto(cours, c))
+                .map(c -> {
+                    try {
+                        return findStdDevCoursCrypto(cours, c);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .toList();
     }
 
-    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) {
+    /**
+     * Retourne l'ecart-type pour les cours d'un crypto specifique.
+     */
+    private Cours findStdDevCoursCrypto(List<Cours> cours, Crypto crypto) throws Exception {
         List<Cours> temp = cours.stream()
                 .filter(c -> c.getCrypto().equals(crypto))
                 .toList();
-        double somme = temp.stream()
+
+        double mean = cryptoService.avg(temp);
+
+        // Calcul de l'écart-type
+        double stdDev = Math.sqrt(temp.stream()
                 .mapToDouble(Cours::getPu)
-                .sum();
-        return new Cours(somme / temp.size(), null, crypto);
+                .map(pu -> Math.pow(pu - mean, 2))
+                .average()
+                .orElse(0.0));
+
+        return new Cours(stdDev, null, crypto);
+    }
+
+    private List<Cours> findAvgCoursForeachCrypto(List<Cours> cours) {
+        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
+        return cryptos.stream()
+                .map(c -> {
+                    try {
+                        return findAvgCoursCrypto(cours, c);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+    }
+
+    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) throws Exception {
+        List<Cours> temp = cours.stream().filter(c -> c.getCrypto().equals(crypto)).toList();
+        return new Cours(cryptoService.avg(temp), null, crypto);
     }
 
     private List<Cours> findMaxCoursForeachCrypto(List<Cours> cours) {
