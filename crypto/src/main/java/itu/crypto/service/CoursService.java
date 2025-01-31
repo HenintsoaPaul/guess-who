@@ -109,7 +109,7 @@ public class CoursService {
         } else if (analysisType == CoursAnalysisType.MIN_COURS) {
             return findMinCoursForeachCrypto(cours);
         } else if (analysisType == CoursAnalysisType.AVG_COURS) {
-//            return findAvgCoursForeachCrypto(cours);
+            return findAvgCoursForeachCrypto(cours);
         } else if (analysisType == CoursAnalysisType.ECART_TYPE_COMMISSION) {
 //            return findEcartTypeCoursForeachCrypto(cours);
         } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COMMISSION) {
@@ -118,25 +118,25 @@ public class CoursService {
         return cours;
     }
 
-//    private List<Cours> findAvgCoursForeachCrypto(List<Cours> cours) {
-//        List<Crypto> cryptos = cours.stream()
-//                .map(Cours::getCrypto)
-//                .distinct()
-//                .toList();
-//        return cryptos.stream()
-//                .map(c -> findAvgCoursCrypto(cours, c))
-//                .toList();
-//    }
-//
-//    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) {
-//        List<Cours> temp = cours.stream()
-//                .filter(c -> c.getCrypto().equals(crypto))
-//                .toList();
-//        double somme = temp.stream()
-//                .mapToDouble(Cours::getPu)
-//                .sum();
-//        return new Cours(somme / temp.size(), null, crypto);
-//    }
+    private List<Cours> findAvgCoursForeachCrypto(List<Cours> cours) {
+        List<Crypto> cryptos = cours.stream()
+                .map(Cours::getCrypto)
+                .distinct()
+                .toList();
+        return cryptos.stream()
+                .map(c -> findAvgCoursCrypto(cours, c))
+                .toList();
+    }
+
+    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) {
+        List<Cours> temp = cours.stream()
+                .filter(c -> c.getCrypto().equals(crypto))
+                .toList();
+        double somme = temp.stream()
+                .mapToDouble(Cours::getPu)
+                .sum();
+        return new Cours(somme / temp.size(), null, crypto);
+    }
 
     private List<Cours> findMaxCoursForeachCrypto(List<Cours> cours) {
         List<Cours> cbdd = coursRepository.findMaxCoursForeachCrypto(cours);
