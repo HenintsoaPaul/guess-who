@@ -30,7 +30,6 @@ public class CommissionController {
 
         List<CommissionPurchase> commissionPurchases = commissionPurchaseService.findAllByDatePurchaseInRange(dateMin, dateMax);
 
-        System.out.println("commissionPurchases: " + commissionPurchases);
         if (idCrypto != null && idCrypto != -1) {
             commissionPurchases = commissionPurchases.stream()
                     .filter(cp -> cp.getPurchase().getSaleDetail().getCrypto().getId().equals(idCrypto))
