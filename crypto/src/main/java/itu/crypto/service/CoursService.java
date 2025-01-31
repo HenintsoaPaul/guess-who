@@ -119,39 +119,39 @@ public class CoursService {
         return cours;
     }
 
-//    private Cours findFirstQuartileCoursCrypto(List<Cours> cours, Crypto crypto) {
-//        List<Cours> temp = cours.stream()
-//                .filter(c -> c.getCrypto().equals(crypto))
-//                .toList();
-//
-//        // Trier les prix
-//        List<Double> sortedPrices = temp.stream()
-//                .mapToDouble(Cours::getPu)
-//                .sorted()
-//                .boxed()
-//                .toList();
-//
-//        int index = sortedPrices.size() / 4;
-//        double prix = sortedPrices.get(index);
-//        // Si l'index est exactement au milieu de deux valeurs
-//        if (sortedPrices.size() % 4 == 0) {
-//            prix = (sortedPrices.get(index - 1) + sortedPrices.get(index)) / 2;
-//        }
-//        return new Cours(prix, null, crypto);
-//    }
-//
-//    private List<Cours> findFirstQuartileCoursForeachCrypto(List<Cours> cours) {
-//        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
-//        return cryptos.stream()
-//                .map(c -> {
-//                    try {
-//                        return findFirstQuartileCoursCrypto(cours, c);
-//                    } catch (Exception e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                })
-//                .toList();
-//    }
+    private Cours findFirstQuartileCoursCrypto(List<Cours> cours, Crypto crypto) {
+        List<Cours> temp = cours.stream()
+                .filter(c -> c.getCrypto().equals(crypto))
+                .toList();
+
+        // Trier les prix
+        List<Double> sortedPrices = temp.stream()
+                .mapToDouble(Cours::getPu)
+                .sorted()
+                .boxed()
+                .toList();
+
+        int index = sortedPrices.size() / 4;
+        double prix = sortedPrices.get(index);
+        // Si l'index est exactement au milieu de deux valeurs
+        if (sortedPrices.size() % 4 == 0) {
+            prix = (sortedPrices.get(index - 1) + sortedPrices.get(index)) / 2;
+        }
+        return new Cours(prix, null, crypto);
+    }
+
+    private List<Cours> findFirstQuartileCoursForeachCrypto(List<Cours> cours) {
+        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
+        return cryptos.stream()
+                .map(c -> {
+                    try {
+                        return findFirstQuartileCoursCrypto(cours, c);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+    }
 
     private List<Cours> findEcartTypeCoursForeachCrypto(List<Cours> cours) {
         List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
