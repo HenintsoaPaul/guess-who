@@ -56,17 +56,40 @@
                 <table class="table table-bordered table-striped mt-3">
                     <thead class="thead-dark">
                     <tr>
-                        <th>Crypto</th>
+                        <th>Type</th>
                         <th>Valeur</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="anal : ${analyses}">
-                        <td th:text="${anal.getCrypto().getName()}"></td>
+                        <td th:text="${anal.getCommissionType().getLabel()}"></td>
                         <td th:text="${anal.getValue()}"></td>
                     </tr>
                     </tbody>
                 </table>
+                <br>
+                <!-- Details -->
+                <div>
+                    <div th:each=" analyse : ${analyses} ">
+                        <h4 class="text-center">
+                            Details <span th:text="${analyse.getCommissionType().getLabel()}"></span>
+                        </h4>
+                        <table class="table table-bordered table-striped mt-3">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Crypto</th>
+                                <th>Montant commissionnee</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="anal : ${analyse.getCommissionPurchases()}">
+                                <td th:text="${anal.getPurchase().getSaleDetail().getCrypto().getName()}"></td>
+                                <td th:text="${anal.getAmount()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
             <section th:else id="section-analyse-not-ok">
                 <p>Aucune analyse disponible</p>
