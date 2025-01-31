@@ -1,18 +1,14 @@
 package itu.crypto.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString
 @Entity
+@NoArgsConstructor
 @Table(name = "cours")
 public class Cours {
     @Id
@@ -24,10 +20,15 @@ public class Cours {
     private double pu;
 
     @Column(name = "date_cours", nullable = false)
-    private LocalDate dateCours;
+    private LocalDateTime dateCours;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_crypto", nullable = false)
     private Crypto crypto;
 
+    public Cours(double pu, LocalDateTime dateCours, Crypto crypto) {
+        this.setPu(pu);
+        this.setDateCours(dateCours);
+        this.setCrypto(crypto);
+    }
 }

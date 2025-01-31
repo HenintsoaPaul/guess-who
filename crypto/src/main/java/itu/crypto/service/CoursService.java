@@ -4,16 +4,23 @@ import itu.crypto.entity.Cours;
 import itu.crypto.entity.Crypto;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.CryptoRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class CoursService {
+
     private final CoursRepository coursRepository;
     private final CryptoRepository cryptoRepository;
 
@@ -36,19 +43,79 @@ public class CoursService {
      * @return a list of all Cours objects saved in the repository.
      */
     public List<Cours> generateCours() {
-        List<Crypto> cryptos = cryptoRepository.findAll();
-        for (Crypto crypto : cryptos) {
-            Cours cours = new Cours();
-            cours.setCrypto(crypto);
-            cours.setDateCours(LocalDate.now());
-            cours.setPu(generateRandomPrice());
-            coursRepository.save(cours);
-        }
+        LocalDateTime genTime = LocalDateTime.now();
+        cryptoRepository.findAll().forEach(crypto -> coursRepository.save(new Cours(generateRandomPrice(), genTime, crypto)));
         return coursRepository.findAll();
     }
 
     private double generateRandomPrice() {
         Random random = new Random();
-        return 50 + (1000 - 50) * random.nextDouble();
+        double MIN_SEUIL_PRICE = 50;
+        double MAX_SEUIL_PRICE = 1000;
+        return MIN_SEUIL_PRICE + (MAX_SEUIL_PRICE - MIN_SEUIL_PRICE) * random.nextDouble();
     }
+
+
+    public List<Cours> findAll() {
+        return coursRepository.findAll();
+    }
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    /**
+     * Recuperer les cours compris dans l'intervalle de date.
+     * {@code dateMin} et {@code dateMax} sont des bornes nullables.
+     */
+    public List<Cours> findAllByDateInInterval(LocalDateTime minDate, LocalDateTime maxDate) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM cours c WHERE 1=1");
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (minDate != null) {
+            queryBuilder.append(" AND c.date_cours >= :minDate");
+            parameters.put("minDate", minDate);
+        }
+        if (maxDate != null) {
+            queryBuilder.append(" AND c.date_cours <= :maxDate");
+            parameters.put("maxDate", maxDate);
+        }
+
+        Query query = entityManager.createNativeQuery(queryBuilder.toString(), Cours.class);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        return query.getResultList();
+    }
+
+    /**
+     * Recuperer les ventes comprises dans l'intervalle de date.
+     * {@code dateMin} et {@code dateMax} sont des bornes nullables.
+     */
+    public List<Cours> findAllByDateInInterval(String dateMin, String dateMax) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        LocalDateTime dmin = (dateMin == null || dateMin.isEmpty()) ? null : LocalDateTime.parse(dateMin, formatter),
+                dmax = (dateMax == null || dateMax.isEmpty()) ? null : LocalDateTime.parse(dateMax, formatter);
+
+        return findAllByDateInInterval(dmin, dmax);
+    }
+
+    public List<Crypto> findAllCrypto() {
+        return cryptoRepository.findAll();
+    }
+
+//    public List<Cours> getAnalysis(CoursAnalysisType analysisType, List<Cours> cours) {
+//        if (analysisType == CoursAnalysisType.MAX_COURS) {
+//            return findMaxCoursForeachCrypto(cours);
+//        } else if (analysisType == CoursAnalysisType.MIN_COURS) {
+//            return findMinCoursForeachCrypto(cours);
+//        } else if (analysisType == CoursAnalysisType.AVG_COURS) {
+//            return findAvgCoursForeachCrypto(cours);
+//        } else if (analysisType == CoursAnalysisType.ECART_TYPE_COMMISSION) {
+//            return findEcartTypeCoursForeachCrypto(cours);
+//        } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COMMISSION) {
+//            return findFirstQuartileCoursForeachCrypto(cours);
+//        }
+//    }
 }
