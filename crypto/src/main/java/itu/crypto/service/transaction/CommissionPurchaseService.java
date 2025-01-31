@@ -1,17 +1,16 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.dto.CommissionAnalysis;
-import itu.crypto.entity.Crypto;
+import itu.crypto.dto.commission.CommissionTypeAnalysis;
 import itu.crypto.entity.Purchase;
 import itu.crypto.entity.commission.CommissionPurchase;
 import itu.crypto.enums.CommissionAnalysisType;
+import itu.crypto.enums.CommissionType;
 import itu.crypto.repository.transaction.CommissionPurchaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,20 +35,11 @@ public class CommissionPurchaseService {
                 .toList();
     }
 
-    public List<CommissionAnalysis> getAnalysis(CommissionAnalysisType analysisType, List<CommissionPurchase> commissionPurchases) {
-        // grouper par crypto
-        List<Crypto> keys = new ArrayList<>();
-        for (CommissionPurchase commission : commissionPurchases) {
-            Crypto kk = commission.getPurchase().getSaleDetail().getCrypto();
-            if (!keys.contains(kk)) {
-                keys.add(kk);
-            }
-        }
-
-        List<CommissionAnalysis> analyses = new ArrayList<>();
-        for (Crypto key : keys) {
+    public List<CommissionTypeAnalysis> getAnalysis(CommissionAnalysisType analysisType, List<CommissionPurchase> commissionPurchases) {
+        List<CommissionTypeAnalysis> analysesByCommissionType = new ArrayList<>(); // vente | achat
+        for (CommissionType cType : CommissionType.values()) {
             List<CommissionPurchase> temp = commissionPurchases.stream()
-                    .filter(comm -> comm.getPurchase().getSaleDetail().getCrypto().equals(key))
+                    .filter(comm -> comm.getCommissionRate().getCommissionType().getName().equals(cType.getLabel()))
                     .toList();
 
             double somme = temp.stream()
@@ -60,10 +50,9 @@ public class CommissionPurchaseService {
                 somme /= temp.size();
             }
 
-            analyses.add(new CommissionAnalysis(key, temp, somme, analysisType));
+            analysesByCommissionType.add(new CommissionTypeAnalysis(cType, temp, somme));
         }
-
-        return analyses;
+        return analysesByCommissionType;
     }
 }
 

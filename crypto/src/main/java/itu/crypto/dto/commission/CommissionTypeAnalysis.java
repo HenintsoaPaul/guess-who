@@ -1,8 +1,7 @@
-package itu.crypto.dto;
+package itu.crypto.dto.commission;
 
-import itu.crypto.entity.Crypto;
 import itu.crypto.entity.commission.CommissionPurchase;
-import itu.crypto.enums.CommissionAnalysisType;
+import itu.crypto.enums.CommissionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,9 +9,8 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class CommissionAnalysis {
-    Crypto crypto;
+public class CommissionTypeAnalysis {
+    CommissionType commissionType;
     List<CommissionPurchase> commissionPurchases;
     double value;
-    CommissionAnalysisType analysisType;
 }

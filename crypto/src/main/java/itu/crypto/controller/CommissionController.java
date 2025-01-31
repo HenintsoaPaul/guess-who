@@ -1,6 +1,6 @@
 package itu.crypto.controller;
 
-import itu.crypto.dto.CommissionAnalysis;
+import itu.crypto.dto.commission.CommissionTypeAnalysis;
 import itu.crypto.entity.commission.CommissionPurchase;
 import itu.crypto.entity.commission.CommissionRate;
 import itu.crypto.enums.CommissionAnalysisType;
@@ -37,7 +37,8 @@ public class CommissionController {
                     .toList();
         }
 
-        List<CommissionAnalysis> analyses = commissionPurchaseService.getAnalysis(analysisType, commissionPurchases);
+        if (analysisType == null) analysisType = CommissionAnalysisType.SUM_COMMISSION;
+        List<CommissionTypeAnalysis> analyses = commissionPurchaseService.getAnalysis(analysisType, commissionPurchases);
         model.addAttribute("analyses", analyses);
 
         model.addAttribute("cryptos", commissionRateService.findAllCrypto());
