@@ -46,20 +46,15 @@ public class CoursService {
      */
     public List<Cours> generateCours() {
         LocalDateTime genTime = LocalDateTime.now();
-        cryptoRepository.findAll().forEach(crypto -> coursRepository.save(new Cours(generateRandomPrice(), genTime, crypto)));
-        return coursRepository.findAll();
-    }
 
-    private double generateRandomPrice() {
-        Random random = new Random();
-        double MIN_SEUIL_PRICE = 50;
-        double MAX_SEUIL_PRICE = 1000;
-        return MIN_SEUIL_PRICE + (MAX_SEUIL_PRICE - MIN_SEUIL_PRICE) * random.nextDouble();
-    }
+        List<Cours> currentCours = this.findCurrentCours();
+        currentCours.stream()
+                .peek(cours -> {
+                    Cours c = cryptoPriceGeneratorService.regenerateCours(cours, genTime);
+                    coursRepository.save(c);
+                });
 
-
-    public List<Cours> findAll() {
-        return coursRepository.findAll();
+        return this.findCurrentCours();
     }
 
     @PersistenceContext
