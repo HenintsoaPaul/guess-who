@@ -48,13 +48,12 @@ public class CoursService {
         LocalDateTime genTime = LocalDateTime.now();
 
         List<Cours> currentCours = this.findCurrentCours();
-        currentCours.stream()
-                .peek(cours -> {
+        return currentCours.stream()
+                .map(cours -> {
                     Cours c = cryptoPriceGeneratorService.regenerateCours(cours, genTime);
                     coursRepository.save(c);
-                });
-
-        return this.findCurrentCours();
+                    return c;
+                }).toList();
     }
 
     @PersistenceContext
