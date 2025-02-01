@@ -93,6 +93,19 @@ VALUES ('2025-01-08 09:00:00', 90, 1, 1),
        ('2025-01-10 17:30:00', 100, 2, 2),
        ('2025-01-10 18:00:00', 50, 3, 1);
 
+-- Init des cours pour tout les crypto
+INSERT INTO cours (date_cours, pu, id_crypto)
+VALUES ('2025-01-08 09:00:00', 30000, 1),
+       ('2025-01-08 09:30:00', 30500, 2),
+       ('2025-01-08 10:00:00', 31000, 3),
+       ('2025-01-08 10:30:00', 31500, 4),
+       ('2025-01-08 11:00:00', 32000, 5),
+       ('2025-01-08 11:30:00', 32500,6),
+       ('2025-01-08 12:00:00', 33000, 7),
+       ('2025-01-08 12:30:00', 33500, 8),
+       ('2025-01-08 13:00:00', 34000, 9),
+       ('2025-01-08 13:30:00', 34500, 10);
+
 -- Insertion de données dans la table 'cours' pour Bitcoin (50 changements de cours)
 -- Changement de cours tous les 30 minutes
 INSERT INTO cours (date_cours, pu, id_crypto)

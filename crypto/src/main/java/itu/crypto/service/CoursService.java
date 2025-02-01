@@ -22,16 +22,19 @@ public class CoursService {
     private final CoursRepository coursRepository;
     private final CryptoRepository cryptoRepository;
     private final CryptoService cryptoService;
+    private final CryptoPriceGeneratorService cryptoPriceGeneratorService;
+
+    public List<Cours> findAll() {
+        return coursRepository.findAll();
+    }
 
     /**
      * Retrieves the latest course for each crypto.
      *
      * @return a list of the latest courses for each crypto.
      */
-    @Deprecated
-    public List<Cours> findCurrentCours() throws Exception {
-//        return coursRepository.findLatestCoursForEachCrypto();
-        throw new Exception("Not Impleemented");
+    public List<Cours> findCurrentCours() {
+        return coursRepository.findLatestCoursForEachCrypto();
     }
 
     /**
@@ -39,24 +42,18 @@ public class CoursService {
      * For each Crypto, a new Cours object is created with the current date and a random price.
      * The generated Cours objects are then saved to the repository.
      *
-     * @return a list of all Cours objects saved in the repository.
+     * @return a list the current cours after all insertion are done.
      */
     public List<Cours> generateCours() {
         LocalDateTime genTime = LocalDateTime.now();
-        cryptoRepository.findAll().forEach(crypto -> coursRepository.save(new Cours(generateRandomPrice(), genTime, crypto)));
-        return coursRepository.findAll();
-    }
 
-    private double generateRandomPrice() {
-        Random random = new Random();
-        double MIN_SEUIL_PRICE = 50;
-        double MAX_SEUIL_PRICE = 1000;
-        return MIN_SEUIL_PRICE + (MAX_SEUIL_PRICE - MIN_SEUIL_PRICE) * random.nextDouble();
-    }
-
-
-    public List<Cours> findAll() {
-        return coursRepository.findAll();
+        List<Cours> currentCours = this.findCurrentCours();
+        return currentCours.stream()
+                .map(cours -> {
+                    Cours c = cryptoPriceGeneratorService.regenerateCours(cours, genTime);
+                    coursRepository.save(c);
+                    return c;
+                }).toList();
     }
 
     @PersistenceContext
@@ -169,7 +166,7 @@ public class CoursService {
     /**
      * Retourne l'ecart-type pour les cours d'un crypto specifique.
      */
-    private Cours findStdDevCoursCrypto(List<Cours> cours, Crypto crypto) throws Exception {
+    private Cours findStdDevCoursCrypto(List<Cours> cours, Crypto crypto) {
         List<Cours> temp = cours.stream()
                 .filter(c -> c.getCrypto().equals(crypto))
                 .toList();
@@ -199,7 +196,7 @@ public class CoursService {
                 .toList();
     }
 
-    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) throws Exception {
+    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) {
         List<Cours> temp = cours.stream().filter(c -> c.getCrypto().equals(crypto)).toList();
         return new Cours(cryptoService.avg(temp), null, crypto);
     }
