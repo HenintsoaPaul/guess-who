@@ -166,7 +166,7 @@ public class CoursService {
     /**
      * Retourne l'ecart-type pour les cours d'un crypto specifique.
      */
-    private Cours findStdDevCoursCrypto(List<Cours> cours, Crypto crypto) throws Exception {
+    private Cours findStdDevCoursCrypto(List<Cours> cours, Crypto crypto) {
         List<Cours> temp = cours.stream()
                 .filter(c -> c.getCrypto().equals(crypto))
                 .toList();
@@ -196,7 +196,7 @@ public class CoursService {
                 .toList();
     }
 
-    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) throws Exception {
+    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) {
         List<Cours> temp = cours.stream().filter(c -> c.getCrypto().equals(crypto)).toList();
         return new Cours(cryptoService.avg(temp), null, crypto);
     }
