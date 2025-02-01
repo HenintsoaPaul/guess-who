@@ -24,4 +24,12 @@ public interface CoursRepository extends JpaRepository<Cours, Integer> {
                          on tab1.id_crypto = tab2.id_crypto and tab1.pu = tab2.pp
             """, nativeQuery = true)
     List<Cours> findMinCoursForeachCrypto(List<Cours> cours);
+
+    @Query(value = """
+                select c.*
+                from cours c
+                         join (select id_crypto, max(date_cours) as dd from cours group by id_crypto) t
+                              on c.id_crypto = t.id_crypto and c.date_cours = t.dd
+            """, nativeQuery = true)
+    List<Cours> findLatestCoursForEachCrypto();
 }
