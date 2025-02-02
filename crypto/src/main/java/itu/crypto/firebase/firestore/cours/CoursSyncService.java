@@ -44,26 +44,33 @@ public class CoursSyncService implements ISyncService<Cours> {
                             ? null : existingCoursDoc.toEntity();
 
                     if (existingCours != null && !existingCours.equals(cours)) {
-                        CoursDocument coursDoc = new CoursDocument(cours);
-                        coursDoc.setCreatedAt(existingCoursDoc.getCreatedAt());
-                        coursDoc.setUpdatedAt(Timestamp.now().toString());
-
-                        coursRef.set(coursDoc);
-                        log.info("Update cours id: {}", coursId);
+                        updateDocument(coursRef, cours, existingCoursDoc);
                     }
                 } else {
-                    // Add new document
-                    CoursDocument coursDoc = new CoursDocument(cours);
-                    String zaoFotoanaZao = Timestamp.now().toString();
-                    coursDoc.setCreatedAt(zaoFotoanaZao);
-                    coursDoc.setUpdatedAt(zaoFotoanaZao);
-
-                    coursRef.set(coursDoc);
-                    log.info("Sync cours id: {}", coursId);
+                    addDocument(coursRef, cours);
                 }
             } catch (ExecutionException | InterruptedException ex) {
                 log.error("Erreur lors de la sync des cours vers Firebase : {}", ex.getMessage());
             }
         }
+    }
+
+    private void updateDocument(DocumentReference docRef, Cours cours, CoursDocument existingCoursDoc) {
+        CoursDocument coursDoc = new CoursDocument(cours);
+        coursDoc.setCreatedAt(existingCoursDoc.getCreatedAt());
+        coursDoc.setUpdatedAt(Timestamp.now().toString());
+
+        docRef.set(coursDoc);
+        log.info("Update cours id: {}", cours.getId().toString());
+    }
+
+    private void addDocument(DocumentReference docRef, Cours cours) {
+        CoursDocument coursDoc = new CoursDocument(cours);
+        String now = Timestamp.now().toString();
+        coursDoc.setCreatedAt(now);
+        coursDoc.setUpdatedAt(now);
+
+        docRef.set(coursDoc);
+        log.info("Sync cours id: {}", cours.getId().toString());
     }
 }
