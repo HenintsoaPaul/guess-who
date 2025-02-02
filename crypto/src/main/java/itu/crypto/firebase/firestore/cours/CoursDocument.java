@@ -12,10 +12,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class CoursDocument {
+
     private Integer id;
     private double pu;
     private Timestamp dateCours;
     private Crypto crypto;
+
+    private String createdAt;
+    private String updatedAt;
 
     public CoursDocument(Cours cours) {
         this.id = cours.getId();
