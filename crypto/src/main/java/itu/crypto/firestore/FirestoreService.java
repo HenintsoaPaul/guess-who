@@ -29,7 +29,7 @@ public class FirestoreService {
         dataWithTimestamp.put("updatedAt", documentDTO.getUpdatedAt());
 
         WriteResult writeResult = collectionReference.document(documentDTO.getDocumentId()).set(documentDTO.getData()).get();
-        return "Update time: " + writeResult.getUpdateTime();
+        return log(writeResult, uid, createdAt, documentDTO.getUpdatedAt());
     }
 
     /**
@@ -46,5 +46,9 @@ public class FirestoreService {
         } while (documentReference.get().get().exists());
 
         return documentId;
+    }
+
+    private String log(WriteResult writeResult, String uid, String createdAt, String updatedAt) {
+        return "id: " + uid + " | createdAt: " + createdAt + " | updatedAt: " + updatedAt;
     }
 }
