@@ -1,0 +1,13 @@
+-npm install @react-navigation/native @react-navigation/stack
+-npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons
+-npm install @react-navigation/native @react-navigation/stack --legacy-peer-deps
+-npx expo install expo-image-picker --npm
+-npm install @react-navigation/native @react-navigation/drawer react-native-gesture-handler react-native-reanimated react-navigation-stack
+-npm install react-native-elements
+-npm install react-native-vector-icons
+-npm install @react-navigation/native-stack
+-npm list @react-navigation/native-stack
+-npm install @react-navigation/native @react-navigation/bottom-tabs react-native-screens react-native-safe-area-context
+
+-npm install axios form-data crypto-js
+-mila asina image ilay bitcoin

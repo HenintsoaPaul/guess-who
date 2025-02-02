@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "455716297248",
+    "project_id": "tirelir-app-71721",
+    "storage_bucket": "tirelir-app-71721.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:455716297248:android:74971b4acd3e1986bf3a45",
+        "android_client_info": {
+          "package_name": "com.notif"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC87g2bzZlnvjX4VRqaB3eWLhRd3EcnGd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:455716297248:android:5941ba6c5378052ebf3a45",
+        "android_client_info": {
+          "package_name": "itu.crypto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC87g2bzZlnvjX4VRqaB3eWLhRd3EcnGd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
