@@ -1,7 +1,6 @@
 package itu.crypto.firebase;
 
-import com.google.cloud.firestore.Firestore;
-import itu.crypto.service.CoursService;
+import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,9 +11,6 @@ import javax.annotation.PostConstruct;
 public class FirebaseInitializer {
 
     private final CoursSyncService coursSyncService;
-    private final CoursService coursService;
-
-    private final Firestore firestore;
 
     @PostConstruct
     public void init() throws Exception {
