@@ -10,4 +10,10 @@ public class FirestoreDocumentDTO {
     private Map<String, Object> data;
     private String createdAt;
     private String updatedAt;
+
+    public Map<String, Object> getData() {
+        data.put("updatedAt", this.getUpdatedAt());
+        data.put("createdAt", this.getCreatedAt());
+        return data;
+    }
 }
