@@ -1,4 +1,4 @@
-package itu.crypto.firestore;
+package itu.crypto.firebase.firestore;
 
 import com.google.cloud.firestore.*;
 import lombok.RequiredArgsConstructor;
