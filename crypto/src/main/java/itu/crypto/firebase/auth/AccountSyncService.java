@@ -34,13 +34,17 @@ public class AccountSyncService {
                 log.debug("Utilisateur déjà synchronisé : {}", account.getEmail());
             } catch (Exception e) {
                 try {
-                    ApiResponse apiResponse = accountService.fetchPasswordFromIdentityProvider(account);
-                    String password = (String) apiResponse.getData();
+                    // Warning: on utilise un password car il n'y pas encore de fonction pour fetch le mot de passe depuis Identity API -> Le password fetched doit etre non hache
+                    // Info: le password temp est "fufu_is_password"
+                    String password = "fufu_is_password";
 
                     CreateRequest request = new CreateRequest()
                             .setEmail(account.getEmail())
-                            .setPassword(password) // 🔥 Remplace par un mot de passe temporaire si haché
+                            .setPassword(password) // Remplace par un mot de passe temporaire si haché
                             .setDisplayName(account.getPseudo());
+
+                    // Warning: Envoyer un email de reinitialisation de password pour changer le password temp
+                    FirebaseAuth.getInstance().generatePasswordResetLink(account.getEmail());
 
                     UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
                     nbSynced++;
