@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Data
-@ToString
 @Entity
+@ToString
 @NoArgsConstructor
 @Table(name = "cours")
 public class Cours {
@@ -22,7 +23,7 @@ public class Cours {
     @Column(name = "date_cours", nullable = false)
     private LocalDateTime dateCours;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_crypto", nullable = false)
     private Crypto crypto;
 
@@ -30,5 +31,15 @@ public class Cours {
         this.setPu(pu);
         this.setDateCours(dateCours);
         this.setCrypto(crypto);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cours cours = (Cours) o;
+        return Double.compare(cours.pu, pu) == 0 &&
+                Objects.equals(dateCours, cours.dateCours) &&
+                Objects.equals(crypto, cours.crypto);
     }
 }
