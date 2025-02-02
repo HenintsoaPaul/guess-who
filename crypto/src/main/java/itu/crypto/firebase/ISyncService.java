@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ISyncService<T> {
 
-    String syncWithFirebase(Firestore firestore, List<T> data);
+    void syncWithFirebase(Firestore firestore, List<T> data);
 }

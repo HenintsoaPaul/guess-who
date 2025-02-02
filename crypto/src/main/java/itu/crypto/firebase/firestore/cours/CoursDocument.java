@@ -30,6 +30,7 @@ public class CoursDocument {
 
     public Cours toEntity() {
         return new Cours(
+                id,
                 pu,
                 dateCours.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
                 crypto

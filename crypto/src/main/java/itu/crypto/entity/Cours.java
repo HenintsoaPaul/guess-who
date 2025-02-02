@@ -33,6 +33,13 @@ public class Cours {
         this.setCrypto(crypto);
     }
 
+    public Cours(Integer id, double pu, LocalDateTime dateCours, Crypto crypto) {
+        this.setId(id);
+        this.setPu(pu);
+        this.setDateCours(dateCours);
+        this.setCrypto(crypto);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

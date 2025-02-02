@@ -23,12 +23,12 @@ public class CoursSyncService implements ISyncService<Cours> {
     private final Firestore firestore;
     private final CoursService coursService;
 
-    public String syncWithFirebase() {
-        return this.syncWithFirebase(firestore, coursService.findAll());
+    public void syncWithFirebase() {
+        this.syncWithFirebase(firestore, coursService.findAll());
     }
 
     @Override
-    public String syncWithFirebase(Firestore firestore, List<Cours> coursList) {
+    public void syncWithFirebase(Firestore firestore, List<Cours> coursList) {
         CollectionReference coursCollection = firestore.collection("cours");
 
         for (Cours cours : coursList) {
@@ -44,9 +44,11 @@ public class CoursSyncService implements ISyncService<Cours> {
                             ? null : existingCoursDoc.toEntity();
 
                     if (existingCours != null && !existingCours.equals(cours)) {
-                        existingCoursDoc.setUpdatedAt(Timestamp.now().toString());
+                        CoursDocument coursDoc = new CoursDocument(cours);
+                        coursDoc.setCreatedAt(existingCoursDoc.getCreatedAt());
+                        coursDoc.setUpdatedAt(Timestamp.now().toString());
 
-                        coursRef.set(existingCoursDoc);
+                        coursRef.set(coursDoc);
                         log.info("Update cours id: {}", coursId);
                     }
                 } else {
@@ -63,7 +65,5 @@ public class CoursSyncService implements ISyncService<Cours> {
                 log.error("Erreur lors de la sync des cours vers Firebase : {}", ex.getMessage());
             }
         }
-
-        return "";
     }
 }
