@@ -1,13 +1,10 @@
 package itu.crypto.firestore;
 
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -21,12 +18,21 @@ public class FirestoreService {
             throws ExecutionException, InterruptedException {
 
         CollectionReference collectionReference = firestore.collection(collection);
+        String creationTime = Instant.now().toString();
 
-        String documentId = generateUniqueDocumentId(collectionReference);
-        documentDTO.setDocumentId(documentId);
+        // Generate unique id if null or empty
+        String uid = (documentDTO.getDocumentId() == null || documentDTO.getDocumentId().isEmpty())
+                ? generateUniqueDocumentId(collectionReference) : documentDTO.getDocumentId();
+        documentDTO.setDocumentId(uid);
 
-        HashMap<String, Object> dataWithTimestamp = new HashMap<>(documentDTO.getData());
-        dataWithTimestamp.put("updatedAt", documentDTO.getUpdatedAt());
+        // createdAt
+        DocumentReference documentReference = collectionReference.document(uid);
+        DocumentSnapshot documentSnapshot = documentReference.get().get();
+        String createdAt = !documentSnapshot.exists() ? creationTime : documentSnapshot.getString("createdAt");
+        documentDTO.setCreatedAt(createdAt);
+
+        // updatedAt
+        documentDTO.setUpdatedAt(creationTime);
 
         WriteResult writeResult = collectionReference.document(documentDTO.getDocumentId()).set(documentDTO.getData()).get();
         return log(writeResult, uid, createdAt, documentDTO.getUpdatedAt());
