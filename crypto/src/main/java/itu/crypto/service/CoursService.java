@@ -3,6 +3,7 @@ package itu.crypto.service;
 import itu.crypto.entity.Cours;
 import itu.crypto.entity.Crypto;
 import itu.crypto.enums.CoursAnalysisType;
+import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.CryptoRepository;
 import jakarta.persistence.EntityManager;
@@ -17,7 +18,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class CoursService {
+public class CoursService implements BaseService<Cours> {
 
     private final CoursRepository coursRepository;
     private final CryptoRepository cryptoRepository;
