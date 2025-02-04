@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback, memo } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FavoriteButton from '../components/atoms/FavoriteButton';
 
 const CoursActuelleScreen = () => {
   const navigation = useNavigation();
-  
+  const [favoritesList, setFavoritesList] = useState([]);
   const [cryptos, setCryptos] = useState([
     {
       idAccount: 1,
@@ -23,7 +23,7 @@ const CoursActuelleScreen = () => {
       isFavorite: false,
     },
     {
-      idAccount: 2, // Identifiant unique pour Ethereum
+      idAccount: 2,
       pseudo: "Alice",
       image: "image2",
       fund: 10000.0,
@@ -38,8 +38,9 @@ const CoursActuelleScreen = () => {
       isFavorite: false,
     }
   ]);
+  const [filterText, setFilterText] = useState('');
 
-  const toggleFavorite = (idAccount) => {
+  const toggleFavorite = useCallback((idAccount) => {
     setCryptos((prevCryptos) =>
       prevCryptos.map((crypto) =>
         crypto.idAccount === idAccount
@@ -47,20 +48,72 @@ const CoursActuelleScreen = () => {
           : crypto
       )
     );
-  };
 
-  const [filterText, setFilterText] = useState('');
-  
-  // Filtrage des cryptos en fonction du texte saisi
+    setFavoritesList(prevFavorites => {
+      const index = prevFavorites.indexOf(idAccount);
+      if (index === -1) {
+        return [...prevFavorites, idAccount];
+      } else {
+        return prevFavorites.filter(id => id !== idAccount);
+      }
+    });
+  }, []);
+
   const filteredCryptos = cryptos.filter((crypto) =>
     crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
     crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
   );
 
+  const CryptoItem = memo(({ item }) => (
+    <View style={styles.tableRow}>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>{item.image} </Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>{item.cryptoName}</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>{item.symbol}</Text>
+      </View>
+      <View style={styles.cell}>
+        <Text style={styles.cellText}>{item.currentPrice} $</Text>
+      </View>
+      <View style={styles.cell}>
+        <FavoriteButton
+          isFavorite={item.isFavorite}
+          onPress={() => toggleFavorite(item.idAccount)}
+        />
+      </View>
+    </View>
+  ));
+
+  const FavoritesSection = () => {
+    const favoriteCryptos = filteredCryptos.filter(
+      crypto => favoritesList.includes(crypto.idAccount)
+    );
+
+    return (
+      <View style={styles.favoritesContainer}>
+        <Text style={styles.sectionTitle}>Favoris</Text>
+        <FlatList
+          data={favoriteCryptos}
+          renderItem={({ item }) => (
+            <View style={styles.favoriteItem}>
+              <Text>{item.cryptoName}</Text>
+              <Text>{item.symbol}</Text>
+              <Text>{item.currentPrice}$</Text>
+            </View>
+          )}
+          keyExtractor={item => item.idAccount.toString()}
+        />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Portefeuille</Text>
-
+      
       {/* Affichage du solde total */}
       <View style={styles.fundContainer}>
         <Text style={styles.fundLabel}>Solde total :</Text>
@@ -90,167 +143,120 @@ const CoursActuelleScreen = () => {
             <Text style={styles.headerText}>Symbole</Text>
           </View>
           <View style={styles.headerCell}>
-            <Text style={styles.headerText}>Quantité</Text>
-          </View>
-          <View style={styles.headerCell}>
             <Text style={styles.headerText}>Cours Actuel</Text>
-          </View>
-          <View style={styles.headerCell}>
-            <Text style={styles.headerText}>Valeur</Text>
-          </View>
-          <View style={styles.headerCell}>
-            <Text style={styles.headerText}>Date MAJ</Text>
           </View>
           <View style={styles.headerCell}>
             <Text style={styles.headerText}>Favoris</Text>
           </View>
         </View>
-
         {filteredCryptos.map((crypto, index) => (
-          <View key={index} style={styles.tableRow}>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.image} </Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.cryptoName}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.symbol}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.quantity}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.currentPrice} $</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.value} $</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.lastUpdated}</Text>
-            </View>
-            <View style={styles.cell}>
-              <FavoriteButton
-                isFavorite={crypto.isFavorite}
-                onPress={() => toggleFavorite(crypto.idAccount)}
-              />
-            </View>
-          </View>
+          <CryptoItem key={index} item={crypto} />
         ))}
       </View>
 
-      {/* Bouton pour naviguer vers les favoris */}
-      <TouchableOpacity
-        style={styles.navigateButton}
-        onPress={() => {
-          const favorites = cryptos.filter((crypto) => crypto.isFavorite);
-          if (favorites.length > 0) {
-            navigation.navigate('Favorites', { favorites });
-          } else {
-            alert('Aucune crypto n\'est marquée comme favorite');
-          }
-        }}
-      >
-        <Text style={styles.buttonText}>Voir mes favoris</Text>
-      </TouchableOpacity>
+      {/* Section favoris */}
+      <FavoritesSection />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      padding: 16,
-    },
-    title: {
-      fontSize: 24,
-      marginBottom: 20,
-      fontWeight: 'bold',
-    },
-    fundContainer: {
-      width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 16,
-      padding: 8,
-      backgroundColor: '#f5f5f5',
-      borderRadius: 4,
-    },
-    fundLabel: {
-      fontSize: 16,
-      color: '#666',
-    },
-    fundAmount: {
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    searchContainer: {
-      width: '100%',
-      marginBottom: 16,
-    },
-    searchInput: {
-      width: '100%',
-      padding: 12,
-      backgroundColor: '#f5f5f5',
-      borderRadius: 4,
-      borderWidth: 1,
-      borderColor: '#ddd',
-    },
-    table: {
-      width: '100%',
-      borderWidth: 1,
-      borderColor: '#ddd',
-      borderRadius: 4,
-    },
-    tableHeader: {
-      flexDirection: 'row',
-      backgroundColor: '#f5f5f5',
-      borderBottomWidth: 1,
-      borderBottomColor: '#ddd',
-    },
-    tableRow: {
-      flexDirection: 'row',
-      borderBottomWidth: 1,
-      borderBottomColor: '#ddd',
-    },
-    headerCell: {
-      flex: 1,
-      padding: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    cell: {
-      flex: 1,
-      padding: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    headerText: {
-      fontWeight: 'bold',
-      color: '#333',
-    },
-    cellText: {
-      color: '#666',
-    },
-    favoriteText: {
-      color: '#FFD700', 
-      fontSize: 16,
-    },
-    navigateButton: {
-      marginTop: 16,
-      padding: 12,
-      backgroundColor: '#007AFF',
-      borderRadius: 4,
-      width: 160,
-    },
-    buttonText: {
-      color: 'white',
-      textAlign: 'center',
-    },
-  });
-  
-  export default CoursActuelleScreen;
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    fontWeight: 'bold',
+  },
+  fundContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    padding: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 4,
+  },
+  fundLabel: {
+    fontSize: 16,
+    color: '#666',
+  },
+  fundAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  searchContainer: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  searchInput: {
+    width: '100%',
+    padding: 12,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  table: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 4,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#f5f5f5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  headerCell: {
+    flex: 1,
+    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cell: {
+    flex: 1,
+    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cellText: {
+    color: '#666',
+  },
+  favoritesContainer: {
+    marginTop: 16,
+    width: '100%',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 4,
+    padding: 8,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  favoriteItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  }
+});
 
+export default CoursActuelleScreen;

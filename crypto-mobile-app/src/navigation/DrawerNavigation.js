@@ -63,15 +63,6 @@ const DrawerNavigation = () => {
           }}
         />
         <Drawer.Screen
-          name="Favoris"
-          component={FavoritesScreen}
-          options={{
-            drawerIcon: ({ focused }) => (
-              <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
-            ),
-          }}
-        />
-        <Drawer.Screen
           name="Crypto cours"
           component={CoursActuelleScreen}
           options={{
