@@ -25,12 +25,12 @@ services:
       dockerfile: Dockerfile
     environment:
       DB_URL: pg-container
-      DB_PORT: 5432
+      DB_PORT: 912
       DB_NAME: crypto
       DB_USERNAME: postgres
       DB_PASSWORD: itu16
     ports:
-      - "911:911"
+      - "911:8080"
     depends_on:
       db:
           condition: service_healthy
