@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 @NoArgsConstructor
 @Getter
@@ -24,5 +23,9 @@ public class Crypto {
 
     @Column(name = "symbol", nullable = false, length = 5)
     private String symbol;
+
+    public String sout() {
+        return name + " (" + symbol + ")";
+    }
 
 }
