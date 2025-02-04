@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "crypto",
+    "slug": "crypto",
+    "version": "1.0.0",
+    "newArchEnabled": true,
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "package": "com.mycorp.myapp"
+    },
+    "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.mycorp.myapp"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
+  }
+}
