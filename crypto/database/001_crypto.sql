@@ -87,6 +87,17 @@ CREATE TABLE sale_detail
     FOREIGN KEY (id_sale) REFERENCES sale (id_sale)
 );
 
+CREATE TABLE crypto_fav
+(
+    id_crypto_fav   SERIAL,
+    date_crypto_fav TIMESTAMP,
+    id_crypto       INTEGER NOT NULL,
+    id_account      INTEGER NOT NULL,
+    PRIMARY KEY (id_crypto_fav),
+    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
 CREATE TABLE wallet
 (
     id_wallet  SERIAL,
@@ -145,14 +156,4 @@ CREATE TABLE commission_purchase
     PRIMARY KEY (id_commission_purchase),
     FOREIGN KEY (id_purchase) REFERENCES purchase (id_purchase),
     FOREIGN KEY (id_commission_rate) REFERENCES commission_rate (id_commission_rate)
-);
-
-CREATE TABLE crypto_fav
-(
-    id_crypto  INTEGER,
-    id_account INTEGER,
-    date_fav   TIMESTAMP,
-    PRIMARY KEY (id_crypto, id_account),
-    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
-    FOREIGN KEY (id_account) REFERENCES account (id_account)
 );

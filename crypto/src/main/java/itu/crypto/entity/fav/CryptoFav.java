@@ -3,28 +3,43 @@ package itu.crypto.entity.fav;
 import itu.crypto.entity.Account;
 import itu.crypto.entity.Crypto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "crypto_fav")
 public class CryptoFav {
-    @EmbeddedId
-    private CryptoFavId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_crypto_fav", nullable = false)
+    private Integer id;
 
-    @MapsId("idCrypto")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_crypto", nullable = false)
-    private Crypto idCrypto;
+    private Crypto crypto;
 
-    @MapsId("idAccount")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
-    private Account idAccount;
+    private Account account;
 
-    @Column(name = "date_fav")
-    private LocalDateTime dateFav;
+    @Column(name = "date_crypto_fav")
+    private LocalDateTime dateCryptoFav;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CryptoFav autreCryptoFav = (CryptoFav) o;
+
+        return Objects.equals(crypto, autreCryptoFav.crypto) &&
+                Objects.equals(account, autreCryptoFav.account) &&
+                Objects.equals(dateCryptoFav, autreCryptoFav.dateCryptoFav);
+    }
 }
