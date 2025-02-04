@@ -1,9 +1,7 @@
 package itu.crypto.service.account;
 
-import itu.crypto.dto.ApiResponse;
 import itu.crypto.entity.Account;
 import itu.crypto.repository.AccountRepository;
-import itu.crypto.service.FetchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,6 @@ import java.util.List;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final FetchService fetchService;
 
     /**
      * Retrouver un Account a partir d'un token dans le session. Mbola tsy mande io.
@@ -38,13 +35,5 @@ public class AccountService {
 
     public List<Account> findAll() {
         return accountRepository.findAll();
-    }
-
-
-    @Deprecated
-    public ApiResponse fetchPasswordFromIdentityProvider(Account account) {
-//        return fetchService.fetchUrl("/api/account/password", account, false);
-
-        return new ApiResponse("ok", "mila mitifitra anle identite", "fufu_is_password", null);
     }
 }

@@ -1,6 +1,7 @@
 package itu.crypto.service.transaction;
 
 import itu.crypto.entity.Purchase;
+import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.transaction.PurchaseRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class PurchaseService {
+public class PurchaseService implements BaseService<Purchase> {
 
     private final PurchaseRepository purchaseRepository;
 
