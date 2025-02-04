@@ -24,11 +24,11 @@ public class SaleDetail {
     @Column(name = "quantity_left")
     private Integer quantityLeft;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_crypto", nullable = false)
     private Crypto crypto;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_sale", nullable = false)
     private Sale sale;
 
