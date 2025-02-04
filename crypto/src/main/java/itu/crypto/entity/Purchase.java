@@ -30,15 +30,15 @@ public class Purchase {
     @Column(name = "quantity_crypto")
     private Integer quantityCrypto;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account_purchaser", nullable = false)
     private Account accountPurchaser;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account_seller", nullable = false)
     private Account accountSeller;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_sale_detail", nullable = false)
     private SaleDetail saleDetail;
 
