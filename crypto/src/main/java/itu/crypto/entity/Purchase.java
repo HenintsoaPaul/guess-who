@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@NoArgsConstructor
 @Data
-@ToString
 @Entity
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "purchase")
 public class Purchase {
     @Id
@@ -40,4 +42,19 @@ public class Purchase {
     @JoinColumn(name = "id_sale_detail", nullable = false)
     private SaleDetail saleDetail;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Purchase autrePurchase = (Purchase) o;
+
+        return Double.compare(autrePurchase.totalPrice, totalPrice) == 0 &&
+                Double.compare(autrePurchase.unitPrice, unitPrice) == 0 &&
+                Double.compare(autrePurchase.quantityCrypto, quantityCrypto) == 0 &&
+
+                Objects.equals(datePurchase, autrePurchase.datePurchase) &&
+                Objects.equals(accountPurchaser, autrePurchase.accountPurchaser) &&
+                Objects.equals(accountSeller, autrePurchase.accountSeller) &&
+                Objects.equals(saleDetail, autrePurchase.saleDetail);
+    }
 }
