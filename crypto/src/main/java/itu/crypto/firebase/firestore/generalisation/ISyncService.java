@@ -1,4 +1,4 @@
-package itu.crypto.firebase;
+package itu.crypto.firebase.firestore.generalisation;
 
 import com.google.cloud.firestore.Firestore;
 
