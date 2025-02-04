@@ -1,6 +1,6 @@
 package itu.crypto.controller;
 
-import itu.crypto.entity.Cours;
+import itu.crypto.entity.cours.Cours;
 import itu.crypto.enums.CoursAnalysisType;
 import itu.crypto.service.CoursService;
 import lombok.RequiredArgsConstructor;

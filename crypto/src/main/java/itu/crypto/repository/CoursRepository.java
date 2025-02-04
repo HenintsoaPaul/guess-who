@@ -1,6 +1,6 @@
 package itu.crypto.repository;
 
-import itu.crypto.entity.Cours;
+import itu.crypto.entity.cours.Cours;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

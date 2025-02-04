@@ -1,7 +1,7 @@
 package itu.crypto.firebase.firestore.cours;
 
 import com.google.cloud.firestore.Firestore;
-import itu.crypto.entity.Cours;
+import itu.crypto.entity.cours.Cours;
 import itu.crypto.firebase.firestore.generalisation.GenericSyncService;
 import itu.crypto.service.CoursService;
 import org.springframework.stereotype.Service;
