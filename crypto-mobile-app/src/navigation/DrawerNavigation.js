@@ -3,15 +3,16 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ProfileScreen from '../screens/ProfileScreen';
+import CoursActuelleScreen from '../screens/CoursActuelleScreen';
 import WalletScreen from '../screens/WalletScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
-import CoursActuelleScreen from '../screens/CoursActuelleScreen';
 import ProfilePicture from '../components/organisms/ProfilePicture';
+
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
   'Portefeuille': 'Portefeuille',
-  'Favoris': 'Favoris',
+  'Favorites': 'Favorites',
   'Crypto cours': 'Crypto cours',
   'ProfileEdit': 'Éditer Profil'
 };
@@ -64,13 +65,23 @@ const DrawerNavigation = () => {
         />
         <Drawer.Screen
           name="Crypto cours"
-          component={CoursActuelleScreen}
+          component={CoursActuelleScreen} 
           options={{
             drawerIcon: ({ focused }) => (
               <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
             ),
           }}
         />
+        <Drawer.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        initialParams={{ favoritesList: [] }} 
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
+          ),
+        }}
+      />
       </Drawer.Navigator>
     </NavigationContainer>
   );

@@ -15,7 +15,6 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
       setWalletTotalPrice(data.totalPrice);
       console.log('Données du document:', data);
 
-      // Listen for real-time updates
       const unsubscribe = onSnapshot(walletDocRef, (doc) => {
         if (doc.exists()) {
           const updatedData = doc.data();

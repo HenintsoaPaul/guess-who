@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FavoriteButton from '../components/atoms/FavoriteButton';
@@ -6,6 +6,7 @@ import FavoriteButton from '../components/atoms/FavoriteButton';
 const CoursActuelleScreen = () => {
   const navigation = useNavigation();
   const [favoritesList, setFavoritesList] = useState([]);
+
   const [cryptos, setCryptos] = useState([
     {
       idAccount: 1,
@@ -17,6 +18,7 @@ const CoursActuelleScreen = () => {
       quantity: 1000,
       purchaseDate: null,
       totalPrice: null,
+
       currentPrice: 45000,
       value: 45000 * 1000,
       lastUpdated: "2023-10-01",
@@ -42,13 +44,13 @@ const CoursActuelleScreen = () => {
 
   const toggleFavorite = useCallback((idAccount) => {
     setCryptos((prevCryptos) =>
-      prevCryptos.map((crypto) =>
+      prevCryptos.map((crypto) => 
         crypto.idAccount === idAccount
           ? { ...crypto, isFavorite: !crypto.isFavorite }
           : crypto
       )
     );
-
+    
     setFavoritesList(prevFavorites => {
       const index = prevFavorites.indexOf(idAccount);
       if (index === -1) {
@@ -58,6 +60,15 @@ const CoursActuelleScreen = () => {
       }
     });
   }, []);
+  
+  useEffect(() => {
+    console.log('Liste initiale des favoris:', favoritesList);
+    navigation.navigate('Favorites', {
+      favoritesList: favoritesList.map(idAccount =>
+        cryptos.find(crypto => crypto.idAccount === idAccount)
+      )
+    });
+  }, [favoritesList]);
 
   const filteredCryptos = cryptos.filter((crypto) =>
     crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -87,33 +98,9 @@ const CoursActuelleScreen = () => {
     </View>
   ));
 
-  const FavoritesSection = () => {
-    const favoriteCryptos = filteredCryptos.filter(
-      crypto => favoritesList.includes(crypto.idAccount)
-    );
-
-    return (
-      <View style={styles.favoritesContainer}>
-        <Text style={styles.sectionTitle}>Favoris</Text>
-        <FlatList
-          data={favoriteCryptos}
-          renderItem={({ item }) => (
-            <View style={styles.favoriteItem}>
-              <Text>{item.cryptoName}</Text>
-              <Text>{item.symbol}</Text>
-              <Text>{item.currentPrice}$</Text>
-            </View>
-          )}
-          keyExtractor={item => item.idAccount.toString()}
-        />
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Portefeuille</Text>
-      
+
       {/* Affichage du solde total */}
       <View style={styles.fundContainer}>
         <Text style={styles.fundLabel}>Solde total :</Text>
@@ -153,9 +140,6 @@ const CoursActuelleScreen = () => {
           <CryptoItem key={index} item={crypto} />
         ))}
       </View>
-
-      {/* Section favoris */}
-      <FavoritesSection />
     </View>
   );
 };
@@ -167,9 +151,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   title: {
     fontSize: 24,
-    marginBottom: 20,
     fontWeight: 'bold',
   },
   fundContainer: {
@@ -237,25 +227,6 @@ const styles = StyleSheet.create({
   },
   cellText: {
     color: '#666',
-  },
-  favoritesContainer: {
-    marginTop: 16,
-    width: '100%',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 4,
-    padding: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  favoriteItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
   }
 });
 
