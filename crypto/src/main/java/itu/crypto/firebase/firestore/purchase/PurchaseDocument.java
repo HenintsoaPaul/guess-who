@@ -1,6 +1,7 @@
 package itu.crypto.firebase.firestore.purchase;
 
 import com.google.cloud.Timestamp;
+import itu.crypto.entity.Account;
 import itu.crypto.entity.Purchase;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;
 import lombok.Data;
@@ -24,8 +25,8 @@ public class PurchaseDocument implements TimestampedDocument {
     private Integer idCrypto;
     private Integer idSaleDetail;
 
-//    private Account accountPurchaser;
-//    private Account accountSeller;
+    private Account accountPurchaser;
+    private Account accountSeller;
 //    private SaleDetail saleDetail;
 
     private String createdAt;
@@ -43,8 +44,8 @@ public class PurchaseDocument implements TimestampedDocument {
         this.idCrypto = purchase.getSaleDetail().getCrypto().getId();
         this.idSaleDetail = purchase.getSaleDetail().getId();
 
-//        this.accountPurchaser = purchase.getAccountPurchaser();
-//        this.accountSeller = purchase.getAccountSeller();
+        this.accountPurchaser = purchase.getAccountPurchaser();
+        this.accountSeller = purchase.getAccountSeller();
 //        this.saleDetail = purchase.getSaleDetail();
     }
 
@@ -55,8 +56,8 @@ public class PurchaseDocument implements TimestampedDocument {
                 totalPrice,
                 unitPrice,
                 quantityCrypto,
-                idAccountPurchaser,
-                idAccountSeller,
+                accountPurchaser,
+                accountSeller,
                 idSaleDetail
         );
     }

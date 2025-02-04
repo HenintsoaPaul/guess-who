@@ -42,6 +42,17 @@ public class Purchase {
     @JoinColumn(name = "id_sale_detail", nullable = false)
     private SaleDetail saleDetail;
 
+    public Purchase(int id, LocalDateTime datePurchase, double totalPrice, double unitPrice, int quantityCrypto,
+                    Account accountPurchaser, Account accountSeller, int idSaleDetail) {
+        this.id = id;
+        this.datePurchase = datePurchase;
+        this.totalPrice = totalPrice;
+        this.unitPrice = unitPrice;
+        this.quantityCrypto = quantityCrypto;
+        this.accountPurchaser = accountPurchaser;
+        this.accountSeller = accountSeller;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
