@@ -17,9 +17,9 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public abstract class GenericSyncService<T, D> implements ISyncService<T> {
 
-    private final Firestore firestore;
+    protected final Firestore firestore;
     private final BaseService<T> baseService;
-    private final String collectionName;
+    protected final String collectionName;
 
     protected abstract D toDocument(T entity);
     protected abstract T toEntity(D document);
