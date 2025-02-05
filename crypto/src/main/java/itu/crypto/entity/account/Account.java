@@ -1,11 +1,17 @@
 package itu.crypto.entity.account;
 
+import itu.crypto.entity.cours.CoursListener;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "account")
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AccountListener.class)
 public class Account {
 
     @Id
