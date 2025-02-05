@@ -91,6 +91,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
 
     protected abstract Class<D> getDocumentClass();
 
+    // CRUD
     public List<T> getAllEntities() {
         List<T> entities = new ArrayList<>();
         try {
@@ -112,5 +113,23 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
             System.err.println("❌ Erreur lors de la récupération des documents: " + e.getMessage());
         }
         return entities;
+    }
+
+    public void saveAsDocument(T entity) throws ExecutionException, InterruptedException {
+        try {
+            CollectionReference collectionRef = firestore.collection(collectionName);
+
+            String entityId = this.getEntityId(entity);
+
+            D document = this.toDocument(entity);
+
+            DocumentReference docRef = collectionRef.document(entityId);
+            docRef.set(document).get(); // `get()` pour attendre la fin de l'opération
+
+            log.info("Add document id '{}' in collection '{}'", entityId, collectionName);
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error on document insertion in collection '{}'. Error: {}", collectionName, e.getMessage());
+            throw e;
+        }
     }
 }
