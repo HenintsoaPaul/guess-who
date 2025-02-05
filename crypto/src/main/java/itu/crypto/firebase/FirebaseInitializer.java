@@ -1,6 +1,8 @@
 package itu.crypto.firebase;
 
 import itu.crypto.entity.Purchase;
+import itu.crypto.entity.cours.Cours;
+import itu.crypto.entity.fav.CryptoFav;
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import itu.crypto.firebase.firestore.fav.CryptoFavSyncService;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
@@ -28,6 +30,12 @@ public class FirebaseInitializer {
 
         List<Purchase> purchaseList = purchaseSyncService.getAllEntities();
         System.out.println("Found " + purchaseList.size() + " purchases");
+
+        List<Cours> coursList = coursSyncService.getAllEntities();
+        System.out.println("Found " + coursList.size() + " cours");
+
+        List<CryptoFav> cryptoFavList = cryptoFavSyncService.getAllEntities();
+        System.out.println("Found " + cryptoFavList.size() + " crypto_fav");
 
 //        Cours testListener = new Cours(500, LocalDateTime.now(), new Crypto(1, "Malko", "M"));
 //        coursRepository.save(testListener);

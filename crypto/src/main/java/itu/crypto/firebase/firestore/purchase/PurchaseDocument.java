@@ -27,6 +27,8 @@ public class PurchaseDocument implements TimestampedDocument {
 
     private Account accountPurchaser;
     private Account accountSeller;
+
+    // Warning: Tsy mety ilay daty mifampiditra fa mila de type google
 //    private SaleDetail saleDetail;
 
     private String createdAt;
