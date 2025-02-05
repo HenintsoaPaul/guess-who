@@ -1,18 +1,20 @@
-import React from 'react';
+import {React,useEffect,useState} from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import ProfileScreen from '../screens/ProfileScreen';
-import CoursActuelleScreen from '../screens/CoursActuelleScreen';
 import WalletScreen from '../screens/WalletScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
+import CoursActuelleScreen from '../screens/CoursActuelleScreen';
 import ProfilePicture from '../components/organisms/ProfilePicture';
+import UserScreen from '../screens/UserScreen';
+import { FIREBASE_AUTH } from '../services/firebaseService';
+import LoginScreen from '../screens/LoginScreen';
 
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
   'Portefeuille': 'Portefeuille',
-  'Favorites': 'Favorites',
+  'Favoris': 'Favoris',
   'Crypto cours': 'Crypto cours',
   'ProfileEdit': 'Éditer Profil'
 };
@@ -20,6 +22,13 @@ const SCREEN_LABELS = {
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigation = () => {
+  const [user,setUser] = useState(null);
+    useEffect(()=>{
+      FIREBASE_AUTH.onAuthStateChanged((user) => {
+        console.log('user :'+user)
+        setUser(user);
+      })
+    })
   return (
     <NavigationContainer>
       <Drawer.Navigator
@@ -35,26 +44,29 @@ const DrawerNavigation = () => {
           },
         }}
         drawerContent={(props) => <CustomDrawerContent {...props} />}
+        initialRouteName='Login'
       >
-        <Drawer.Screen
-          name="Profil"
-          component={ProfileScreen}
-          options={{
-            drawerIcon: ({ focused }) => (
-              <Text style={[styles.icon, focused && styles.activeIcon]}>👤</Text>
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="ProfileEdit"
-          component={ProfilePicture}
-          options={{
-            drawerIcon: ({ focused }) => (
-              <Text style={[styles.icon, focused && styles.activeIcon]}>📝</Text>
-            ),
-          }}
-        />
-        <Drawer.Screen
+        {user ? (
+        <>
+          <Drawer.Screen
+            name="Profil"
+            component={UserScreen}
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>👤</Text>
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="ProfileEdit"
+            component={ProfilePicture}
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>📝</Text>
+              ),
+            }}
+          />
+          <Drawer.Screen
           name="Portefeuille"
           component={WalletScreen}
           options={{
@@ -62,26 +74,30 @@ const DrawerNavigation = () => {
               <Text style={[styles.icon, focused && styles.activeIcon]}>💰</Text>
             ),
           }}
-        />
-        <Drawer.Screen
+          />
+          <Drawer.Screen
+          name="Favoris"
+          component={FavoritesScreen}
+          options={{
+            drawerIcon: ({ focused }) => (
+              <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
+            ),
+          }}
+          />
+          <Drawer.Screen
           name="Crypto cours"
-          component={CoursActuelleScreen} 
+          component={CoursActuelleScreen}
           options={{
             drawerIcon: ({ focused }) => (
               <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
             ),
           }}
-        />
-        <Drawer.Screen
-        name="Favorites"
-        component={FavoritesScreen}
-        initialParams={{ favoritesList: [] }} 
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
-          ),
-        }}
-      />
+          />
+        </>
+      ):
+      (
+        <Drawer.Screen name='Login'component={LoginScreen} options={{headerShown:false}}/>
+      )}
       </Drawer.Navigator>
     </NavigationContainer>
   );

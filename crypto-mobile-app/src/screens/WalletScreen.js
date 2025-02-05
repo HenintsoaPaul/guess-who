@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { db } from '../../config/firestore';
-import { query, collection, where, onSnapshot, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { FIRESTORE_DB } from '../services/firebaseService';
+import { onSnapshot, doc, getDoc } from 'firebase/firestore';
 
 const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
   try {
-    const walletDocRef = doc(db, "wallets", "1");
+    const walletDocRef = doc(FIRESTORE_DB, "wallets", "1");
     const docSnap = await getDoc(walletDocRef);
 
     if (docSnap.exists()) {
@@ -15,6 +15,7 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
       setWalletTotalPrice(data.totalPrice);
       console.log('Données du document:', data);
 
+      // Listen for real-time updates
       const unsubscribe = onSnapshot(walletDocRef, (doc) => {
         if (doc.exists()) {
           const updatedData = doc.data();

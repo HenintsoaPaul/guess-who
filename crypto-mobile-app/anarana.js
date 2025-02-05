@@ -44,7 +44,7 @@ const mobile_query = [
             montant: 8989000
         },
         response: {
-            ......
+            
         }
     },
     {
@@ -56,7 +56,7 @@ const mobile_query = [
             montant: 8989000
         },
         response: {
-            ......
+            
         }
     },
 
@@ -69,7 +69,7 @@ const mobile_query = [
             montant: 890
         },
         response: {
-            ......
+            
         }
         
     },
@@ -82,7 +82,7 @@ const mobile_query = [
             montant: 123
         },
         response: {
-            ......
+            
         }
     },
 ]

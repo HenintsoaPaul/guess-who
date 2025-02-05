@@ -1,30 +1,35 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAuth} from "firebase/auth";
+import { getFirestore ,collection} from "firebase/firestore";
 
-// Configuration Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyC87g2bzZlnvjX4VRqaB3eWLhRd3EcnGd8",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "tirelir-app-71721",
-    storageBucket: "tirelir-app-71721.firebasestorage.app",
-    messagingSenderId: "455716297248",
-    appId: "1:455716297248:android:74971b4acd3e1986bf3a45"
+  apiKey: "AIzaSyCB8WP6g1VVBaK3MO85NloEOpWm6jl5fvI",
+  authDomain: "tirelir-app-71721.firebaseapp.com",
+  projectId: "tirelir-app-71721",
+  storageBucket: "tirelir-app-71721.firebasestorage.app",
+  messagingSenderId: "455716297248",
+  appId: "1:455716297248:web:80c60491595ae9d8bf3a45",
+  measurementId: "G-L2H4J2GDHW"
 };
 
-// Initialiser Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+export const FIREBASE_APP = initializeApp(firebaseConfig);
+export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
+export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
+
+
+export default function getCollection({collectionname}){
+  const coll = collection(FIRESTORE_DB,collectionname);
+  return coll;
 }
 
-const db = firebase.firestore();
-
 export const fetchDataFromFirebase = async () => {
-    try {
-        const snapshot = await db.collection("your-collection").get();
-        snapshot.forEach(doc => {
-            console.log(doc.id, "=>", doc.data());
-        });
-    } catch (error) {
-        console.error("Error fetching data from Firebase: ", error);
-    }
+  try {
+      const snapshot = await db.collection("your-collection").get();
+      snapshot.forEach(doc => {
+          console.log(doc.id, "=>", doc.data());
+      });
+  } catch (error) {
+      console.error("Error fetching data from Firebase: ", error);
+  }
 };

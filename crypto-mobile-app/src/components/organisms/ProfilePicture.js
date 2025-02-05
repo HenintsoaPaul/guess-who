@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useContext} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import FormData from 'form-data';
 import CryptoJS from 'crypto-js';
+import { AppContext } from '../../../AppContext';
 
 const ProfilePicture = () => {
   const navigation = useNavigation();
-  const [image, setImage] = useState(null);
+  const { image, setImage } = useContext(AppContext); // Use the context
   const [uploading, setUploading] = useState(false);
 
   const CLOUDINARY_CONFIG = {
-    cloudName: 'dl280pugt',
-    apiKey: '715139885557876',
-    apiSecret: '8Hkn167yaygNrg1F-A9Ea_F0BPg'
+    cloudName: 'dulx9capq',
+    apiKey: '174986489287854',
+    apiSecret: 'k7dnDcMEbe24SF1jNB3YSPM1krA'
   };
 
   const generateSignature = () => {
@@ -122,7 +123,7 @@ const ProfilePicture = () => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.imageContainer} onPress={pickImage}>
         <Image
-          source={image ? { uri: image } : require('../../../assets/profile-default.jpg')}
+          source={image ? { uri: image } : require('../../../assets/profile.jpg')}
           style={styles.image}
         />
       </TouchableOpacity>

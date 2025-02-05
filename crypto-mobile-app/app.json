@@ -3,7 +3,7 @@
     "name": "crypto",
     "slug": "crypto",
     "version": "1.0.0",
-    "newArchEnabled": true,
+    "newArchEnabled":true,
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.mycorp.myapp"
