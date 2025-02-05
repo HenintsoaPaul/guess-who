@@ -1,6 +1,6 @@
-package itu.crypto.repository;
+package itu.crypto.repository.account;
 
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {

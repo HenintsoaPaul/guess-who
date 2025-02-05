@@ -1,6 +1,6 @@
 package itu.crypto.entity.fav;
 
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.Crypto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

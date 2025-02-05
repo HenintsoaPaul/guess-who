@@ -1,7 +1,7 @@
 package itu.crypto.service.account;
 
-import itu.crypto.entity.Account;
-import itu.crypto.repository.AccountRepository;
+import itu.crypto.entity.account.Account;
+import itu.crypto.repository.account.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +35,14 @@ public class AccountService {
 
     public List<Account> findAll() {
         return accountRepository.findAll();
+    }
+
+    /**
+     * Retourner les tokens firebase pour l'envoi des notifications
+     * vers un utilisateur
+     */
+    @Deprecated
+    public List<String> findAllFCMTokens(Account account) {
+        return null;
     }
 }

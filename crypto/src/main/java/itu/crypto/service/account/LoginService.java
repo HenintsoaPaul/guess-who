@@ -2,7 +2,7 @@ package itu.crypto.service.account;
 
 import itu.crypto.dto.ApiResponse;
 import itu.crypto.dto.login.LoginRequest;
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.service.FetchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

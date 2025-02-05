@@ -1,7 +1,7 @@
 package itu.crypto.firebase.firestore.purchase;
 
 import com.google.cloud.Timestamp;
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.Purchase;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;
 import lombok.Data;

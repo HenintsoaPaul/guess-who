@@ -1,18 +1,15 @@
 package itu.crypto.entity;
 
+import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
+@ToString
+@NoArgsConstructor
 @Table(name = "mv_fund")
 public class MvFund {
     @Id
@@ -37,4 +34,7 @@ public class MvFund {
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
+    public boolean isDepotRetrait() {
+        return this.getTypeMvFund().getId() == 1 || this.getTypeMvFund().getId() == 2;
+    }
 }

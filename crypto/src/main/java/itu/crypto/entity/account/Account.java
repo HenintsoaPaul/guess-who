@@ -1,4 +1,4 @@
-package itu.crypto.entity;
+package itu.crypto.entity.account;
 
 import jakarta.persistence.*;
 import lombok.Data;

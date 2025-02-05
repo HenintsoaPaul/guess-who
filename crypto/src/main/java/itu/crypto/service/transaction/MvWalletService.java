@@ -1,6 +1,6 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.Crypto;
 import itu.crypto.entity.MvWallet;
 import itu.crypto.repository.transaction.MvWalletRepository;

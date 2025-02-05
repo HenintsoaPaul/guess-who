@@ -1,7 +1,7 @@
 package itu.crypto.firebase.firestore.fav;
 
 import com.google.cloud.Timestamp;
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.Crypto;
 import itu.crypto.entity.fav.CryptoFav;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;

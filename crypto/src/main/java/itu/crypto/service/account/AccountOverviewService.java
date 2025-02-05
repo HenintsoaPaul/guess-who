@@ -1,9 +1,9 @@
 package itu.crypto.service.account;
 
 import itu.crypto.dto.AccountOverview;
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.Purchase;
-import itu.crypto.repository.AccountRepository;
+import itu.crypto.repository.account.AccountRepository;
 import itu.crypto.service.transaction.PurchaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
