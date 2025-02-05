@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutionException;
-
 @Component
 public class AccountListener {
 
@@ -20,14 +18,14 @@ public class AccountListener {
     }
 
     @PostPersist
-    public void apresSauvegarde(Account account) throws ExecutionException, InterruptedException {
+    public void apresSauvegarde(Account account) {
         System.out.println("Après insertion : " + account);
         accountSyncService.saveAsDocument(account);
     }
 
     @PostUpdate
-    public void apresModification(Account account) throws ExecutionException, InterruptedException {
+    public void apresModification(Account account) {
         System.out.println("Après udpate : " + account);
-//        accountSyncService.updateAsDocument(account);
+        accountSyncService.updateAsDocument(account);
     }
 }

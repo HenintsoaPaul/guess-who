@@ -2,12 +2,9 @@ package itu.crypto.entity.cours;
 
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import jakarta.persistence.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.ExecutionException;
 
 @Component
 public class CoursListener {
@@ -20,13 +17,14 @@ public class CoursListener {
     }
 
     @PostPersist
-    public void apresSauvegarde(Cours cours) throws ExecutionException, InterruptedException {
+    public void apresSauvegarde(Cours cours) {
         System.out.println("Après insertion : " + cours);
         coursSyncService.saveAsDocument(cours);
     }
 
     @PostUpdate
-    public void apresModification(Cours cours) throws ExecutionException, InterruptedException {
+    public void apresModification(Cours cours) {
+        System.out.println("Après update : " + cours);
         coursSyncService.updateAsDocument(cours);
     }
 }

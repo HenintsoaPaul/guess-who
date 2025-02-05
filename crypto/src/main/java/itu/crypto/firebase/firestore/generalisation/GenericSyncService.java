@@ -21,6 +21,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
     protected final String collectionName;
 
     protected abstract D toDocument(T entity);
+
     protected abstract T toEntity(D document);
 
     public void syncWithFirebase() {
@@ -31,7 +32,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
     public void syncWithFirebase(Firestore firestore, List<T> entityList) {
         CollectionReference collectionRef = firestore.collection(collectionName);
 
-        log.info("Debut sync pour la collection '{}'", collectionName);
+        log.debug("Debut sync pour la collection '{}'", collectionName);
 
         for (T entity : entityList) {
             String entityId = getEntityId(entity);
@@ -44,7 +45,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
                     T existingEntity = existingDoc == null ? null : toEntity(existingDoc);
 
                     if (existingEntity != null && !existingEntity.equals(entity)) {
-                        updateDocument(docRef, entity, existingDoc);
+                        updateDocument(docRef, entity);
                     }
                 } else {
                     addDocument(docRef, entity);
@@ -54,15 +55,15 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
             }
         }
 
-        log.info("Fin sync pour la collection '{}'", collectionName);
+        log.debug("Fin sync pour la collection '{}'", collectionName);
 
     }
 
-    private void updateDocument(DocumentReference docRef, T entity, D existingDoc) {
+    private void updateDocument(DocumentReference docRef, T entity) {
         D document = toDocument(entity);
         setUpdatedAt(document);
         docRef.set(document);
-        log.info("Mise à jour de l'entité ID: {}", getEntityId(entity));
+        log.debug("Mise à jour de l'entité ID: {}", getEntityId(entity));
     }
 
     private void addDocument(DocumentReference docRef, T entity) {
@@ -70,7 +71,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
         setCreatedAt(document);
         setUpdatedAt(document);
         docRef.set(document);
-        log.info("Ajout de l'entité ID: {}", getEntityId(entity));
+        log.debug("Ajout de l'entité ID: {}", getEntityId(entity));
     }
 
     private void setCreatedAt(D document) {
@@ -115,21 +116,23 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
         return entities;
     }
 
-    public void saveAsDocument(T entity) throws ExecutionException, InterruptedException {
-        try {
-            CollectionReference collectionRef = firestore.collection(collectionName);
+    public void saveAsDocument(T entity) {
+        CollectionReference collectionRef = firestore.collection(collectionName);
+        String entityId = this.getEntityId(entity);
+        DocumentReference docRef = collectionRef.document(entityId);
 
-            String entityId = this.getEntityId(entity);
+        this.addDocument(docRef, entity);
 
-            D document = this.toDocument(entity);
+        log.debug("Add document id '{}' in collection '{}'", entityId, collectionName);
+    }
 
-            DocumentReference docRef = collectionRef.document(entityId);
-            docRef.set(document).get(); // `get()` pour attendre la fin de l'opération
+    public void updateAsDocument(T entity) {
+        CollectionReference collectionRef = firestore.collection(collectionName);
+        String entityId = this.getEntityId(entity);
+        DocumentReference docRef = collectionRef.document(entityId);
 
-            log.info("Add document id '{}' in collection '{}'", entityId, collectionName);
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Error on document insertion in collection '{}'. Error: {}", collectionName, e.getMessage());
-            throw e;
-        }
+        this.updateDocument(docRef, entity);
+
+        log.debug("Update document id '{}' in collection '{}'", entityId, collectionName);
     }
 }

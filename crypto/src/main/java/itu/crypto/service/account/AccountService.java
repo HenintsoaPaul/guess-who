@@ -1,6 +1,7 @@
 package itu.crypto.service.account;
 
 import itu.crypto.entity.account.Account;
+import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.account.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService implements BaseService<Account> {
 
     private final AccountRepository accountRepository;
 
