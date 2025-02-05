@@ -11,7 +11,7 @@ services:
       - "912:5432"
     volumes:
       - pg_crypto_data:/var/lib/postgresql/data
-#      - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d crypto" ]
       interval: 10s
@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      DB_URL: pg-container
+      DB_URL: jdbc:postgresql://pg-container:5432/crypto
       DB_PORT: 912
       DB_NAME: crypto
       DB_USERNAME: postgres
