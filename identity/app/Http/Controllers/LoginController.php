@@ -100,7 +100,7 @@ class LoginController extends Controller
      *     path="/api/login/validate",
      *     summary="Validation du PIN",
      *     description="Valide le PIN envoyé par email et génère un token d'accès.",
-     *     operationId="validatePin",
+     *     operationId="validateLoginPin",
      *     tags={"Authentification"},
      *     @OA\RequestBody(
      *         required=true,
