@@ -32,7 +32,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
     public void syncWithFirebase(Firestore firestore, List<T> entityList) {
         CollectionReference collectionRef = firestore.collection(collectionName);
 
-        log.debug("Debut sync pour la collection '{}'", collectionName);
+        log.info("Debut sync pour la collection '{}'", collectionName);
 
         for (T entity : entityList) {
             String entityId = getEntityId(entity);
@@ -45,7 +45,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
                     T existingEntity = existingDoc == null ? null : toEntity(existingDoc);
 
                     if (existingEntity != null && !existingEntity.equals(entity)) {
-                        updateDocument(docRef, entity);
+                        updateDocument(docRef, entity, existingDoc);
                     }
                 } else {
                     addDocument(docRef, entity);
@@ -55,15 +55,19 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
             }
         }
 
-        log.debug("Fin sync pour la collection '{}'", collectionName);
+        log.info("Fin sync pour la collection '{}'", collectionName);
 
     }
 
-    private void updateDocument(DocumentReference docRef, T entity) {
+    private void updateDocument(DocumentReference docRef, T entity, D existingDocument) {
         D document = toDocument(entity);
         setUpdatedAt(document);
+
+        String creationTime = ((TimestampedDocument) existingDocument).getCreatedAt();
+        ((TimestampedDocument) document).setCreatedAt(creationTime);
+
         docRef.set(document);
-        log.debug("Mise à jour de l'entité ID: {}", getEntityId(entity));
+        log.info("Mise à jour de l'entité ID: {}", getEntityId(entity));
     }
 
     private void addDocument(DocumentReference docRef, T entity) {
@@ -71,7 +75,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
         setCreatedAt(document);
         setUpdatedAt(document);
         docRef.set(document);
-        log.debug("Ajout de l'entité ID: {}", getEntityId(entity));
+        log.info("Ajout de l'entité ID: {}", getEntityId(entity));
     }
 
     private void setCreatedAt(D document) {
@@ -123,16 +127,21 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
 
         this.addDocument(docRef, entity);
 
-        log.debug("Add document id '{}' in collection '{}'", entityId, collectionName);
+        log.info("Add document id '{}' in collection '{}'", entityId, collectionName);
     }
 
     public void updateAsDocument(T entity) {
         CollectionReference collectionRef = firestore.collection(collectionName);
         String entityId = this.getEntityId(entity);
-        DocumentReference docRef = collectionRef.document(entityId);
+        try {
+            DocumentReference docRef = collectionRef.document(entityId);
+            D existingDoc = docRef.get().get().toObject(getDocumentClass());
 
-        this.updateDocument(docRef, entity);
+            this.updateDocument(docRef, entity, existingDoc);
 
-        log.debug("Update document id '{}' in collection '{}'", entityId, collectionName);
+            log.info("Update document id '{}' in collection '{}'", entityId, collectionName);
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error on update document id '{}' in collection '{}'. Error: {}", entityId, collectionName, e.getMessage());
+        }
     }
 }

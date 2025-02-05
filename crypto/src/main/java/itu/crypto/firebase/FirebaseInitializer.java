@@ -35,9 +35,11 @@ public class FirebaseInitializer {
     public void init() throws Exception {
         System.out.println("Initializing Firebase");
 //        testSync();
+        accountSyncService.syncWithFirebase();
+
 //        testGetAll();
-        testSaveAccount();
-        testSaveCours();
+//        testSaveAccount();
+//        testSaveCours();
     }
 
     private void testSync() {
@@ -47,7 +49,7 @@ public class FirebaseInitializer {
     }
 
     private void testSaveAccount() {
-        Account account = new Account(null, "fufu", "fufu@gmail.com", 500);
+        Account account = new Account(null, "fufu", "fufu@gmail.com", "mypassword", 500);
         accountRepository.save(account);
     }
 
