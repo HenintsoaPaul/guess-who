@@ -32,17 +32,17 @@ VALUES ('Bitcoin', 'BTC'),
        ('Chainlink', 'LINK');
 
 ------ 10 utilisateurs
-INSERT INTO account (pseudo, email, fund)
-VALUES ('Alice', 'rocruxappafra-4143@yopmail.com', 10000),
-       ('Bob', 'frucodillefeu-1226@yopmail.com', 12000),
-       ('Charlie', 'giyoibrappoihou-3938@yopmail.com', 15000),
-       ('Diana', 'barauxinulli-4329@yopmail.com', 8000),
-       ('Eve', 'meiwoussadate-5662@yopmail.com', 9000),
-       ('Frank', 'boifoissecoullu-3728@yopmail.com', 7000),
-       ('Grace', 'yettennevuffu-9049@yopmail.com', 9500),
-       ('Hank', 'baviwagrouye-6787@yopmail.com', 11000),
-       ('Ivy', 'bappoppotameu-6100@yopmail.com', 10500),
-       ('Jack', 'nopeummeuxoigrau-1855@yopmail.com', 11500);
+INSERT INTO account (pseudo, email, password, fund)
+VALUES ('Alice', 'rocruxappafra-4143@yopmail.com', 'mypassword', 10000),
+       ('Bob', 'frucodillefeu-1226@yopmail.com', 'mypassword', 12000),
+       ('Charlie', 'giyoibrappoihou-3938@yopmail.com', 'mypassword', 15000),
+       ('Diana', 'barauxinulli-4329@yopmail.com', 'mypassword', 8000),
+       ('Eve', 'meiwoussadate-5662@yopmail.com', 'mypassword', 9000),
+       ('Frank', 'boifoissecoullu-3728@yopmail.com', 'mypassword', 7000),
+       ('Grace', 'yettennevuffu-9049@yopmail.com', 'mypassword', 9500),
+       ('Hank', 'baviwagrouye-6787@yopmail.com', 'mypassword', 11000),
+       ('Ivy', 'bappoppotameu-6100@yopmail.com', 'mypassword', 10500),
+       ('Jack', 'nopeummeuxoigrau-1855@yopmail.com', 'mypassword', 11500);
 
 -- -- Insertion de données dans la table 'wallet'
 -- INSERT INTO wallet (quantity, id_crypto, id_account)

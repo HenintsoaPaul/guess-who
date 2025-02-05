@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "account")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "account")
 @EntityListeners(AccountListener.class)
 public class Account {
 
@@ -24,6 +24,9 @@ public class Account {
 
     @Column(name = "email", nullable = false, length = 250)
     private String email;
+
+    @Column(name = "password", nullable = false, length = 250)
+    private String password;
 
     @Column(name = "fund", nullable = false)
     private double fund;
