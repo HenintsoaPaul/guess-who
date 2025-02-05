@@ -1,4 +1,4 @@
-package itu.crypto.dto;
+package itu.crypto.api;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class ApiResponse {
+
     private String status;
     private String message;
     private Object data;
