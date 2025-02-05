@@ -1,9 +1,9 @@
 package itu.crypto.service.account;
 
-import itu.crypto.dto.ApiResponse;
+import itu.crypto.api.ApiResponse;
 import itu.crypto.dto.register.RegisterRequest;
 import itu.crypto.entity.account.Account;
-import itu.crypto.service.FetchService;
+import itu.crypto.api.FetchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,7 @@ public class RegisterService {
         Account account = new Account();
         account.setEmail(authDTO.getEmail());
         account.setPseudo(authDTO.getPseudo());
+        account.setPassword(authDTO.getPassword());
         account.setFund(0);
 
         return accountService.save(account);

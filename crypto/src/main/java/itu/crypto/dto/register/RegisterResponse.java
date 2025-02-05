@@ -1,6 +1,6 @@
 package itu.crypto.dto.register;
 
-import itu.crypto.dto.ApiResponse;
+import itu.crypto.api.ApiResponse;
 import lombok.Data;
 
 import java.util.LinkedHashMap;
