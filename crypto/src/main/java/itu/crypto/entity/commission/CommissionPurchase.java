@@ -1,6 +1,6 @@
 package itu.crypto.entity.commission;
 
-import itu.crypto.entity.Purchase;
+import itu.crypto.entity.purchase.Purchase;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

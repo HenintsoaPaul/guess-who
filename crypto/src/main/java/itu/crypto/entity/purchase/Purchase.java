@@ -1,5 +1,6 @@
-package itu.crypto.entity;
+package itu.crypto.entity.purchase;
 
+import itu.crypto.entity.SaleDetail;
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "purchase")
+@EntityListeners(PurchaseListener.class)
 public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,17 +44,6 @@ public class Purchase {
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_sale_detail", nullable = false)
     private SaleDetail saleDetail;
-
-    public Purchase(int id, LocalDateTime datePurchase, double totalPrice, double unitPrice, int quantityCrypto,
-                    Account accountPurchaser, Account accountSeller, int idSaleDetail) {
-        this.id = id;
-        this.datePurchase = datePurchase;
-        this.totalPrice = totalPrice;
-        this.unitPrice = unitPrice;
-        this.quantityCrypto = quantityCrypto;
-        this.accountPurchaser = accountPurchaser;
-        this.accountSeller = accountSeller;
-    }
 
     @Override
     public boolean equals(Object o) {
