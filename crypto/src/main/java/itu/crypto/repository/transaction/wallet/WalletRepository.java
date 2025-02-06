@@ -1,7 +1,7 @@
-package itu.crypto.repository;
+package itu.crypto.repository.transaction.wallet;
 
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Wallet;
+import itu.crypto.entity.wallet.Wallet;
 
 import java.util.List;
 

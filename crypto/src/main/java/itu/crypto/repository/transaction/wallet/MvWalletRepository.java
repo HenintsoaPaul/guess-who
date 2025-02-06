@@ -1,6 +1,6 @@
-package itu.crypto.repository.transaction;
+package itu.crypto.repository.transaction.wallet;
 
-import itu.crypto.entity.MvWallet;
+import itu.crypto.entity.wallet.MvWallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
