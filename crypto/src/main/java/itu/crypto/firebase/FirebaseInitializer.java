@@ -9,6 +9,7 @@ import itu.crypto.firebase.firestore.account.AccountSyncService;
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import itu.crypto.firebase.firestore.fav.CryptoFavSyncService;
 import itu.crypto.firebase.firestore.fund.MvFundSyncService;
+import itu.crypto.firebase.firestore.fund.pending.PendingMvFundSyncService;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.account.AccountRepository;
@@ -31,6 +32,7 @@ public class FirebaseInitializer {
     private final PurchaseSyncService purchaseSyncService;
     private final CryptoFavSyncService cryptoFavSyncService;
     private final MvFundSyncService mvFundSyncService;
+    private final PendingMvFundSyncService pendingMvFundSyncService;
 
     private final AccountRepository accountRepository;
     private final CoursRepository coursRepository;
@@ -52,7 +54,8 @@ public class FirebaseInitializer {
 //        purchaseSyncService.syncWithFirebase();
 //        cryptoFavSyncService.syncWithFirebase();
 
-        mvFundSyncService.syncWithFirebase();
+//        mvFundSyncService.syncWithFirebase();
+        pendingMvFundSyncService.syncWithFirebase();
     }
 
     private void testSaveAccount() {
