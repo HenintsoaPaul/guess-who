@@ -24,6 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      API_URL: http://laravel_guess_who:8000
       DB_URL: jdbc:postgresql://pg-container:5432/crypto
       DB_PORT: 912
       DB_NAME: crypto
@@ -37,3 +38,7 @@ services:
 
 volumes:
   pg_crypto_data:
+
+networks:
+  app_network:
+    driver: bridge

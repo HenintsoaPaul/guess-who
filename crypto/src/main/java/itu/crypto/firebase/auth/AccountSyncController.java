@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AccountSyncController {
 
-    private final AccountSyncService accountSyncService;
+    private final AccountSyncServiceTenaTsyMety accountSyncService;
 
     @GetMapping("/sync")
     public String syncUsers() {
