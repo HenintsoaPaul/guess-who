@@ -30,17 +30,14 @@ public class LoginController {
     }
 
     @PostMapping("/auth")
-    public String authenticateFirstForm(Model model, @ModelAttribute("loginRequest") LoginRequest loginRequest) {
+    public String authenticateFirstForm(Model model,
+                                        @ModelAttribute("loginRequest") LoginRequest loginRequest) {
         ApiResponse apiResponse = loginService.sendLoginDto(loginRequest);
 
         if (apiResponse.isOk()) {
             // goto pin form
             model.addAttribute("dto", loginRequest);
             model.addAttribute("msg", apiResponse.getMessage());
-
-            // todo: fafana rehefa mande ilay email
-            System.out.println(apiResponse.getData());
-            // todo: fafana rehefa mande ilay email
 
             return "login/pin";
         } else {
@@ -52,23 +49,17 @@ public class LoginController {
     }
 
     @PostMapping("/pin/auth")
-    public String authenticatePinForm(Model model, @ModelAttribute("loginRequest") LoginRequest loginRequest,
+    public String authenticatePinForm(Model model,
+                                      @ModelAttribute("loginRequest") LoginRequest loginRequest,
                                       HttpSession session) {
         ApiResponse apiResponse = loginService.sendPin(loginRequest);
 
         if (apiResponse.isOk()) {
-            // get token from apiResponse
-            System.out.println("msg: " + apiResponse.getMessage());
-            System.out.println("data: " + apiResponse.getData());
-
             // Get user by email, then save in Session
             Account myAccount = loginService.getAccount(loginRequest);
-            System.out.println("myAccount: " + myAccount);
 
             // save it in the Session
             LoginResponse loginResponse = new LoginResponse(apiResponse);
-            System.out.println("loginResponse: " + loginResponse);
-
             String token = loginResponse.getToken();
             String tokenExpiration = loginResponse.getExpiration();
 

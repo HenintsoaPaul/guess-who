@@ -3,6 +3,7 @@ package itu.crypto.service.account;
 import itu.crypto.entity.account.Account;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.account.AccountRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +15,21 @@ public class AccountService implements BaseService<Account> {
 
     private final AccountRepository accountRepository;
 
-    /**
-     * Retrouver un Account a partir d'un token dans le session. Mbola tsy mande io.
-     */
-    @Deprecated
-    public Account findFromToken(String token) {
-        return null;
-    }
-
-    public Account save(Account account) {
-        return accountRepository.save(account);
-    }
-
-    public Account findByEmail(String email) {
-        return accountRepository.findAccountByEmail(email);
-    }
-
     public Account findById(Integer id) {
         return accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Account not found"));
     }
 
     public List<Account> findAll() {
         return accountRepository.findAll();
+    }
+
+    public Account findByEmail(String email) {
+        return accountRepository.findAccountByEmail(email);
+    }
+
+    @Transactional
+    public Account save(Account account) {
+        return accountRepository.save(account);
     }
 
     /**

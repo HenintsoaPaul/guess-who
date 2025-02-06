@@ -25,6 +25,7 @@ public class RegisterController {
         return "register/index";
     }
 
+    // Pour la validation par PIN apres la redirection automatique
     @PostMapping("/auth")
     public String authenticateFirstForm(Model model,
                                         @ModelAttribute("registerRequest") RegisterRequest registerRequest) {
@@ -34,33 +35,38 @@ public class RegisterController {
             // goto pin form
             model.addAttribute("dto", registerRequest);
             model.addAttribute("msg", apiResponse.getMessage());
-            System.out.println("ApiResponse: " + apiResponse.getData());
+            model.addAttribute("registerRequest", registerRequest);
 
             return "register/pin";
         } else {
             // goto email form
-            System.out.println("msg: " + apiResponse.getMessage());
-
             model.addAttribute("msg", apiResponse.getMessage());
             model.addAttribute("registerRequest", new RegisterRequest());
+
             return "register/index";
         }
+    }
+
+    // Pour les validations par PIN en attentes
+    @GetMapping("/pending")
+    public String gotoPinForm(Model model) {
+        model.addAttribute("registerRequest", new RegisterRequest());
+        return "register/pin";
     }
 
     @PostMapping("/pin/auth")
     public String authenticatePinForm(HttpSession session, Model model,
                                       @ModelAttribute("registerRequest") RegisterRequest registerRequest) {
+        // Save account to identity
         ApiResponse apiResponse = registerService.sendPin(registerRequest);
 
         if (apiResponse.isOk()) {
-            System.out.println("dto: " + registerRequest);
-            registerService.register(registerRequest);
+            RegisterResponse registerResponse = new RegisterResponse(apiResponse);
+
+            // Save account to crypto
+            registerService.register(registerRequest, registerResponse);
 
             // Add token from API into the Session
-            System.out.println("apiResponse: " + apiResponse.getData());
-
-            RegisterResponse registerResponse = new RegisterResponse(apiResponse);
-            System.out.println("registerResponse: " + registerResponse);
             session.setAttribute("token", registerResponse.getToken());
             session.setAttribute("token_expiration", registerResponse.getExpiration());
 
@@ -70,6 +76,7 @@ public class RegisterController {
             model.addAttribute("msg", apiResponse.getMessage());
             model.addAttribute("errors", apiResponse.getErrors());
             model.addAttribute("dto", registerRequest);
+
             return "register/pin";
         }
     }
