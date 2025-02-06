@@ -1,7 +1,7 @@
 package itu.crypto.controller;
 
-import itu.crypto.entity.MvWallet;
-import itu.crypto.service.transaction.MvWalletService;
+import itu.crypto.entity.wallet.MvWallet;
+import itu.crypto.service.transaction.wallet.MvWalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

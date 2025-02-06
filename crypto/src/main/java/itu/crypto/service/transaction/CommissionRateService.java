@@ -1,6 +1,6 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.entity.Crypto;
+import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.entity.commission.CommissionRate;
 import itu.crypto.entity.commission.CommissionType;
 import itu.crypto.repository.transaction.CommissionRateRepository;
@@ -40,7 +40,7 @@ public class CommissionRateService {
     }
 
     @Transactional
-    public void save(CommissionRate commissionRate) throws Exception {
+    public void save(CommissionRate commissionRate) {
         commissionRateRepository.save(commissionRate);
     }
 }

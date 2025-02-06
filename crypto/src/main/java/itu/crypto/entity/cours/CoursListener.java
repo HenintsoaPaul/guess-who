@@ -18,13 +18,11 @@ public class CoursListener {
 
     @PostPersist
     public void apresSauvegarde(Cours cours) {
-        System.out.println("Après insertion : " + cours);
         coursSyncService.saveAsDocument(cours);
     }
 
     @PostUpdate
     public void apresModification(Cours cours) {
-        System.out.println("Après update : " + cours);
         coursSyncService.updateAsDocument(cours);
     }
 }

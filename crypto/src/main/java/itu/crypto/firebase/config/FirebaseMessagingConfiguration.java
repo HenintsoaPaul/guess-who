@@ -15,7 +15,7 @@ public class FirebaseMessagingConfiguration {
     private final FirebaseApp firebaseApp;
 
     @Bean
-    public FirebaseMessaging firebaseMessaging() throws IOException {
+    public FirebaseMessaging firebaseMessaging() {
         return FirebaseMessaging.getInstance(firebaseApp);
     }
 }

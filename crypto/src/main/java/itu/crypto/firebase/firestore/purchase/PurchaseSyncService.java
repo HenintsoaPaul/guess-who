@@ -1,7 +1,7 @@
 package itu.crypto.firebase.firestore.purchase;
 
 import com.google.cloud.firestore.Firestore;
-import itu.crypto.entity.Purchase;
+import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.firebase.firestore.generalisation.GenericSyncService;
 import itu.crypto.service.transaction.PurchaseService;
 import org.springframework.stereotype.Service;

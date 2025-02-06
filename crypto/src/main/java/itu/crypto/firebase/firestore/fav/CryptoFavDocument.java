@@ -2,8 +2,8 @@ package itu.crypto.firebase.firestore.fav;
 
 import com.google.cloud.Timestamp;
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Crypto;
-import itu.crypto.entity.fav.CryptoFav;
+import itu.crypto.entity.crypto.Crypto;
+import itu.crypto.entity.crypto.CryptoFav;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;
 import lombok.Data;
 import lombok.NoArgsConstructor;

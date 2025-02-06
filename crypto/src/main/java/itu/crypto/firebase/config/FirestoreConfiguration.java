@@ -16,7 +16,7 @@ public class FirestoreConfiguration {
     private final FirebaseApp firebaseApp;
 
     @Bean
-    public Firestore firestore() throws IOException {
+    public Firestore firestore() {
         return FirestoreClient.getFirestore(firebaseApp);
     }
 }

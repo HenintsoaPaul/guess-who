@@ -2,7 +2,7 @@ package itu.crypto.service.account;
 
 import itu.crypto.dto.AccountOverview;
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Purchase;
+import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.repository.account.AccountRepository;
 import itu.crypto.service.transaction.PurchaseService;
 import lombok.RequiredArgsConstructor;

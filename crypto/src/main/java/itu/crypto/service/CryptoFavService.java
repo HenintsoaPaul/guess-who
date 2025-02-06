@@ -1,6 +1,6 @@
 package itu.crypto.service;
 
-import itu.crypto.entity.fav.CryptoFav;
+import itu.crypto.entity.crypto.CryptoFav;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.CryptoFavRepository;
 import lombok.RequiredArgsConstructor;

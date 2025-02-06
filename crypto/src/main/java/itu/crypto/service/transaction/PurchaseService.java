@@ -1,6 +1,6 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.entity.Purchase;
+import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.transaction.PurchaseRepository;
 import jakarta.persistence.EntityManager;

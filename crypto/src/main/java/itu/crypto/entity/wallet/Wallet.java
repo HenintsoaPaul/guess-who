@@ -1,18 +1,17 @@
-package itu.crypto.entity;
+package itu.crypto.entity.wallet;
 
+import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString
 @Entity
 @Table(name = "wallet")
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(WalletListener.class)
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +21,11 @@ public class Wallet {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_crypto", nullable = false)
     private Crypto crypto;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
     private Account account;
 

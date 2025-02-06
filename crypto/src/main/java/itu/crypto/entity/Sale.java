@@ -2,19 +2,16 @@ package itu.crypto.entity;
 
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
+@ToString
 @Table(name = "sale")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +19,9 @@ public class Sale {
     private Integer id;
 
     @Column(name = "date_sale")
-    private LocalDate dateSale;
+    private LocalDateTime dateSale;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
     @ToString.Exclude
     private Account account;

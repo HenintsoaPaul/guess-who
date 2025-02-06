@@ -1,7 +1,6 @@
-package itu.crypto.entity.fav;
+package itu.crypto.entity.crypto;
 
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Crypto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "crypto_fav")
+@EntityListeners(CryptoFavListener.class)
 public class CryptoFav {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

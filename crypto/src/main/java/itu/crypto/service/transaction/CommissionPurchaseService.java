@@ -1,7 +1,7 @@
 package itu.crypto.service.transaction;
 
 import itu.crypto.dto.commission.CommissionTypeAnalysis;
-import itu.crypto.entity.Purchase;
+import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.entity.commission.CommissionPurchase;
 import itu.crypto.enums.CommissionAnalysisType;
 import itu.crypto.enums.CommissionType;

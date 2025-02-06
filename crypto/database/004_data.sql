@@ -18,6 +18,11 @@ VALUES ('Dépôt'),
        ('Achat'),
        ('Vente');
 
+--
+INSERT INTO pending_state (name)
+VALUES ('En Attente'),
+       ('Validee');
+
 -- 10 crypto
 INSERT INTO crypto (name, symbol)
 VALUES ('Bitcoin', 'BTC'),

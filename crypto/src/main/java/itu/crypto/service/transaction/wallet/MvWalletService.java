@@ -1,9 +1,9 @@
-package itu.crypto.service.transaction;
+package itu.crypto.service.transaction.wallet;
 
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Crypto;
-import itu.crypto.entity.MvWallet;
-import itu.crypto.repository.transaction.MvWalletRepository;
+import itu.crypto.entity.crypto.Crypto;
+import itu.crypto.entity.wallet.MvWallet;
+import itu.crypto.repository.transaction.wallet.MvWalletRepository;
 import itu.crypto.service.account.AccountService;
 import itu.crypto.service.CryptoService;
 import lombok.RequiredArgsConstructor;

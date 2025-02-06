@@ -7,7 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface CoursRepository extends JpaRepository<Cours, Integer> {
-    List<Cours> findById(int idCrypto);
+
+    @Query(value = """
+            select cr from Cours cr where cr.crypto.id = :idCrypto
+            """)
+    List<Cours> findByIdCrypto(int idCrypto);
 
     @Query(value = """
             select tab1.*
