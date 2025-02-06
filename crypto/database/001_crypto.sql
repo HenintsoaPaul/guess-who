@@ -46,19 +46,6 @@ CREATE TABLE type_mv_fund
     UNIQUE (name)
 );
 
-CREATE TABLE mv_fund
-(
-    id_mv_fund      SERIAL,
-    date_mv         TIMESTAMP      NOT NULL,
-    amount          NUMERIC(15, 2) NOT NULL,
-    id_source       INTEGER,
-    id_type_mv_fund INTEGER        NOT NULL,
-    id_account      INTEGER        NOT NULL,
-    PRIMARY KEY (id_mv_fund),
-    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
-    FOREIGN KEY (id_account) REFERENCES account (id_account)
-);
-
 CREATE TABLE type_mv_wallet
 (
     id_type_mv_wallet SERIAL,
@@ -97,6 +84,14 @@ CREATE TABLE crypto_fav
     PRIMARY KEY (id_crypto_fav),
     FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
     FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
+CREATE TABLE pending_state
+(
+    id_pending_state SERIAL,
+    name             VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id_pending_state),
+    UNIQUE (name)
 );
 
 CREATE TABLE wallet
@@ -157,4 +152,34 @@ CREATE TABLE commission_purchase
     PRIMARY KEY (id_commission_purchase),
     FOREIGN KEY (id_purchase) REFERENCES purchase (id_purchase),
     FOREIGN KEY (id_commission_rate) REFERENCES commission_rate (id_commission_rate)
+);
+
+CREATE TABLE pending_mv_fund
+(
+    id_pending_mv_fund SERIAL,
+    date_pending       TIMESTAMP      NOT NULL,
+    date_validation    TIMESTAMP,
+    amount             NUMERIC(15, 2) NOT NULL,
+    id_pending_state   INTEGER        NOT NULL,
+    id_type_mv_fund    INTEGER        NOT NULL,
+    id_account         INTEGER        NOT NULL,
+    PRIMARY KEY (id_pending_mv_fund),
+    FOREIGN KEY (id_pending_state) REFERENCES pending_state (id_pending_state),
+    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
+CREATE TABLE mv_fund
+(
+    id_mv_fund         SERIAL,
+    date_mv            TIMESTAMP      NOT NULL,
+    amount             NUMERIC(15, 2) NOT NULL,
+    id_source          INTEGER,
+    id_pending_mv_fund INTEGER,
+    id_type_mv_fund    INTEGER        NOT NULL,
+    id_account         INTEGER        NOT NULL,
+    PRIMARY KEY (id_mv_fund),
+    FOREIGN KEY (id_pending_mv_fund) REFERENCES pending_mv_fund (id_pending_mv_fund),
+    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
 );

@@ -1,5 +1,6 @@
-package itu.crypto.entity;
+package itu.crypto.entity.fund;
 
+import itu.crypto.entity.TypeMvFund;
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,6 +34,10 @@ public class MvFund {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_pending_mv_fund")
+    private PendingMvFund pendingMvFund;
 
     public boolean isDepotRetrait() {
         return this.getTypeMvFund().getId() == 1 || this.getTypeMvFund().getId() == 2;
