@@ -1,27 +1,45 @@
-import React, { useEffect, useState ,useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import FormData from 'form-data';
 import CryptoJS from 'crypto-js';
 import { AppContext } from '../../../AppContext';
 
+const CLOUDINARY_CONFIG = {
+  cloudName: 'dulx9capq',
+  apiKey: '174986489287854',
+  apiSecret: 'k7dnDcMEbe24SF1jNB3YSPM1krA'
+};
+
 const ProfilePicture = () => {
-  const { image, setImage } = useContext(AppContext); // Use the context
+  const { image, setImage, user } = useContext(AppContext);
   const [uploading, setUploading] = useState(false);
 
-  const CLOUDINARY_CONFIG = {
-    cloudName: 'dulx9capq',
-    apiKey: '174986489287854',
-    apiSecret: 'k7dnDcMEbe24SF1jNB3YSPM1krA'
+  useEffect(() => {
+    requestPermissions();
+    fetchProfileImage();
+  }, []);
+
+  const fetchProfileImage = async () => {
+    try {
+      const response = await axios.get(`https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloudName}/image/upload/profile-${user.id}.jpg`);
+      if (response.status === 200) {
+        setImage(response.data.secure_url);
+      } 
+    } catch (error) {
+    }
+  };
+
+  const requestPermissions = async () => {
+    await ImagePicker.requestCameraPermissionsAsync();
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
   };
 
   const generateSignature = () => {
     const timestamp = Date.now().toString();
     const toSign = `timestamp=${timestamp}${CLOUDINARY_CONFIG.apiSecret}`;
-    const hash = CryptoJS.SHA1(toSign).toString();
-    return hash;
+    return CryptoJS.SHA1(toSign).toString();
   };
 
   const uploadImage = async (imageAsset) => {
@@ -31,7 +49,7 @@ const ProfilePicture = () => {
       formData.append('file', {
         uri: imageAsset.uri,
         type: 'image/jpeg',
-        name: `profile-${Date.now()}.jpg`,
+        name: `profile-${user.id}.jpg`,
       });
       formData.append('api_key', CLOUDINARY_CONFIG.apiKey);
       formData.append('timestamp', Date.now().toString());
@@ -40,11 +58,7 @@ const ProfilePicture = () => {
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`,
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        }
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
       console.log('Image uploadée avec succès:', response.data);
@@ -58,57 +72,39 @@ const ProfilePicture = () => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
-      const { status: mediaLibraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    })();
-  }, []);
-
   const pickImage = () => {
     Alert.alert(
       'Choisir une option',
       'Sélectionnez une option pour ajouter une photo de profil',
       [
-        {
-          text: 'Galerie',
-          onPress: () => pickImageFromGallery(),
-        },
-        {
-          text: 'Appareil photo',
-          onPress: () => pickImageFromCamera(),
-        },
-        {
-          text: 'Annuler',
-          style: 'cancel',
-        },
+        { text: 'Galerie', onPress: pickImageFromGallery },
+        { text: 'Appareil photo', onPress: pickImageFromCamera },
+        { text: 'Annuler', style: 'cancel' },
       ],
       { cancelable: true }
     );
   };
 
   const pickImageFromGallery = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      const imageUrl = await uploadImage(result.assets[0]);
-      if (imageUrl) {
-        console.log('URL de l\'image:', imageUrl);
-      }
-    }
+    handleImagePick(result);
   };
 
   const pickImageFromCamera = async () => {
-    let result = await ImagePicker.launchCameraAsync({
+    const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
+    handleImagePick(result);
+  };
+
+  const handleImagePick = async (result) => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       const imageUrl = await uploadImage(result.assets[0]);
@@ -126,9 +122,7 @@ const ProfilePicture = () => {
           style={styles.image}
         />
       </TouchableOpacity>
-      {uploading && (
-        <Text style={styles.uploadingText}>Upload en cours...</Text>
-      )}
+      {uploading && <Text style={styles.uploadingText}>Upload en cours...</Text>}
     </View>
   );
 };
@@ -153,17 +147,6 @@ const styles = StyleSheet.create({
     width: 160,
     height: 160,
     borderRadius: 80,
-  },
-  navigateButton: {
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: '#007AFF',
-    borderRadius: 4,
-    width: 160,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
   },
   uploadingText: {
     marginTop: 8,

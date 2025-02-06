@@ -1,18 +1,22 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { AntDesign } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 import { colors } from '../../constants/Colors'
 import StyleText from '../atoms/StyleText'
 
 export default function UserInfo({icon,label,children}) {
   return (
-    <View style={styles.container}>
+    <View style={{flexDirection:'row'}}>
       <View style={styles.label}>
-        <AntDesign name={icon} size={18} ></AntDesign>
-        <StyleText style={styles.labelText}  fs={18}> {label} </StyleText>
+        <FontAwesome name={icon} size={16} ></FontAwesome>
+        <StyleText style={styles.labelText}  fs={16}> {label} </StyleText>
+      </View> 
+    <View style={styles.container}>
+      <View>
+        <StyleText fs={16} color={colors.dark}>{children}</StyleText>
       </View>
-      <StyleText  fs={18}>{children}</StyleText>
     </View>
+  </View>
   )
 }
 
@@ -20,18 +24,18 @@ const styles = StyleSheet.create({
   container : {
     flex:1,
     flexDirection:'row',
-    backgroundColor: "#1111",
+    backgroundColor: colors.light,
     alignItems:'center',
-    paddingHorizontal:15,
-    paddingVertical:15,
-    borderRadius: 10,
-    justifyContent:'space-between'
+    padding:10,
+    justifyContent:'flex-end',
+
+
   },
   label:{
-      flexDirection:'row',
-      alignItems:'center'
+    backgroundColor:colors.white,
   },
   labelText:{
-    marginLeft:10,
+    textAlign:'center',
+    color:colors.pink
   }
 });
