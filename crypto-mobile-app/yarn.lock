@@ -3350,6 +3350,7 @@ crypto-random-string@^2.0.0:
   resolved "file:"
   dependencies:
     "@expo/metro-runtime" "~4.0.1"
+    "@react-native-firebase/app" "^21.7.1"
     "@react-native-firebase/auth" "^21.7.1"
     "@react-native-firebase/crashlytics" "^21.7.1"
     "@react-native-firebase/firestore" "^21.7.1"
