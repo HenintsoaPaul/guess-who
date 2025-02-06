@@ -5,9 +5,9 @@ import { onSnapshot, doc, getDoc, setDoc, collection } from 'firebase/firestore'
 import { FIRESTORE_DB } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
 
-const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
+const fetchWalletData = async (setCryptos, setWalletTotalPrice,user) => {
   try {
-    const walletDocRef = doc(FIRESTORE_DB, "wallets", "1");
+    const walletDocRef = doc(FIRESTORE_DB, "wallets", user.id+"");
     const docSnap = await getDoc(walletDocRef);
 
     if (docSnap.exists()) {
@@ -65,7 +65,6 @@ function TransactionFundScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterText, setFilterText] = useState('');
-  const navigation = useNavigation();
   const [amount, setAmount] = useState('');
   const [transactionType, setTransactionType] = useState('deposit');
   const {user, setUser} = useContext(AppContext); 
@@ -75,7 +74,7 @@ function TransactionFundScreen() {
       try {
         setLoading(true);
         setError(null);
-        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice);
+        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice,user);
         return () => {
           if (unsubscribe) unsubscribe();
         };

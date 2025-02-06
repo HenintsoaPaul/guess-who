@@ -1,10 +1,11 @@
-import React, { useState, useCallback, memo, useEffect } from 'react';
+import React, { useState, useCallback, memo, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FavoriteButton from '../components/atoms/FavoriteButton';
 import { doc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import {FIRESTORE_DB } from '../services/firebaseService';
+import { AppContext } from '../../AppContext';
 
 const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
   try {
@@ -90,9 +91,9 @@ const removeFavorite = async (cryptoId, accountId) => {
   }
 };
 
-const updateFavoritesListInFirestore = async (favoritesList) => {
+const updateFavoritesListInFirestore = async (favoritesList,user) => {
   try {
-    const favoritesDocRef = doc(FIRESTORE_DB, "favorites", "1");  
+    const favoritesDocRef = doc(FIRESTORE_DB, "favorites", user.id+"");  
     await updateDoc(favoritesDocRef, {
       favorites: favoritesList
     });
@@ -125,6 +126,7 @@ const CoursActuelleScreen = () => {
   const [walletTotalPrice, setWalletTotalPrice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
+  const {user} = useContext(AppContext);
 
   useEffect(() => {
     const fetchCryptos = async () => {
@@ -169,7 +171,7 @@ const CoursActuelleScreen = () => {
           dateAdded: crypto.dateAdded || Timestamp.now(), 
         }));
   
-      updateFavoritesListInFirestore(updatedFavoritesList);
+      updateFavoritesListInFirestore(updatedFavoritesList,user);
   
       return updatedCryptos;
     });

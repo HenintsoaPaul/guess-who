@@ -7,7 +7,7 @@ import { FIRESTORE_DB } from '../services/firebaseService';
 
 const fetchWalletData = async (setFavorites,user) => {
   try {
-    const Listfav = doc(FIRESTORE_DB, "favorites", "1");
+    const Listfav = doc(FIRESTORE_DB, "favorites", user.id+"");
     const docSnap = await getDoc(Listfav);
 
     if (docSnap.exists()) {
