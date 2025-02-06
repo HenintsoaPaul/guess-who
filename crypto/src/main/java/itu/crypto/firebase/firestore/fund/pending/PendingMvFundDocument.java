@@ -31,7 +31,11 @@ public class PendingMvFundDocument implements TimestampedDocument {
     public PendingMvFundDocument(PendingMvFund pendingMvFund) {
         this.id = pendingMvFund.getId();
         this.datePending = Timestamp.of(Date.from(pendingMvFund.getDatePending().toInstant(ZoneOffset.UTC)));
-        this.dateValidation = Timestamp.of(Date.from(pendingMvFund.getDateValidation().toInstant(ZoneOffset.UTC)));
+
+        Object dd = pendingMvFund.getDateValidation() == null ?
+                null : Timestamp.of(Date.from(pendingMvFund.getDateValidation().toInstant(ZoneOffset.UTC)));
+        this.dateValidation = (Timestamp) dd;
+
         this.amount = pendingMvFund.getAmount();
 
         this.pendingState = pendingMvFund.getPendingState();

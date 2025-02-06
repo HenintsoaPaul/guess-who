@@ -19,13 +19,11 @@ public class MvFundListener {
 
     @PostPersist
     public void apresSauvegarde(MvFund mvFund) {
-        System.out.println("Après insertion : " + mvFund);
         mvFundSyncService.saveAsDocument(mvFund);
     }
 
     @PostUpdate
     public void apresModification(MvFund mvFund) {
-        System.out.println("Après udpate : " + mvFund);
         mvFundSyncService.updateAsDocument(mvFund);
     }
 }

@@ -25,12 +25,12 @@ public class MvFundService implements BaseService<MvFund> {
     }
 
     @Transactional
-    public MvFund save(MvFund mvFund) throws FirebaseMessagingException {
+    public MvFund save(MvFund mvFund) {
         return mvFundRepository.save(mvFund);
     }
 
     public Optional<MvFund> findByPendingMvFund(PendingMvFund pendingMvFund) {
-        return Optional.ofNullable(mvFundRepository.findByPendingMvFund(pendingMvFund));
+        return mvFundRepository.findByIdPendingMvFund(pendingMvFund.getId());
     }
 
     /**
@@ -39,11 +39,12 @@ public class MvFundService implements BaseService<MvFund> {
      * faisons rien et nous retournons null.
      */
     @Transactional
-    public MvFund addFromPending(PendingMvFund pmf) throws FirebaseMessagingException {
-        if (this.findByPendingMvFund(pmf).isEmpty()) {
-            MvFund mv = new MvFund(pmf);
-            return this.save(mv);
+    public MvFund addFromPending(PendingMvFund pmf) {
+        MvFund fille = findByPendingMvFund(pmf).orElse(null);
+        if (fille == null) {
+            fille = new MvFund(pmf);
+            return this.save(fille);
         }
-        return null;
+        return fille;
     }
 }
