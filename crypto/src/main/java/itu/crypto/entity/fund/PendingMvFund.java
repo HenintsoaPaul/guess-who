@@ -1,17 +1,14 @@
 package itu.crypto.entity.fund;
 
-import itu.crypto.entity.TypeMvFund;
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "pending_mv_fund")
 public class PendingMvFund {
@@ -26,18 +23,18 @@ public class PendingMvFund {
     @Column(name = "date_validation")
     private LocalDateTime dateValidation;
 
-    @Column(name = "amount", nullable = false, precision = 15, scale = 2)
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_pending_state", nullable = false)
     private PendingState pendingState;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
     private Account account;
 

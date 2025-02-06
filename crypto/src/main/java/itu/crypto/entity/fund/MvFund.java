@@ -1,11 +1,10 @@
 package itu.crypto.entity.fund;
 
-import itu.crypto.entity.TypeMvFund;
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -19,7 +18,7 @@ public class MvFund {
     private Integer id;
 
     @Column(name = "date_mv")
-    private LocalDate dateMv;
+    private LocalDateTime dateMv;
 
     @Column(name = "amount")
     private Double amount;
@@ -27,17 +26,25 @@ public class MvFund {
     @Column(name = "id_source")
     private Integer idSource;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
     private Account account;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_pending_mv_fund")
     private PendingMvFund pendingMvFund;
+
+    public MvFund(Integer id, LocalDateTime localDateTime, double amount, Account account, TypeMvFund typeMvFund) {
+        this.id = id;
+        this.dateMv = localDateTime;
+        this.amount = amount;
+        this.account = account;
+        this.typeMvFund = typeMvFund;
+    }
 
     public boolean isDepotRetrait() {
         return this.getTypeMvFund().getId() == 1 || this.getTypeMvFund().getId() == 2;

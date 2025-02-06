@@ -8,10 +8,12 @@ import itu.crypto.entity.fav.CryptoFav;
 import itu.crypto.firebase.firestore.account.AccountSyncService;
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import itu.crypto.firebase.firestore.fav.CryptoFavSyncService;
+import itu.crypto.firebase.firestore.fund.MvFundSyncService;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.account.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +21,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FirebaseInitializer {
@@ -27,15 +30,17 @@ public class FirebaseInitializer {
     private final CoursSyncService coursSyncService;
     private final PurchaseSyncService purchaseSyncService;
     private final CryptoFavSyncService cryptoFavSyncService;
+    private final MvFundSyncService mvFundSyncService;
 
     private final AccountRepository accountRepository;
     private final CoursRepository coursRepository;
 
     @PostConstruct
     public void init() throws Exception {
-        System.out.println("Initializing Firebase");
-//        testSync();
-        accountSyncService.syncWithFirebase();
+        log.info("Initializing Firebase");
+
+        testSync();
+//        accountSyncService.syncWithFirebase();
 
 //        testGetAll();
 //        testSaveAccount();
@@ -43,9 +48,11 @@ public class FirebaseInitializer {
     }
 
     private void testSync() {
-        coursSyncService.syncWithFirebase();
-        purchaseSyncService.syncWithFirebase();
-        cryptoFavSyncService.syncWithFirebase();
+//        coursSyncService.syncWithFirebase();
+//        purchaseSyncService.syncWithFirebase();
+//        cryptoFavSyncService.syncWithFirebase();
+
+        mvFundSyncService.syncWithFirebase();
     }
 
     private void testSaveAccount() {

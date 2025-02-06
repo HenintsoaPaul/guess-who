@@ -1,4 +1,4 @@
-package itu.crypto.entity;
+package itu.crypto.entity.fund;
 
 import jakarta.persistence.*;
 import lombok.Getter;
