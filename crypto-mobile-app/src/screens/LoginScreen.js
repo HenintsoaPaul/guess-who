@@ -1,27 +1,21 @@
 import { View, Text, TextInput, ActivityIndicator, Button } from 'react-native'
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { FIREBASE_AUTH } from '../services/firebaseService';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import  * as LoginService from '../services/loginService';
 
 const LoginScreen = () => {
-  const [email,setEmail] = useState('chris@gmail.com');
+  const [email,setEmail] = useState("frucodillefeu-1226@yopmail.com");
   const [password, setPassword] = useState('chris123');
   const [loading, setLoading] = useState(false);
   const signIn = async() => {
     setLoading(true)
     try {
-      const response = await signInWithEmailAndPassword(auth,email,password);
-      console.log(response);
-      alert('Log in');
+      const user = await LoginService.logInWithMailAndPassword(email,password)
+      console.log("UU : "+user)
     }
     catch (error){
       console.log(error);
       var errorMessage = error.message;
-      if (error.contains("auth/network-request-failed")) {
-        errorMessage = "verifiez votre connexion internet"
-      }
       alert('Sign In failed :'+ errorMessage);
     }
     finally {
@@ -38,7 +32,6 @@ const LoginScreen = () => {
         ) : (
         <View style={styles.btnContainer}>
           <Button title='Login' style={styles.actBtn} onPress={signIn}/>        
-          <Button title='Create account' style={styles.actBtn} onPress={signUp}/>        
         </View>
       )}
 
@@ -71,6 +64,5 @@ const styles = StyleSheet.create({
   }
 
 });
-
 
 export default LoginScreen;  
