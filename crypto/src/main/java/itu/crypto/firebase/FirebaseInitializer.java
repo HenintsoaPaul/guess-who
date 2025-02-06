@@ -55,7 +55,7 @@ public class FirebaseInitializer {
     private final SaleDetailRepository saleDetailRepository;
 
     @PostConstruct
-    public void init() throws Exception {
+    public void init() {
         log.info("Initializing Firebase begins...");
 
 //        testAccount();

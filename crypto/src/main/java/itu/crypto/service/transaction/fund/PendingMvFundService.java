@@ -35,7 +35,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     }
 
     @Transactional
-    public PendingMvFund save(PendingMvFund pmf) throws FirebaseMessagingException {
+    public PendingMvFund save(PendingMvFund pmf) {
         pendingMvFundRepository.save(pmf);
 
         if (pmf.isValidated()) {

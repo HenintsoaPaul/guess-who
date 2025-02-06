@@ -41,9 +41,6 @@ public class PendingMvFund {
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
-//    @OneToMany(mappedBy = "pendingMvFund")
-//    private Set<MvFund> mvFunds = new LinkedHashSet<>();
-
     public boolean isValidated() {
         return dateValidation != null;
     }

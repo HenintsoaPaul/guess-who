@@ -1,7 +1,5 @@
 package itu.crypto.service.transaction.fund;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
-
 import itu.crypto.entity.fund.MvFund;
 import itu.crypto.entity.fund.PendingMvFund;
 import itu.crypto.firebase.firestore.generalisation.BaseService;

@@ -40,7 +40,7 @@ public class CommissionRateService {
     }
 
     @Transactional
-    public void save(CommissionRate commissionRate) throws Exception {
+    public void save(CommissionRate commissionRate) {
         commissionRateRepository.save(commissionRate);
     }
 }

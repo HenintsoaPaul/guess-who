@@ -1,6 +1,5 @@
 package itu.crypto.entity.account;
 
-import itu.crypto.entity.cours.CoursListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
