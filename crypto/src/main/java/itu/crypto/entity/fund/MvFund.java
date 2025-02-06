@@ -46,6 +46,18 @@ public class MvFund {
         this.typeMvFund = typeMvFund;
     }
 
+    public MvFund(PendingMvFund pendingMvFund) {
+        this.id = null;
+        this.dateMv = pendingMvFund.getDateValidation();
+        this.amount = pendingMvFund.getAmount();
+
+        this.idSource = null;
+
+        this.account = pendingMvFund.getAccount();
+        this.typeMvFund = pendingMvFund.getTypeMvFund();
+        this.pendingMvFund = pendingMvFund;
+    }
+
     public boolean isDepotRetrait() {
         return this.getTypeMvFund().getId() == 1 || this.getTypeMvFund().getId() == 2;
     }

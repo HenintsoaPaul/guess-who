@@ -2,15 +2,18 @@ package itu.crypto.entity.fund;
 
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "pending_mv_fund")
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(PendingMvFundListener.class)
 public class PendingMvFund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +34,17 @@ public class PendingMvFund {
     private PendingState pendingState;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "id_type_mv_fund", nullable = false)
-    private TypeMvFund typeMvFund;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
     private Account account;
 
-    @OneToMany(mappedBy = "pendingMvFund")
-    private Set<MvFund> mvFunds = new LinkedHashSet<>();
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "id_type_mv_fund", nullable = false)
+    private TypeMvFund typeMvFund;
 
+//    @OneToMany(mappedBy = "pendingMvFund")
+//    private Set<MvFund> mvFunds = new LinkedHashSet<>();
+
+    public boolean isValidated() {
+        return dateValidation != null;
+    }
 }

@@ -3,9 +3,6 @@ package itu.crypto.entity.fund;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Data
 @Entity
 @Table(name = "pending_state")
@@ -18,7 +15,7 @@ public class PendingState {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @OneToMany
-    private Set<itu.crypto.entity.fund.PendingMvFund> pendingMvFunds = new LinkedHashSet<>();
+//    @OneToMany
+//    private Set<itu.crypto.entity.fund.PendingMvFund> pendingMvFunds = new LinkedHashSet<>();
 
 }
