@@ -1,81 +1,104 @@
 import React, { useState, useCallback, memo, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FavoriteButton from '../components/atoms/FavoriteButton';
+import { db } from '../../config/firestore';
+import { doc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
+
+const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
+  try {
+    const walletDocRef = doc(db, "wallets", "1");
+    const docSnap = await getDoc(walletDocRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      setCryptos(data.wallets || []);
+      setWalletTotalPrice(data.totalPrice);
+      console.log('Données du document:', data);
+
+      const unsubscribe = onSnapshot(walletDocRef, (doc) => {
+        if (doc.exists()) {
+          const updatedData = doc.data();
+          setCryptos(updatedData.wallets || []);
+          setWalletTotalPrice(updatedData.totalPrice);
+          console.log('Données mises à jour:', updatedData);
+        }
+      });
+
+      return unsubscribe;
+    } else {
+      console.log('Aucun document trouvé');
+      setCryptos([]);
+      setWalletTotalPrice(null);
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    throw error;
+  }
+};
+
+const updateFavoritesListInFirestore = async (favoritesList) => {
+  try {
+    const favoritesDocRef = doc(db, "favorites", "1");  // Assurez-vous de remplacer "1" par l'ID de votre document de favoris
+    await updateDoc(favoritesDocRef, {
+      favorites: favoritesList
+    });
+    console.log('Liste des favoris mise à jour dans Firestore:', favoritesList);
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour de la liste des favoris dans Firestore:', error);
+  }
+};
 
 const CoursActuelleScreen = () => {
   const navigation = useNavigation();
   const [favoritesList, setFavoritesList] = useState([]);
-
-  const [cryptos, setCryptos] = useState([
-    {
-      idAccount: 1,
-      pseudo: "Alice",
-      image: "image1",
-      fund: 10000.0,
-      cryptoName: "Bitcoin",
-      symbol: "BTC",
-      quantity: 1000,
-      purchaseDate: null,
-      totalPrice: null,
-
-      currentPrice: 45000,
-      value: 45000 * 1000,
-      lastUpdated: "2023-10-01",
-      isFavorite: false,
-    },
-    {
-      idAccount: 2,
-      pseudo: "Alice",
-      image: "image2",
-      fund: 10000.0,
-      cryptoName: "Ethereum",
-      symbol: "ETH",
-      quantity: 500,
-      purchaseDate: null,
-      totalPrice: null,
-      currentPrice: 3000,
-      value: 3000 * 500,
-      lastUpdated: "2023-10-01",
-      isFavorite: false,
-    }
-  ]);
+  const [cryptos, setCryptos] = useState([]);
+  const [walletTotalPrice, setWalletTotalPrice] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
-  const toggleFavorite = useCallback((idAccount) => {
-    setCryptos((prevCryptos) =>
-      prevCryptos.map((crypto) => 
-        crypto.idAccount === idAccount
-          ? { ...crypto, isFavorite: !crypto.isFavorite }
+  const toggleFavorite = useCallback((index) => {
+    setCryptos((prevCryptos) => {
+      const updatedCryptos = prevCryptos.map((crypto, i) => 
+        i === index 
+          ? { ...crypto, isFavorite: !crypto.isFavorite } // Toggle l'état de favori
           : crypto
-      )
-    );
-    
-    setFavoritesList(prevFavorites => {
-      const index = prevFavorites.indexOf(idAccount);
-      if (index === -1) {
-        return [...prevFavorites, idAccount];
-      } else {
-        return prevFavorites.filter(id => id !== idAccount);
-      }
-    });
-  }, []);
+      );
   
-  useEffect(() => {
-    console.log('Liste initiale des favoris:', favoritesList);
-    navigation.navigate('Favorites', {
-      favoritesList: favoritesList.map(idAccount =>
-        cryptos.find(crypto => crypto.idAccount === idAccount)
-      )
+      // Mettre à jour la liste des favoris
+      const updatedFavoritesList = updatedCryptos.filter(crypto => crypto.isFavorite);
+      
+      // Mettre à jour Firestore avec la nouvelle liste des favoris
+      updateFavoritesListInFirestore(updatedFavoritesList);
+      
+      return updatedCryptos;
     });
-  }, [favoritesList]);
+  }, []);  
+
+  useEffect(() => {
+    const fetchCryptos = async () => {
+      try {
+        setLoading(true);
+        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice);
+        return () => {
+          if (unsubscribe) unsubscribe();
+        };
+      } catch (error) {
+        console.error('Erreur lors du chargement des cryptomonnaies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCryptos();
+  }, []);
 
   const filteredCryptos = cryptos.filter((crypto) =>
     crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
     crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  const CryptoItem = memo(({ item }) => (
+  const CryptoItem = memo(({ item, index }) => (
     <View style={styles.tableRow}>
       <View style={styles.cell}>
         <Text style={styles.cellText}>{item.image} </Text>
@@ -92,19 +115,27 @@ const CoursActuelleScreen = () => {
       <View style={styles.cell}>
         <FavoriteButton
           isFavorite={item.isFavorite}
-          onPress={() => toggleFavorite(item.idAccount)}
+          onPress={() => toggleFavorite(index)}
         />
       </View>
     </View>
   ));
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#000" />
+        <Text style={styles.loadingText}>Chargement...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-
       {/* Affichage du solde total */}
       <View style={styles.fundContainer}>
         <Text style={styles.fundLabel}>Solde total :</Text>
-        <Text style={styles.fundAmount}>{cryptos[0].fund} €</Text>
+        <Text style={styles.fundAmount}>{cryptos[0]?.fund || 0} €</Text>
       </View>
 
       {/* Barre de recherche */}
@@ -113,7 +144,7 @@ const CoursActuelleScreen = () => {
           style={styles.searchInput}
           placeholder="Rechercher une cryptomonnaie..."
           value={filterText}
-          onChange={(text) => setFilterText(text)}
+          onChangeText={(text) => setFilterText(text)}
         />
       </View>
 
@@ -137,7 +168,7 @@ const CoursActuelleScreen = () => {
           </View>
         </View>
         {filteredCryptos.map((crypto, index) => (
-          <CryptoItem key={index} item={crypto} />
+          <CryptoItem key={index} item={crypto} index={index} />
         ))}
       </View>
     </View>
