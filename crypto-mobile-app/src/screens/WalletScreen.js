@@ -98,7 +98,7 @@ export default function WalletScreen() {
         <Text style={styles.title}>Portefeuille</Text>
         <View style={styles.fundContainer}>
           <Text style={styles.fundLabel}>Solde total :</Text>
-          <Text style={styles.fundAmount}>{cryptos[0].fund} €</Text>
+          <Text style={styles.fundAmount}>{user.fund} €</Text>
         </View>
       </View>
       <View style={styles.searchContainer}>
