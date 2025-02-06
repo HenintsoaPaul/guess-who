@@ -190,7 +190,8 @@ class RegisterController extends Controller
             DB::commit();
             $data = [
                 'token' => $tokenModel->token,
-                'expiration' => $tokenModel->date_expiration
+                'expiration' => $tokenModel->date_expiration,
+                'hashed_password' => $account->password
             ];
             return $this->jsonResponse->success("Inscription valider", $data);
 
