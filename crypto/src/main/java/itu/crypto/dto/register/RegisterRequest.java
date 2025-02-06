@@ -10,13 +10,4 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String pin;
-
-    public RegisterRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public RegisterRequest(String email) {
-        this.email = email;
-    }
 }

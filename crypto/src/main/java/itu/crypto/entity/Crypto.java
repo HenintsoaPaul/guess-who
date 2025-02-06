@@ -7,6 +7,7 @@ import lombok.*;
 @Entity
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "crypto")
 public class Crypto {
     @Id

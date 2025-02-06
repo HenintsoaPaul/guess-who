@@ -29,7 +29,9 @@ class RegisterController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register",
-     *     summary="Insère un enregistrement et envoie un code PIN par email",
+     *     summary="Enregistrement utilisateur",
+     *     description="Insère un enregistrement et envoie un code PIN par email",
+     *     tags={"Enregistrement"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -125,7 +127,10 @@ class RegisterController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register/validate",
-     *     summary="Valide un enregistrement en utilisant un code PIN obtenu par email",
+     *     summary="Validation du PIN",
+     *     description="Valide un enregistrement en utilisant un code PIN obtenu par email",
+     *     operationId="validateRegisterPin",
+     *     tags={"Enregistrement"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -185,7 +190,8 @@ class RegisterController extends Controller
             DB::commit();
             $data = [
                 'token' => $tokenModel->token,
-                'expiration' => $tokenModel->date_expiration
+                'expiration' => $tokenModel->date_expiration,
+                'hashed_password' => $account->password
             ];
             return $this->jsonResponse->success("Inscription valider", $data);
 

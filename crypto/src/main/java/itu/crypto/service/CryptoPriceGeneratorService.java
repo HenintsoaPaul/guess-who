@@ -1,6 +1,6 @@
 package itu.crypto.service;
 
-import itu.crypto.entity.Cours;
+import itu.crypto.entity.cours.Cours;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

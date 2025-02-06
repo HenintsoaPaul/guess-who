@@ -1,6 +1,6 @@
 package itu.crypto.dto;
 
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.Sale;
 import itu.crypto.entity.SaleDetail;
 import lombok.Data;

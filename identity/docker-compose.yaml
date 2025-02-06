@@ -33,7 +33,7 @@ services:
       - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: itu16
       POSTGRES_DB: guess_who
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -46,3 +46,7 @@ services:
 
 volumes:
   postgres_data:
+
+networks:
+  app_network:
+    driver: bridge

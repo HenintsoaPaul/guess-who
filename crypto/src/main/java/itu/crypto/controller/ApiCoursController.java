@@ -1,6 +1,6 @@
 package itu.crypto.controller;
 
-import itu.crypto.entity.Cours;
+import itu.crypto.entity.cours.Cours;
 import itu.crypto.service.CoursService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

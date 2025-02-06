@@ -1,14 +1,13 @@
 package itu.crypto.firebase.firestore.generalisation;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -17,17 +16,17 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public abstract class GenericSyncService<T, D> implements ISyncService<T> {
 
-    private final Firestore firestore;
+    protected final Firestore firestore;
     private final BaseService<T> baseService;
-    private final String collectionName;
+    protected final String collectionName;
 
     protected abstract D toDocument(T entity);
+
     protected abstract T toEntity(D document);
 
     public void syncWithFirebase() {
         this.syncWithFirebase(firestore, baseService.findAll());
     }
-
 
     @Override
     public void syncWithFirebase(Firestore firestore, List<T> entityList) {
@@ -60,9 +59,13 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
 
     }
 
-    private void updateDocument(DocumentReference docRef, T entity, D existingDoc) {
+    private void updateDocument(DocumentReference docRef, T entity, D existingDocument) {
         D document = toDocument(entity);
         setUpdatedAt(document);
+
+        String creationTime = ((TimestampedDocument) existingDocument).getCreatedAt();
+        ((TimestampedDocument) document).setCreatedAt(creationTime);
+
         docRef.set(document);
         log.info("Mise à jour de l'entité ID: {}", getEntityId(entity));
     }
@@ -92,4 +95,53 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
     protected abstract String getEntityId(T entity);
 
     protected abstract Class<D> getDocumentClass();
+
+    // CRUD
+    public List<T> getAllEntities() {
+        List<T> entities = new ArrayList<>();
+        try {
+            // get the collection
+            CollectionReference collectionRef = firestore.collection(collectionName);
+
+            // get all documents
+            ApiFuture<QuerySnapshot> querySnapshot = collectionRef.get();
+
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                // doc -> entity
+                D documentObject = document.toObject(this.getDocumentClass());
+                if (documentObject != null) {
+                    entities.add(this.toEntity(documentObject));
+                }
+            }
+            System.out.println("✅ Récupération réussie de la collection: " + collectionName);
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println("❌ Erreur lors de la récupération des documents: " + e.getMessage());
+        }
+        return entities;
+    }
+
+    public void saveAsDocument(T entity) {
+        CollectionReference collectionRef = firestore.collection(collectionName);
+        String entityId = this.getEntityId(entity);
+        DocumentReference docRef = collectionRef.document(entityId);
+
+        this.addDocument(docRef, entity);
+
+        log.info("Add document id '{}' in collection '{}'", entityId, collectionName);
+    }
+
+    public void updateAsDocument(T entity) {
+        CollectionReference collectionRef = firestore.collection(collectionName);
+        String entityId = this.getEntityId(entity);
+        try {
+            DocumentReference docRef = collectionRef.document(entityId);
+            D existingDoc = docRef.get().get().toObject(getDocumentClass());
+
+            this.updateDocument(docRef, entity, existingDoc);
+
+            log.info("Update document id '{}' in collection '{}'", entityId, collectionName);
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error on update document id '{}' in collection '{}'. Error: {}", entityId, collectionName, e.getMessage());
+        }
+    }
 }

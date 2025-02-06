@@ -1,7 +1,7 @@
 package itu.crypto.firebase.firestore.purchase;
 
 import com.google.cloud.Timestamp;
-import itu.crypto.entity.Account;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.Purchase;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;
 import lombok.Data;
@@ -27,6 +27,8 @@ public class PurchaseDocument implements TimestampedDocument {
 
     private Account accountPurchaser;
     private Account accountSeller;
+
+    // Warning: Tsy mety ilay daty mifampiditra fa mila de type google
 //    private SaleDetail saleDetail;
 
     private String createdAt;

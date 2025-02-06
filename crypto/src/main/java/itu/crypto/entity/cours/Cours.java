@@ -1,5 +1,6 @@
-package itu.crypto.entity;
+package itu.crypto.entity.cours;
 
+import itu.crypto.entity.Crypto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 @Data
 @Entity
+@EntityListeners(CoursListener.class)
 @ToString
 @NoArgsConstructor
 @Table(name = "cours")

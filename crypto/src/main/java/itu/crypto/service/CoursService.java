@@ -1,6 +1,6 @@
 package itu.crypto.service;
 
-import itu.crypto.entity.Cours;
+import itu.crypto.entity.cours.Cours;
 import itu.crypto.entity.Crypto;
 import itu.crypto.enums.CoursAnalysisType;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
