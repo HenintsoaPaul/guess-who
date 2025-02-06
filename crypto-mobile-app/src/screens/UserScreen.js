@@ -1,17 +1,16 @@
 import { StyleSheet, ScrollView,Button,View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StyleText from '../components/atoms/StyleText';
 import { colors } from '../constants/Colors';
 import UserInfos from '../components/organisms/UserInfos';
-import { getUserCryptoFavoris } from '../services/cryptoService';
-import { FIREBASE_AUTH } from '../services/firebaseService';
 import ProfilePicture from '../components/organisms/ProfilePicture';
 import { useNavigation } from '@react-navigation/native';
+import { AppContext } from '../../AppContext';
 
 export default function UserScreen() {
+  const {logOut} = useContext(AppContext);
   const navigation  = useNavigation();
-  const favoris = getUserCryptoFavoris();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -27,7 +26,7 @@ export default function UserScreen() {
         <View style={{marginTop:10}}>
           <Button 
             title='Se deconnecter'
-            onPress={()=> FIREBASE_AUTH.signOut()}
+            onPress={logOut()}
             style={styles.signOut} 
           />
         </View>
@@ -40,7 +39,8 @@ export default function UserScreen() {
 const styles = StyleSheet.create({
   profileContainer:{
     flex:1,
-    alignItems:'center'
+    alignItems:'center',
+    justifyContent:'center'
   },
   container:{
     paddingHorizontal:10

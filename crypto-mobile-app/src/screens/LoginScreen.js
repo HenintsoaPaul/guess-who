@@ -1,17 +1,20 @@
 import { View, Text, TextInput, ActivityIndicator, Button } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import  * as LoginService from '../services/loginService';
+import { AppContext } from '../../AppContext';
 
 const LoginScreen = () => {
   const [email,setEmail] = useState("frucodillefeu-1226@yopmail.com");
-  const [password, setPassword] = useState('chris123');
+  const [password, setPassword] = useState('mypassword');
   const [loading, setLoading] = useState(false);
+
+  const {logIn} = useContext(AppContext)
   const signIn = async() => {
     setLoading(true)
     try {
-      const user = await LoginService.logInWithMailAndPassword(email,password)
-      console.log("UU : "+user)
+      const userLog = await LoginService.logInWithMailAndPassword(email,password)
+      logIn(userLog)
     }
     catch (error){
       console.log(error);

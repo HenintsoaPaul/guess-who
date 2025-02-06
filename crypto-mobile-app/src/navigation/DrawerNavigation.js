@@ -1,4 +1,4 @@
-import {React,useEffect,useState} from 'react';
+import {React,useContext,useEffect,useState} from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
@@ -9,6 +9,7 @@ import ProfilePicture from '../components/organisms/ProfilePicture';
 import UserScreen from '../screens/UserScreen';
 import { FIREBASE_AUTH } from '../services/firebaseService';
 import LoginScreen from '../screens/LoginScreen';
+import { AppContext } from '../../AppContext';
 
 
 const SCREEN_LABELS = {
@@ -22,13 +23,7 @@ const SCREEN_LABELS = {
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigation = () => {
-  const [user,setUser] = useState(null);
-    useEffect(()=>{
-      FIREBASE_AUTH.onAuthStateChanged((user) => {
-        console.log('user :'+user)
-        setUser(user);
-      })
-    })
+  const {user,setUser} = useContext(AppContext);
   return (
     <NavigationContainer>
       <Drawer.Navigator

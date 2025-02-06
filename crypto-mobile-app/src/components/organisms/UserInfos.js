@@ -1,15 +1,16 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import UserInfo from '../molecules/UserInfo'
-import { FIREBASE_AUTH } from '../../services/firebaseService'
+import { AppContext } from '../../../AppContext';
 
 export default function UserInfos() {
-    const user = FIREBASE_AUTH.currentUser;
+    const {user} = useContext(AppContext) ;
     return (
         <View style={styles.container}>
-            <UserInfo icon={'user'} label={'UID'}>{user.uid}</UserInfo>
+            <UserInfo icon={'user'} label={'UID'}>{user.id}</UserInfo>
             <UserInfo icon={'mail'} label={'Email'}>{user.email}</UserInfo>
-            <UserInfo icon={'dollar'} label={'Fund'}>100.20$</UserInfo>
+            <UserInfo icon={'dollar'} label={'Fund'}>{user.fund}</UserInfo>
+            <UserInfo icon={'user'} label={'Pseudo'}>{user.pseudo}</UserInfo>
         </View>
     )
 }
@@ -18,6 +19,8 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
         gap:10
     }
 })
