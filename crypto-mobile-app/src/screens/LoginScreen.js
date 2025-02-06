@@ -5,7 +5,7 @@ import  * as LoginService from '../services/loginService';
 import { AppContext } from '../../AppContext';
 
 const LoginScreen = () => {
-  const [email,setEmail] = useState("frucodillefeu-1226@yopmail.com");
+  const [email,setEmail] = useState("rocruxappafra-4143@yopmail.com");
   const [password, setPassword] = useState('mypassword');
   const [loading, setLoading] = useState(false);
 

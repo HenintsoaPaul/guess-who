@@ -13,7 +13,6 @@ export default function UserScreen() {
   const navigation  = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
         <View style={styles.profileContainer}>
           <ProfilePicture></ProfilePicture>    
         </View>
@@ -26,12 +25,10 @@ export default function UserScreen() {
         <View style={{marginTop:10}}>
           <Button 
             title='Se deconnecter'
-            onPress={logOut()}
+            onPress={logOut}
             style={styles.signOut} 
           />
         </View>
-
-      </ScrollView>
     </SafeAreaView>
   )
 }

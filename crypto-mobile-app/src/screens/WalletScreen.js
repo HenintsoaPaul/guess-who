@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FIRESTORE_DB } from '../services/firebaseService';
 import { onSnapshot, doc, getDoc } from 'firebase/firestore';
+import { AppContext } from '../../AppContext';
 
-const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
+const fetchWalletData = async (setCryptos, setWalletTotalPrice , user) => {
   try {
-    const walletDocRef = doc(FIRESTORE_DB, "wallets", "1");
+    const walletDocRef = doc(FIRESTORE_DB, "wallets", user.id+"");
     const docSnap = await getDoc(walletDocRef);
 
     if (docSnap.exists()) {
@@ -38,6 +39,7 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
 };
 
 export default function WalletScreen() {
+  const {user} = useContext(AppContext) 
   const [cryptos, setCryptos] = useState([]);
   const [walletTotalPrice, setWalletTotalPrice] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ export default function WalletScreen() {
       try {
         setLoading(true);
         setError(null);
-        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice);
+        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice,user);
         return () => {
           if (unsubscribe) unsubscribe();
         };
