@@ -36,7 +36,7 @@ public class ChartController {
     // Endpoint pour récupérer les cours d'une crypto donnée
     @GetMapping("/cours/{idCrypto}")
     public List<Cours> getCoursByCrypto(@PathVariable int idCrypto) {
-        return coursRepository.findById(idCrypto);
+        return coursRepository.findByIdCrypto(idCrypto);
     }
 }
 
