@@ -1,7 +1,7 @@
 package itu.crypto.firebase;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import itu.crypto.entity.Purchase;
+import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
 import itu.crypto.entity.crypto.CryptoFav;
@@ -18,6 +18,7 @@ import itu.crypto.repository.CryptoFavRepository;
 import itu.crypto.repository.CryptoRepository;
 import itu.crypto.repository.account.AccountRepository;
 import itu.crypto.repository.transaction.PurchaseRepository;
+import itu.crypto.repository.transaction.SaleDetailRepository;
 import itu.crypto.repository.transaction.wallet.WalletRepository;
 import itu.crypto.service.transaction.fund.MvFundService;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
@@ -51,35 +52,28 @@ public class FirebaseInitializer {
     private final PendingMvFundService pendingMvFundService;
     private final PurchaseRepository purchaseRepository;
     private final WalletRepository walletRepository;
+    private final SaleDetailRepository saleDetailRepository;
 
     @PostConstruct
     public void init() throws Exception {
-        log.info("Initializing Firebase");
+        log.info("Initializing Firebase begins...");
 
+//        testAccount();
 //        testCours();
-        testCryptoFav();
+//        testCryptoFav();
+//        testPurchase();
 
-
-//        testSync();
-//        accountSyncService.syncWithFirebase();
-
-//        testGetAll();
-//        testSaveAccount();
-//        testCours();
+        log.info("Firebase initialization complete.");
     }
 
-    private void testSync() {
-//        coursSyncService.syncWithFirebase();
-//        purchaseSyncService.syncWithFirebase();
-//        cryptoFavSyncService.syncWithFirebase();
+    private void testAccount() {
+        accountSyncService.syncWithFirebase();
 
-//        mvFundSyncService.syncWithFirebase();
-        pendingMvFundSyncService.syncWithFirebase();
-    }
+        Account account = new Account(null, "fufu", "fufu@gmail.com", "mypassword", 500),
+                vao = accountRepository.save(account);
 
-    private void testSaveAccount() {
-        Account account = new Account(null, "fufu", "fufu@gmail.com", "mypassword", 500);
-        accountRepository.save(account);
+        vao.setEmail("blabla.com");
+        accountRepository.save(vao);
     }
 
     private void testCours() {
@@ -129,20 +123,25 @@ public class FirebaseInitializer {
         walletRepository.save(w);
     }
 
-//    private void testPurchase() {
-//        purchaseSyncService.syncWithFirebase();
-//
-//        Purchase vao = purchaseRepository.save(new Purchase(
-//                null,
-//                LocalDateTime.now(),
-//                52,
-//                cryptoRepository.findAll().get(0)
-//        ));
-//
-//        Purchase w = purchaseRepository.findById(vao.getId()).orElse(null);
-//        w.setPu(55555);
-//        purchaseRepository.save(w);
-//    }
+    private void testPurchase() {
+        purchaseSyncService.syncWithFirebase();
+
+        Purchase p = new Purchase(
+                null,
+                LocalDateTime.now(),
+                1500.00,
+                500.00,
+                3,
+                accountRepository.findAll().get(0),
+                accountRepository.findAll().get(1),
+                saleDetailRepository.findAll().get(0)
+        );
+        Purchase vao = purchaseRepository.save(p);
+
+        Purchase w = purchaseRepository.findById(vao.getId()).orElse(null);
+        w.setQuantityCrypto(55555);
+        purchaseRepository.save(w);
+    }
 
     private void testPendingMvFund() throws FirebaseMessagingException {
         pendingMvFundService.save(pendingMvFundService.cobaieAttente());
