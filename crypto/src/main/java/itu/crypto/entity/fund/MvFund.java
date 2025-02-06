@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Table(name = "mv_fund")
+@EntityListeners(MvFundListener.class)
 public class MvFund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,17 +1,14 @@
 package itu.crypto.entity.fund;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString
 @Entity
 @Table(name = "type_mv_fund")
+@NoArgsConstructor
+@AllArgsConstructor
 public class TypeMvFund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

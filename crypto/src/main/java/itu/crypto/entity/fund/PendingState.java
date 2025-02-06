@@ -1,11 +1,15 @@
 package itu.crypto.entity.fund;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "pending_state")
+@NoArgsConstructor
+@AllArgsConstructor
 public class PendingState {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,8 +18,4 @@ public class PendingState {
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
-
-//    @OneToMany
-//    private Set<itu.crypto.entity.fund.PendingMvFund> pendingMvFunds = new LinkedHashSet<>();
-
 }
