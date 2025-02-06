@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import FavoriteButton from '../components/atoms/FavoriteButton';
 import { db } from '../../config/firestore';
 import { doc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 
 const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
   try {
@@ -57,13 +58,22 @@ const fetchFavorites = async (setFavoritesList) => {
   }
 };
 
-
 const updateFavoritesListInFirestore = async (favoritesList) => {
   try {
     const favoritesDocRef = doc(db, "favorites", "1");  
     await updateDoc(favoritesDocRef, {
       favorites: favoritesList
     });
+
+    const updatedFavorites = favoritesList.map(fav => ({
+      ...fav,
+      dateAdded: fav.dateAdded || Timestamp.now(), 
+    }));
+
+    await updateDoc(favoritesDocRef, {
+      favorites: updatedFavorites
+    });
+
     console.log('Liste des favoris mise à jour dans Firestore:', favoritesList);
   } catch (error) {
     console.error('Erreur lors de la mise à jour de la liste des favoris dans Firestore:', error);
@@ -103,19 +113,29 @@ const CoursActuelleScreen = () => {
 
   const toggleFavorite = useCallback((index) => {
     setCryptos((prevCryptos) => {
-      const updatedCryptos = prevCryptos.map((crypto, i) => 
-        i === index 
-          ? { ...crypto, isFavorite: !crypto.isFavorite } 
-          : crypto
-      );
-
-      const updatedFavoritesList = updatedCryptos.filter(crypto => crypto.isFavorite);
-      
+      const updatedCryptos = prevCryptos.map((crypto, i) => {
+        if (i === index) {
+          return { 
+            ...crypto, 
+            isFavorite: !crypto.isFavorite,
+            dateAdded: crypto.isFavorite ? null : Timestamp.now(), 
+          };
+        }
+        return crypto;
+      });
+  
+      const updatedFavoritesList = updatedCryptos
+        .filter(crypto => crypto.isFavorite)
+        .map(crypto => ({
+          ...crypto,
+          dateAdded: crypto.dateAdded || Timestamp.now(), 
+        }));
+  
       updateFavoritesListInFirestore(updatedFavoritesList);
-      
+  
       return updatedCryptos;
     });
-  }, []);  
+  }, []);    
 
   const filteredCryptos = cryptos.filter((crypto) =>
     crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
