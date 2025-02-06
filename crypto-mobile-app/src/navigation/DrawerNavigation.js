@@ -5,19 +5,19 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import WalletScreen from '../screens/WalletScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import CoursActuelleScreen from '../screens/CoursActuelleScreen';
+import TransactionFundScreen from '../screens/TransactionFundScreen';
 import ProfilePicture from '../components/organisms/ProfilePicture';
 import UserScreen from '../screens/UserScreen';
-import { FIREBASE_AUTH } from '../services/firebaseService';
 import LoginScreen from '../screens/LoginScreen';
 import { AppContext } from '../../AppContext';
-
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
   'Portefeuille': 'Portefeuille',
   'Favoris': 'Favoris',
   'Crypto cours': 'Crypto cours',
-  'ProfileEdit': 'Éditer Profil'
+  'ProfileEdit': 'Éditer Profil',
+  'Transaction fund': 'Transaction fund'
 };
 
 const Drawer = createDrawerNavigator();
@@ -71,22 +71,33 @@ const DrawerNavigation = () => {
           }}
           />
           <Drawer.Screen
-          name="Favoris"
-          component={FavoritesScreen}
-          options={{
-            drawerIcon: ({ focused }) => (
-              <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
-            ),
-          }}
+            name="Crypto cours"
+            component={CoursActuelleScreen} 
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
+              ),
+            }}
           />
           <Drawer.Screen
-          name="Crypto cours"
-          component={CoursActuelleScreen}
-          options={{
-            drawerIcon: ({ focused }) => (
-              <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
-            ),
-          }}
+            name="Favoris"
+            component={FavoritesScreen}
+            initialParams={{ favoritesList: [] }} 
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
+              ),
+            }}
+          />
+
+          <Drawer.Screen
+            name="Transaction fund"
+            component={TransactionFundScreen}
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>🔁</Text>
+              ),
+            }}
           />
         </>
       ):

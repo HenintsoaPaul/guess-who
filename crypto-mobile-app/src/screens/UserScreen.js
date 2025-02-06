@@ -20,7 +20,8 @@ export default function UserScreen() {
         <UserInfos></UserInfos>
         <View style={styles.buttonContainer}>
           <Button style={styles.userButton} title='Consulter Wallet' onPress={()=> navigation.navigate('Portefeuille')}/>
-          <Button style={styles.userButton} title='Voir Les favoris' onPress={()=> navigation.navigate('Favoris')}/>
+          <Button style={styles.userButton} title='Voir favoris' onPress={()=> navigation.navigate('Favoris')}/>
+          <Button style={styles.userButton} title='Consulter Cours' onPress={()=> navigation.navigate('Crypto cours')}/>
         </View>
         <View style={{marginTop:10}}>
           <Button 
