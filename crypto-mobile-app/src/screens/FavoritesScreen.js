@@ -1,37 +1,70 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { db } from '../../config/firestore';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+
+const fetchWalletData = async (setFavorites) => {
+  try {
+    const Listfav = doc(db, "favorites", "1");
+    const docSnap = await getDoc(Listfav);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      setFavorites(data.favorites || []);
+      console.log('Données du document:', data);
+
+      const unsubscribe = onSnapshot(Listfav, (doc) => {
+        if (doc.exists()) {
+          const updatedData = doc.data();
+          setFavorites(updatedData.favorites || []);
+          console.log('Données mises à jour:', updatedData);
+        }
+      });
+
+      return unsubscribe;
+    } else {
+      console.log('Aucun document trouvé');
+      setFavorites([]);
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    throw error;
+  }
+};
 
 const FavoritesScreen = () => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
-    try {
-      const favoritesCollection = collection(db, 'favorites');
-      console.log("Collection reference:", favoritesCollection);
-
-      const unsubscribe = onSnapshot(favoritesCollection, (snapshot) => {
-        console.log("Snapshot received:", snapshot.docs.length);
-        const favoritesList = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setFavorites(favoritesList);
+    const fetchFavoris = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const unsubscribe = await fetchWalletData(setFavorites);
+        return () => {
+          if (unsubscribe) unsubscribe();
+        };
+      } catch (error) {
+        setError(error.message);
+      } finally {
         setLoading(false);
-      });
-
-      return () => unsubscribe();
-    } catch (error) {
-      console.error('Erreur lors de la récupération des favoris:', error);
-      setError(error.message);
-      setLoading(false);
-    }
+      }
+    };
+    fetchFavoris();
   }, []);
 
-  const memoizedFavorites = useMemo(() => favorites, [favorites]);
+  const filteredFavoris = useMemo(
+    () =>
+      favorites.filter(
+        (favorite) =>
+          favorite.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
+          favorite.symbol.toLowerCase().includes(filterText.toLowerCase())
+      ),
+    [favorites, filterText]
+  );
 
   if (loading) {
     return (
@@ -52,21 +85,35 @@ const FavoritesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Mes Cryptos Favorites</Text>
-      {memoizedFavorites.length > 0 ? (
-        <FlatList
-          data={memoizedFavorites}
-          renderItem={({ item }) => (
-            <View style={styles.favoriteItem}>
-              <Text style={styles.cryptoName}>{item.cryptoName}</Text>
-              <Text style={styles.symbol}>{item.symbol}</Text>
+      <View style={styles.table}>
+        <View style={styles.tableHeader}>
+          <View style={styles.headerCell}>
+              <Text style={styles.headerText}>Image</Text>
             </View>
-          )}
-          keyExtractor={(item) => item.id.toString()} 
-        />
-      ) : (
-        <Text style={styles.noFavorites}>Aucune crypto en favori.</Text>
-      )}
+            <View style={styles.headerCell}>
+              <Text style={styles.headerText}>Cryptomonnaie</Text>
+            </View>
+            <View style={styles.headerCell}>
+              <Text style={styles.headerText}>Symbole</Text>
+            </View>
+          </View>
+          {filteredFavoris.map((favorite, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.tableRow}
+          >
+            <View style={styles.cell}>
+              <Text style={styles.cellText}></Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellText}>{favorite.cryptoName}</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellText}>{favorite.symbol}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+        </View>
     </View>
   );
 };
@@ -74,44 +121,94 @@ const FavoritesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     padding: 16,
-    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
+    marginBottom: 20,
     fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
   },
-  favoriteItem: {
+  fundContainer: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    padding: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 4,
+  },
+  fundLabel: {
+    fontSize: 16,
+    color: '#666',
+  },
+  fundAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  searchContainer: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  searchInput: {
+    width: '100%',
     padding: 12,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  table: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 4,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#f5f5f5',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
-  cryptoName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
-  symbol: {
-    fontSize: 16,
-    color: '#666',
-  },
-  noFavorites: {
+  headerCell: {
     flex: 1,
-    textAlign: 'center',
-    marginTop: 20,
+    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cell: {
+    flex: 1,
+    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cellText: {
     color: '#666',
   },
-  loadingText: {
-    fontSize: 18,
-    marginTop: 10,
-    color: '#666',
+  favoriteText: {
+    color: '#FFD700', 
+    fontSize: 16,
   },
-  errorText: {
-    fontSize: 18,
-    color: 'red',
+  navigateButton: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#007AFF',
+    borderRadius: 4,
+    width: 160,
+  },
+  buttonText: {
+    color: 'white',
     textAlign: 'center',
   },
 });

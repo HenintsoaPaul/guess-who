@@ -37,9 +37,30 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
   }
 };
 
+const fetchFavorites = async (setFavoritesList) => {
+  try {
+    const favoritesDocRef = doc(db, "favorites", "1");
+    const unsubscribe = onSnapshot(favoritesDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setFavoritesList(data.favorites || []);
+        console.log('Données des favoris mises à jour:', data);
+      } else {
+        console.log('Aucun document trouvé pour les favoris');
+        setFavoritesList([]);
+      }
+    });
+
+    return unsubscribe;
+  } catch (error) {
+    console.error('Erreur lors du chargement des favoris:', error);
+  }
+};
+
+
 const updateFavoritesListInFirestore = async (favoritesList) => {
   try {
-    const favoritesDocRef = doc(db, "favorites", "1");  // Assurez-vous de remplacer "1" par l'ID de votre document de favoris
+    const favoritesDocRef = doc(db, "favorites", "1");  
     await updateDoc(favoritesDocRef, {
       favorites: favoritesList
     });
@@ -57,24 +78,6 @@ const CoursActuelleScreen = () => {
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
-  const toggleFavorite = useCallback((index) => {
-    setCryptos((prevCryptos) => {
-      const updatedCryptos = prevCryptos.map((crypto, i) => 
-        i === index 
-          ? { ...crypto, isFavorite: !crypto.isFavorite } // Toggle l'état de favori
-          : crypto
-      );
-  
-      // Mettre à jour la liste des favoris
-      const updatedFavoritesList = updatedCryptos.filter(crypto => crypto.isFavorite);
-      
-      // Mettre à jour Firestore avec la nouvelle liste des favoris
-      updateFavoritesListInFirestore(updatedFavoritesList);
-      
-      return updatedCryptos;
-    });
-  }, []);  
-
   useEffect(() => {
     const fetchCryptos = async () => {
       try {
@@ -90,8 +93,29 @@ const CoursActuelleScreen = () => {
       }
     };
 
+    const fetchFavoritesData = async () => {
+      await fetchFavorites(setFavoritesList);
+    };
+
     fetchCryptos();
+    fetchFavoritesData();
   }, []);
+
+  const toggleFavorite = useCallback((index) => {
+    setCryptos((prevCryptos) => {
+      const updatedCryptos = prevCryptos.map((crypto, i) => 
+        i === index 
+          ? { ...crypto, isFavorite: !crypto.isFavorite } 
+          : crypto
+      );
+
+      const updatedFavoritesList = updatedCryptos.filter(crypto => crypto.isFavorite);
+      
+      updateFavoritesListInFirestore(updatedFavoritesList);
+      
+      return updatedCryptos;
+    });
+  }, []);  
 
   const filteredCryptos = cryptos.filter((crypto) =>
     crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -114,7 +138,7 @@ const CoursActuelleScreen = () => {
       </View>
       <View style={styles.cell}>
         <FavoriteButton
-          isFavorite={item.isFavorite}
+          isFavorite={favoritesList.some(fav => fav.cryptoName === item.cryptoName)} // Vérifie si la crypto est dans les favoris
           onPress={() => toggleFavorite(index)}
         />
       </View>
