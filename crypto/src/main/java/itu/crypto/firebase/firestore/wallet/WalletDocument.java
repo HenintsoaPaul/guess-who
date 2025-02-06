@@ -1,6 +1,6 @@
 package itu.crypto.firebase.firestore.wallet;
 
-import itu.crypto.entity.Crypto;
+import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;

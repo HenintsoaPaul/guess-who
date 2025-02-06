@@ -1,6 +1,6 @@
 package itu.crypto.dto.commission;
 
-import itu.crypto.entity.Crypto;
+import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.entity.commission.CommissionPurchase;
 import itu.crypto.enums.CommissionAnalysisType;
 import lombok.AllArgsConstructor;

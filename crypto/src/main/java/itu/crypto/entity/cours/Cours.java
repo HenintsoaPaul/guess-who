@@ -1,6 +1,6 @@
 package itu.crypto.entity.cours;
 
-import itu.crypto.entity.Crypto;
+import itu.crypto.entity.crypto.Crypto;
 import jakarta.persistence.*;
 import lombok.*;
 

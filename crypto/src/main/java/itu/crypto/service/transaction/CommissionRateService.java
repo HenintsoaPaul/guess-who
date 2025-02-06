@@ -1,6 +1,6 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.entity.Crypto;
+import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.entity.commission.CommissionRate;
 import itu.crypto.entity.commission.CommissionType;
 import itu.crypto.repository.transaction.CommissionRateRepository;
