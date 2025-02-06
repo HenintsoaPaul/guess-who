@@ -6,6 +6,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import CoursActuelleScreen from '../screens/CoursActuelleScreen';
 import WalletScreen from '../screens/WalletScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
+import TransactionFundScreen from '../screens/TransactionFundScreen';
 import ProfilePicture from '../components/organisms/ProfilePicture';
 
 
@@ -14,7 +15,8 @@ const SCREEN_LABELS = {
   'Portefeuille': 'Portefeuille',
   'Favorites': 'Favorites',
   'Crypto cours': 'Crypto cours',
-  'ProfileEdit': 'Éditer Profil'
+  'ProfileEdit': 'Éditer Profil',
+  'Transaction fund': 'Transaction fund'
 };
 
 const Drawer = createDrawerNavigator();
@@ -73,15 +75,25 @@ const DrawerNavigation = () => {
           }}
         />
         <Drawer.Screen
-        name="Favorites"
-        component={FavoritesScreen}
-        initialParams={{ favoritesList: [] }} 
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
-          ),
-        }}
-      />
+          name="Favorites"
+          component={FavoritesScreen}
+          initialParams={{ favoritesList: [] }} 
+          options={{
+            drawerIcon: ({ focused }) => (
+              <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
+            ),
+          }}
+        />
+
+        <Drawer.Screen
+          name="Depot/Retrait"
+          component={TransactionFundScreen}
+          options={{
+            drawerIcon: ({ focused }) => (
+              <Text style={[styles.icon, focused && styles.activeIcon]}>🔁</Text>
+            ),
+          }}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );

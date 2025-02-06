@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Picker, ActivityIndicator, Button} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { db } from '../../config/firestore';
-import { onSnapshot, doc, getDoc } from 'firebase/firestore';
+import { onSnapshot, doc, getDoc, setDoc, collection } from 'firebase/firestore';
 
 const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
   try {
@@ -36,7 +36,29 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
   }
 };
 
-export default function WalletScreen() {
+const sendTransactionData = async (amount, transactionType, user) => {
+  try {
+    const transactionRef = collection(db, 'transactions');
+    const timestamp = Date.now();
+    const transactionData = {
+      date: timestamp,
+      etat: 1, 
+      data: {
+        user: user,
+        type: transactionType, 
+        montant: parseFloat(amount)
+      },
+      response: {} 
+    };
+
+    await setDoc(doc(transactionRef), transactionData);
+    console.log('Transaction envoyée:', transactionData);
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de la transaction:', error);
+  }
+};
+
+function TransactionFundScreen() {
   const [cryptos, setCryptos] = useState([]);
   const [walletTotalPrice, setWalletTotalPrice] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,6 +67,7 @@ export default function WalletScreen() {
   const navigation = useNavigation();
   const [amount, setAmount] = useState('');
   const [transactionType, setTransactionType] = useState('deposit');
+  const [user, setUser] = useState('ü1'); 
 
   useEffect(() => {
     const fetchCryptos = async () => {
@@ -74,6 +97,14 @@ export default function WalletScreen() {
     [cryptos, filterText]
   );
 
+  const handleTransaction = () => {
+    if (!amount || isNaN(amount)) {
+      alert("Veuillez entrer un montant valide.");
+      return;
+    }
+    sendTransactionData(amount, transactionType, user);
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -100,25 +131,31 @@ export default function WalletScreen() {
         </View>
       </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.amountInput}
-          keyboardType="numeric"
-          placeholder="Montant"
-          value={amount}
-          onChangeText={(text) => setAmount(text)}
-        />
+      <View style={styles.formContainer}>
+        <View style={styles.inputContainer}>
+            <TextInput
+            style={styles.amountInput}
+            keyboardType="numeric"
+            placeholder="Montant"
+            value={amount}
+            onChangeText={(text) => setAmount(text)}
+            />
+        </View>
+
+        <View style={styles.selectorContainer}>
+            <Picker
+            selectedValue={transactionType}
+            style={styles.transactionSelector}
+            onValueChange={(itemValue) => setTransactionType(itemValue)}
+            >
+            <Picker.Item label="Dépôt" value="depot" />
+            <Picker.Item label="Retrait" value="Retrait" />
+            </Picker>
+        </View>
       </View>
 
-      <View style={styles.selectorContainer}>
-        <Picker
-          selectedValue={transactionType}
-          style={styles.transactionSelector}
-          onValueChange={(itemValue) => setTransactionType(itemValue)}
-        >
-          <Picker.Item label="Dépôt" value="deposit" />
-          <Picker.Item label="Retrait" value="withdrawal" />
-        </Picker>
+      <View style={styles.buttonContainer}>
+        <Button title="Confirmer la transaction" onPress={handleTransaction} />
       </View>
     </View>
   );
@@ -130,11 +167,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold',
   },
   fundContainer: {
     width: '100%',
@@ -154,74 +186,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  searchContainer: {
-    width: '100%',
-    marginBottom: 16,
-  },
-  searchInput: {
-    width: '100%',
-    padding: 12,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  table: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 4,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  headerCell: {
-    flex: 1,
-    padding: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cell: {
-    flex: 1,
-    padding: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerText: {
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  cellText: {
-    color: '#666',
-  },
-  favoriteText: {
-    color: '#FFD700', 
-    fontSize: 16,
-  },
-  navigateButton: {
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: '#007AFF',
-    borderRadius: 4,
-    width: 160,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-  },
-  fundContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
   inputContainer: {
     marginBottom: 20,
   },
@@ -240,5 +204,10 @@ const styles = StyleSheet.create({
   },
   transactionSelector: {
     width: '100%',
+  },
+  buttonContainer: {
+    marginTop: 20,
   }
 });
+
+export default TransactionFundScreen;
