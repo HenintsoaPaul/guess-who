@@ -49,8 +49,8 @@ public class Purchase {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Purchase autrePurchase = (Purchase) o;
 
+        Purchase autrePurchase = (Purchase) o;
         return Double.compare(autrePurchase.totalPrice, totalPrice) == 0 &&
                 Double.compare(autrePurchase.unitPrice, unitPrice) == 0 &&
                 Double.compare(autrePurchase.quantityCrypto, quantityCrypto) == 0 &&

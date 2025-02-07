@@ -19,13 +19,11 @@ public class AccountListener {
 
     @PostPersist
     public void apresSauvegarde(Account account) {
-        System.out.println("Après insertion : " + account);
         accountSyncService.saveAsDocument(account);
     }
 
     @PostUpdate
     public void apresModification(Account account) {
-        System.out.println("Après udpate : " + account);
         accountSyncService.updateAsDocument(account);
     }
 }

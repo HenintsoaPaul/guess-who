@@ -24,6 +24,15 @@ public class AccountService implements BaseService<Account> {
         return accountRepository.findAll();
     }
 
+    @Transactional
+    public void updateOrCreate(Account account) {
+        this.save(account);
+    }
+
+    public void deleteById(int id) {
+        accountRepository.deleteById(id);
+    }
+
     public Account findByEmail(String email) {
         return accountRepository.findAccountByEmail(email);
     }
