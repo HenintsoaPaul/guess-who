@@ -7,35 +7,30 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { useContext, useState } from 'react';
-import  * as LoginService from '../services/loginService';
+import React , { useEffect, useState } from 'react';
+import { FIREBASE_AUTH } from "../services/firebaseService";
 import { LinearGradient } from "expo-linear-gradient";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Svg, { Path } from "react-native-svg";
-import { AppContext } from '../../AppContext';
-import { colorsChart } from "../constants/ColorsChart";
-import { color } from "react-native-elements/dist/helpers";
 
-const LoginScreen = () => {
-  const [email,setEmail] = useState("rocruxappafra-4143@yopmail.com");
-  const [password, setPassword] = useState('mypassword');
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const {logIn} = useContext(AppContext)
-  const signIn = async() => {
-    setLoading(true)
+  const auth = FIREBASE_AUTH;
+
+  const handleLogin = async () => {
+    setLoading(true);
     try {
-      const userLog = await LoginService.logInWithMailAndPassword(email,password)
-      logIn(userLog)
-    }
-    catch (error){
-      console.log(error);
-      var errorMessage = error.message;
-      alert('Sign In failed :'+ errorMessage);
-    }
-    finally {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Connexion réussie !");
+    } catch (error) {
+      alert(`Erreur de connexion: ${error.message}`);
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <ScrollView
@@ -94,7 +89,7 @@ const LoginScreen = () => {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={signIn}
+            onPress={handleLogin}
             disabled={loading}
           >
             <Text style={styles.buttonText}>Se connecter</Text>
@@ -125,7 +120,7 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    backgroundColor: colorsChart.light,
+    backgroundColor: "#f8f9fa",
   },
   headerContainer: {
     height: 350,
@@ -141,7 +136,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     // fontSize: 32,
-    color:colorsChart.white,
+    color: "white",
     fontWeight: "bold",
     marginBottom: 10,
     fontFamily: "OpenSans-Bold",
@@ -149,7 +144,6 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     // fontSize: 16,
     color: "rgba(255,255,255,0.8)",
-    // color: colorsChart.red,
     textAlign: "center",
     fontFamily: "OpenSans-Regular",
   },
@@ -158,10 +152,10 @@ const styles = StyleSheet.create({
     marginTop: -50,
   },
   card: {
-    backgroundColor: colorsChart.white,
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 25,
-    shadowColor: colorsChart.dark,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -175,7 +169,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 20,
     // fontSize: 16,
-    backgroundColor: colorsChart.light,
+    backgroundColor: "#f8f9fa",
   },
   button: {
     backgroundColor: "#39406e",
@@ -186,7 +180,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   buttonText: {
-    color:colorsChart.white,
+    color: "white",
     // fontSize: 16,
     fontWeight: "600",
   },
@@ -210,4 +204,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;  
+export default LoginScreen;

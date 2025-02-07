@@ -11,6 +11,8 @@ import UserScreen from '../screens/UserScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { AppContext } from '../../AppContext';
 import { colorsChart } from '../constants/ColorsChart';
+import EditUserScreen from '../screens/EditUserScreen';
+import AchatVenteScreen from '../screens/AchatVenteScreen';
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
@@ -18,7 +20,8 @@ const SCREEN_LABELS = {
   'Favoris': 'Favoris',
   'Crypto cours': 'Crypto cours',
   'ProfileEdit': 'Éditer Profil',
-  'Transaction fund': 'Transaction fund'
+  'Transaction fund': 'Transaction fund',
+  'AchatVente': 'AchatVente'
 };
 
 const Drawer = createDrawerNavigator();
@@ -49,7 +52,6 @@ const DrawerNavigation = () => {
             component={UserScreen}
             options={
               {
-              // headerShown:false,
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>👤</Text>
               ),
@@ -57,7 +59,7 @@ const DrawerNavigation = () => {
           />
           <Drawer.Screen
             name="ProfileEdit"
-            component={ProfilePicture}
+            component={EditUserScreen}
             options={{
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>📝</Text>
@@ -99,6 +101,16 @@ const DrawerNavigation = () => {
             options={{
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>🔁</Text>
+              ),
+            }}
+          />
+
+          <Drawer.Screen
+            name='AchatVente'
+            component={AchatVenteScreen}
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>🛒</Text>
               ),
             }}
           />

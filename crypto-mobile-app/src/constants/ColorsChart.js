@@ -2,7 +2,7 @@
 export const colorsChart = {
     primary : '#14213d',
     secondary: '#fca311',
-    light:'#e5e5e5',
+    light:'#f8f9fa',
     white:'#ffffff',
     dark:'#000000',
     red:'#d62828',

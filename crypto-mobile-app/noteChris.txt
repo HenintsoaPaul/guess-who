@@ -1,0 +1,5 @@
+npm install react-native-animatable
+npm install expo-linear-gradient
+
+npm install react-native-animatable
+npm install @react-native-community/datetimepicker
