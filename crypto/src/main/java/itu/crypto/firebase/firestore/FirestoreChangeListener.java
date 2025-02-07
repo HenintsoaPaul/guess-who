@@ -2,7 +2,7 @@ package itu.crypto.firebase.firestore;
 
 import com.google.cloud.firestore.*;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
-import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ public abstract class FirestoreChangeListener<T, D> {
 
     private final Firestore firestore;
     private final BaseService<T> baseService;
+    @Getter
     private final String collectionName;
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -28,6 +29,7 @@ public abstract class FirestoreChangeListener<T, D> {
 
     protected abstract void deleteFromDatabase(String entityId);
 
+    // Verification des changements entre doc-entity
     protected boolean hadChanges(T entity, String entityId, BaseService<T> service) {
         T existingEntity = service.findById(Integer.parseInt(entityId)).orElse(null);
         if (existingEntity == null) {
@@ -36,7 +38,9 @@ public abstract class FirestoreChangeListener<T, D> {
         return !entity.equals(existingEntity);
     }
 
-    @PostConstruct // Exécuter automatiquement au démarrage
+    /**
+     * Démarre l’écoute des changements sur la collection associée.
+     */
     public void startListening() {
         CollectionReference collectionRef = firestore.collection(collectionName);
         collectionRef.addSnapshotListener(executorService, (snapshots, error) -> {
@@ -54,21 +58,21 @@ public abstract class FirestoreChangeListener<T, D> {
                 T entity = toEntity(document);
                 switch (change.getType()) {
                     case ADDED:
-                     case MODIFIED:
+                    case MODIFIED:
                         if (hadChanges(entity, entityId, baseService)) {
                             updateDatabase(entity);
-                            log.info("📌 [FirestoreSync] Update: [id: {}, collection: {}]", entityId, collectionName);
+                            log.info("📌 [listener][FirestoreSync] Update: [id: {}, collection: {}]", entityId, collectionName);
                         }
                         break;
 
                     case REMOVED:
                         deleteFromDatabase(entityId);
-                        log.info("🗑️ [Firestore] Suppression de l'entité ID: {}", entityId);
+                        log.info("🗑️ [listener][FirestoreSync] Suppression de l'entité ID: {}", entityId);
                         break;
                 }
             }
         });
 
-        log.info("👂[firebase->local] Écoute des changements Firestore activée pour la collection: '{}'", collectionName);
+        log.info("[listener][firebase->local] Écoute des changements Firestore activée pour la collection: '{}'", collectionName);
     }
 }

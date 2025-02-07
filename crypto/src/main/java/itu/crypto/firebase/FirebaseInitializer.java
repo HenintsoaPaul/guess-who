@@ -6,9 +6,11 @@ import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
 import itu.crypto.entity.crypto.CryptoFav;
 import itu.crypto.entity.wallet.Wallet;
+import itu.crypto.firebase.firestore.FirestoreChangeListenerManager;
+import itu.crypto.firebase.firestore.FirestoreSyncManager;
 import itu.crypto.firebase.firestore.account.AccountSyncService;
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
-import itu.crypto.firebase.firestore.fav.CryptoFavSyncService;
+import itu.crypto.firebase.firestore.crypto.CryptoFavSyncService;
 import itu.crypto.firebase.firestore.fund.MvFundSyncService;
 import itu.crypto.firebase.firestore.fund.pending.PendingMvFundSyncService;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
@@ -36,6 +38,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FirebaseInitializer {
 
+    private final FirestoreChangeListenerManager firestoreChangeListenerManager;
+    private final FirestoreSyncManager firestoreSyncManager;
+
     private final AccountSyncService accountSyncService;
     private final CoursSyncService coursSyncService;
     private final PurchaseSyncService purchaseSyncService;
@@ -56,14 +61,9 @@ public class FirebaseInitializer {
 
     @PostConstruct
     public void init() {
-        log.info("[local->firebase]Initializing Firebase begins...");
+        firestoreSyncManager.init();
 
-//        testAccount();
-//        testCours();
-//        testCryptoFav();
-//        testPurchase();
-
-        log.info("[local->firebase]Firebase initialization complete.");
+        firestoreChangeListenerManager.init();
     }
 
     private void testAccount() {
