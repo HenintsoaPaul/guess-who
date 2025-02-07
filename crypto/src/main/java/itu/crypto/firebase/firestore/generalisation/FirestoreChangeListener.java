@@ -1,7 +1,6 @@
-package itu.crypto.firebase.firestore;
+package itu.crypto.firebase.firestore.generalisation;
 
 import com.google.cloud.firestore.*;
-import itu.crypto.firebase.firestore.generalisation.BaseService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

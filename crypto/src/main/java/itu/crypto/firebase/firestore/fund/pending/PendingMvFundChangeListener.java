@@ -2,7 +2,7 @@ package itu.crypto.firebase.firestore.fund.pending;
 
 import com.google.cloud.firestore.Firestore;
 import itu.crypto.entity.fund.PendingMvFund;
-import itu.crypto.firebase.firestore.FirestoreChangeListener;
+import itu.crypto.firebase.firestore.generalisation.FirestoreChangeListener;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
