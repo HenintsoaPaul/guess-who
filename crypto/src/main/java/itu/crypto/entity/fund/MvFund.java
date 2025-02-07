@@ -45,7 +45,7 @@ public class MvFund {
         this.dateMv = pendingMvFund.getDateValidation();
         this.amount = pendingMvFund.getAmount();
 
-        this.idSource = null;
+        this.idSource = pendingMvFund.getId();
 
         this.account = pendingMvFund.getAccount();
         this.typeMvFund = pendingMvFund.getTypeMvFund();

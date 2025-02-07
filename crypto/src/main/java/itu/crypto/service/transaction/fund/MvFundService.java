@@ -27,10 +27,13 @@ public class MvFundService implements BaseService<MvFund> {
         return mvFundRepository.findById(id);
     }
 
+    @Transactional
     public void updateOrCreate(MvFund mvFund) {
+        if (mvFund.getIdSource() == null) mvFund.setIdSource(0);
         mvFundRepository.save(mvFund);
     }
 
+    @Transactional
     public void deleteById(int id) {
         mvFundRepository.deleteById(id);
     }

@@ -25,6 +25,7 @@ import itu.crypto.service.transaction.fund.MvFundService;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -61,7 +62,6 @@ public class FirebaseInitializer {
     @PostConstruct
     public void init() {
         firestoreSyncManager.init();
-
         firestoreChangeListenerManager.init();
     }
 
@@ -143,6 +143,7 @@ public class FirebaseInitializer {
     }
 
     private void testPendingMvFund() {
+        pendingMvFundService.save(pendingMvFundService.cobaieAttente());
         pendingMvFundService.save(pendingMvFundService.cobaieAttente());
         System.out.println("\n");
         pendingMvFundService.save(pendingMvFundService.cobaieValide());

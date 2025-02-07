@@ -16,7 +16,7 @@ public class FirestoreSyncManager {
 
     protected FirestoreSyncManager(
             List<FirestoreSyncService<?, ?>> listeners,
-            @Value("${firestore.listen.collections.sync}") List<String> collectionNames) {
+            @Value("${firestore.sync.collections}") List<String> collectionNames) {
         this.listeners = listeners;
         this.collectionNames = collectionNames;
     }
