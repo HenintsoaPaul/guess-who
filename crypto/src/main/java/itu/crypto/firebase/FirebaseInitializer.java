@@ -143,7 +143,7 @@ public class FirebaseInitializer {
         purchaseRepository.save(w);
     }
 
-    private void testPendingMvFund() throws FirebaseMessagingException {
+    private void testPendingMvFund() {
         pendingMvFundService.save(pendingMvFundService.cobaieAttente());
         System.out.println("\n");
         pendingMvFundService.save(pendingMvFundService.cobaieValide());

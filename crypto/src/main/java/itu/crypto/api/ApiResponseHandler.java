@@ -3,8 +3,6 @@ package itu.crypto.api;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 
-import java.io.IOException;
-
 public class ApiResponseHandler implements ResponseErrorHandler {
 
     @Override
