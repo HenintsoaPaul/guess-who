@@ -3,6 +3,7 @@ package itu.crypto.firebase.firestore.generalisation;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public abstract class GenericSyncService<T, D> implements ISyncService<T> {
 
     protected final Firestore firestore;
     private final BaseService<T> baseService;
+    @Getter
     protected final String collectionName;
 
     protected abstract D toDocument(T entity);
