@@ -1,9 +1,9 @@
-package itu.crypto.firebase.firestore.fav;
+package itu.crypto.firebase.firestore.crypto;
 
 import com.google.cloud.firestore.Firestore;
 import itu.crypto.entity.crypto.CryptoFav;
 import itu.crypto.firebase.firestore.generalisation.GenericSyncService;
-import itu.crypto.service.CryptoFavService;
+import itu.crypto.service.crypto.CryptoFavService;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,6 +1,6 @@
 package itu.crypto.entity.crypto;
 
-import itu.crypto.firebase.firestore.fav.CryptoFavSyncService;
+import itu.crypto.firebase.firestore.crypto.CryptoFavSyncService;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostUpdate;
 import org.springframework.beans.factory.annotation.Autowired;

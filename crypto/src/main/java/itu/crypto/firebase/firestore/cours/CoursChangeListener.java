@@ -37,8 +37,4 @@ public class CoursChangeListener extends FirestoreChangeListener<Cours, CoursDoc
     protected void deleteFromDatabase(String entityId) {
         coursService.deleteById(Integer.parseInt(entityId)); // 🔥 Suppression de la ligne
     }
-
-    protected boolean hadChanges(Cours entity) {
-        return false;
-    }
 }
