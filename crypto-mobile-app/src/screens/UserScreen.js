@@ -8,16 +8,23 @@ import ProfilePicture from '../components/organisms/ProfilePicture';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../AppContext';
 import UserButton from '../components/atoms/UserButton';
+import { LinearGradient } from "expo-linear-gradient";
+
 
 export default function UserScreen() {
   const {user,logOut} = useContext(AppContext);
   const navigation  = useNavigation();
   return (
     <View style={styles.container}>
-      <View style={styles.profileContainer}>
+      <View>
+        <LinearGradient
+          colors={["rgba(58,65,110,255)", "rgba(25,28,48,255)"]}
+          style={styles.headerOverlay}
+        >
         <ProfilePicture></ProfilePicture>    
         <StyleText style={styles.title} color={colorsChart.white} fw={'bold'} fs={24}>{user.pseudo}</StyleText>
         <StyleText style={styles.title} color={colorsChart.white} fw={'200'} fs={12}>{user.email}</StyleText>
+        </LinearGradient>
       </View>
       <View style={{paddingVertical:25,flex:1}}>
         <UserInfos></UserInfos>
@@ -49,12 +56,6 @@ export default function UserScreen() {
 }
 
 const styles = StyleSheet.create({
-  profileContainer:{
-    alignItems:'center',
-    justifyContent:'center',
-    backgroundColor:colorsChart.primary,
-    paddingVertical:10
-  },
   container:{
     backgroundColor:colorsChart.white,
     flex:1
@@ -63,6 +64,11 @@ const styles = StyleSheet.create({
   {
     borderColor:colorsChart.white,
     textAlign:'center'
+  },
+  headerOverlay: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding:10,
   },
   signOut:{
     borderColor:colorsChart.red,
@@ -74,6 +80,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer : {
     marginHorizontal:10,
+    padding:10,
     flex:1,
     flexDirection:'row',
     justifyContent:'space-between'

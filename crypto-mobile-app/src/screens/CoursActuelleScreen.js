@@ -7,9 +7,9 @@ import { Timestamp } from 'firebase/firestore';
 import {FIRESTORE_DB } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
 
-const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
+const fetchWalletData = async (setCryptos, setWalletTotalPrice,user) => {
   try {
-    const walletDocRef = doc(FIRESTORE_DB, "wallets", "1");
+    const walletDocRef = doc(FIRESTORE_DB, "wallets", user.id+"");
     const docSnap = await getDoc(walletDocRef);
 
     if (docSnap.exists()) {
@@ -39,9 +39,9 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice) => {
   }
 };
 
-const fetchFavorites = async (setFavoritesList) => {
+const fetchFavorites = async (setFavoritesList,user) => {
   try {
-    const favoritesDocRef = doc(FIRESTORE_DB, "favorites", "1");
+    const favoritesDocRef = doc(FIRESTORE_DB, "favorites", user.id+"");
     const unsubscribe = onSnapshot(favoritesDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -120,10 +120,8 @@ const updateFavoritesListInFirestore = async (favoritesList,user) => {
 };
 
 const CoursActuelleScreen = () => {
-  const navigation = useNavigation();
   const [favoritesList, setFavoritesList] = useState([]);
   const [cryptos, setCryptos] = useState([]);
-  const [walletTotalPrice, setWalletTotalPrice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
   const {user} = useContext(AppContext);
@@ -132,7 +130,7 @@ const CoursActuelleScreen = () => {
     const fetchCryptos = async () => {
       try {
         setLoading(true);
-        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice);
+        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice,user);
         return () => {
           if (unsubscribe) unsubscribe();
         };
@@ -144,7 +142,7 @@ const CoursActuelleScreen = () => {
     };
 
     const fetchFavoritesData = async () => {
-      await fetchFavorites(setFavoritesList);
+      await fetchFavorites(setFavoritesList,user);
     };
 
     fetchCryptos();
@@ -219,7 +217,7 @@ const CoursActuelleScreen = () => {
       {/* Affichage du solde total */}
       <View style={styles.fundContainer}>
         <Text style={styles.fundLabel}>Solde total :</Text>
-        <Text style={styles.fundAmount}>{cryptos[0]?.fund || 0} €</Text>
+        <Text style={styles.fundAmount}>{user.fund || 0} €</Text>
       </View>
 
       {/* Barre de recherche */}

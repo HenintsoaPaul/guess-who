@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, Picker, ActivityIndicator, Button} from 'react-native';
+import React, { useState,useContext } from 'react';
+import { View, Text, StyleSheet, TextInput,Button} from 'react-native';
 import { FIRESTORE_DB } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
 

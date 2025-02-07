@@ -13,7 +13,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
 import { AppContext } from '../../AppContext';
 import { colorsChart } from "../constants/ColorsChart";
-import { color } from "react-native-elements/dist/helpers";
 
 const LoginScreen = () => {
   const [email,setEmail] = useState("rocruxappafra-4143@yopmail.com");

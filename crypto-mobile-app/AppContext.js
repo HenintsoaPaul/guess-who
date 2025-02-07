@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { findAccountByMail } from './src/services/loginService';
 
 export const AppContext = createContext();
 
@@ -19,8 +20,18 @@ export const AppProvider = ({ children }) => {
     // await clearSession();
   };
 
+  const refreshUser = async () => {
+    if (user === null) {
+      return;
+    }
+    console.log("Refreshing . . . "+user.email);
+    const userData = await findAccountByMail(user.email)
+    console.log("USER REFRESH "+userData);
+    setUser(userData)
+  }
+
   return (
-    <AppContext.Provider value={{ image, setImage, user, setUser, logIn, logOut }}>
+    <AppContext.Provider value={{ image, setImage, user, setUser, logIn, logOut , refreshUser }}>
       {children}
     </AppContext.Provider>
   );
