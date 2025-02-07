@@ -18,4 +18,11 @@ public class TypeMvFund {
     @Column(name = "name", nullable = false, length = 250)
     private String name;
 
+    public boolean isAttente() {
+        return this.id == 1;
+    }
+
+    public boolean isValidated() {
+        return this.id == 2;
+    }
 }

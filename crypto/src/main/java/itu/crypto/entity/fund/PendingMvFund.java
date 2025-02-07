@@ -41,7 +41,11 @@ public class PendingMvFund {
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
+    public boolean isAttente() {
+        return dateValidation == null && typeMvFund.isAttente();
+    }
+
     public boolean isValidated() {
-        return dateValidation != null;
+        return dateValidation != null && typeMvFund.isValidated();
     }
 }
