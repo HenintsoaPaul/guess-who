@@ -1,18 +1,24 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { AntDesign } from '@expo/vector-icons'
-import { colors } from '../../constants/Colors'
+import { FontAwesome } from '@expo/vector-icons'
+import { colorsChart } from '../../constants/ColorsChart'
 import StyleText from '../atoms/StyleText'
 
 export default function UserInfo({icon,label,children}) {
   return (
-    <View style={styles.container}>
+    <View style={{flexDirection:'row',alignItems:'center' , gap:10}}>
       <View style={styles.label}>
-        <AntDesign name={icon} size={18} ></AntDesign>
-        <StyleText style={styles.labelText}  fs={18}> {label} </StyleText>
+        <FontAwesome name={icon} size={16} color={colorsChart.white} />
+      </View> 
+      <View>
+        <StyleText>{label}</StyleText>
       </View>
-      <StyleText  fs={18}>{children}</StyleText>
+    <View style={styles.container}>
+      <View>
+        <StyleText fs={16} color={colorsChart.dark}>{children}</StyleText>
+      </View>
     </View>
+  </View>
   )
 }
 
@@ -20,18 +26,18 @@ const styles = StyleSheet.create({
   container : {
     flex:1,
     flexDirection:'row',
-    backgroundColor: "#1111",
     alignItems:'center',
-    paddingHorizontal:15,
-    paddingVertical:15,
-    borderRadius: 10,
-    justifyContent:'space-between'
+    padding:10,
+    justifyContent:'flex-end',
+    borderEndEndRadius:4,
+    borderStartEndRadius:4,
   },
   label:{
-      flexDirection:'row',
-      alignItems:'center'
-  },
-  labelText:{
-    marginLeft:10,
+    borderRadius:100,
+    width:50,
+    height:50,
+    backgroundColor:colorsChart.primary,
+    alignItems:'center',
+    justifyContent:'center'
   }
 });

@@ -5,19 +5,20 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import WalletScreen from '../screens/WalletScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import CoursActuelleScreen from '../screens/CoursActuelleScreen';
+import TransactionFundScreen from '../screens/TransactionFundScreen';
 import ProfilePicture from '../components/organisms/ProfilePicture';
 import UserScreen from '../screens/UserScreen';
-import { FIREBASE_AUTH } from '../services/firebaseService';
 import LoginScreen from '../screens/LoginScreen';
 import { AppContext } from '../../AppContext';
-
+import { colorsChart } from '../constants/ColorsChart';
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
   'Portefeuille': 'Portefeuille',
   'Favoris': 'Favoris',
   'Crypto cours': 'Crypto cours',
-  'ProfileEdit': 'Éditer Profil'
+  'ProfileEdit': 'Éditer Profil',
+  'Transaction fund': 'Transaction fund'
 };
 
 const Drawer = createDrawerNavigator();
@@ -46,7 +47,9 @@ const DrawerNavigation = () => {
           <Drawer.Screen
             name="Profil"
             component={UserScreen}
-            options={{
+            options={
+              {
+              // headerShown:false,
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>👤</Text>
               ),
@@ -71,22 +74,33 @@ const DrawerNavigation = () => {
           }}
           />
           <Drawer.Screen
-          name="Favoris"
-          component={FavoritesScreen}
-          options={{
-            drawerIcon: ({ focused }) => (
-              <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
-            ),
-          }}
+            name="Crypto cours"
+            component={CoursActuelleScreen} 
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
+              ),
+            }}
           />
           <Drawer.Screen
-          name="Crypto cours"
-          component={CoursActuelleScreen}
-          options={{
-            drawerIcon: ({ focused }) => (
-              <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
-            ),
-          }}
+            name="Favoris"
+            component={FavoritesScreen}
+            initialParams={{ favoritesList: [] }} 
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
+              ),
+            }}
+          />
+
+          <Drawer.Screen
+            name="Transaction fund"
+            component={TransactionFundScreen}
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>🔁</Text>
+              ),
+            }}
           />
         </>
       ):
@@ -129,9 +143,8 @@ const styles = StyleSheet.create({
   },
   drawerHeader: {
     padding: 20,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    backgroundColor: colorsChart.primary,
+    borderBottomColor: colorsChart.secondary,
   },
   profilePicture: {
     fontSize: 40,
@@ -147,6 +160,7 @@ const styles = StyleSheet.create({
   drawerMenu: {
     flex: 1,
     paddingTop: 10,
+    backgroundColor:colorsChart.white
   },
   menuItem: {
     padding: 15,

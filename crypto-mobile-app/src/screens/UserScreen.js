@@ -1,69 +1,81 @@
-import { StyleSheet, ScrollView,Button,View } from 'react-native'
+import { StyleSheet, ScrollView,View } from 'react-native'
 import React, { useContext } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button } from 'react-native-elements';
 import StyleText from '../components/atoms/StyleText';
-import { colors } from '../constants/Colors';
+import { colorsChart } from '../constants/ColorsChart';
 import UserInfos from '../components/organisms/UserInfos';
 import ProfilePicture from '../components/organisms/ProfilePicture';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../AppContext';
+import UserButton from '../components/atoms/UserButton';
 
 export default function UserScreen() {
-  const {logOut} = useContext(AppContext);
+  const {user,logOut} = useContext(AppContext);
   const navigation  = useNavigation();
   return (
-    <SafeAreaView style={styles.container}>
-        <View style={styles.profileContainer}>
-          <ProfilePicture></ProfilePicture>    
-        </View>
-        <StyleText style={styles.title} color={colors.primary} fw={'bold'} fs={24}> Account </StyleText>
+    <View style={styles.container}>
+      <View style={styles.profileContainer}>
+        <ProfilePicture></ProfilePicture>    
+        <StyleText style={styles.title} color={colorsChart.white} fw={'bold'} fs={24}>{user.pseudo}</StyleText>
+        <StyleText style={styles.title} color={colorsChart.white} fw={'200'} fs={12}>{user.email}</StyleText>
+      </View>
+      <View style={{paddingVertical:25,flex:1}}>
         <UserInfos></UserInfos>
-        <View style={styles.buttonContainer}>
-          <Button style={styles.userButton} title='Consulter Wallet' onPress={()=> navigation.navigate('Portefeuille')}/>
-          <Button style={styles.userButton} title='Voir Les favoris' onPress={()=> navigation.navigate('Favoris')}/>
-        </View>
-        <View style={{marginTop:10}}>
-          <Button 
-            title='Se deconnecter'
-            onPress={logOut}
-            style={styles.signOut} 
+      </View>
+      <View style={styles.buttonContainer}>
+        <UserButton 
+          iconName={'money'}
+          onPress={()=> navigation.navigate('Portefeuille')}
+        />
+        <UserButton
+          onPress={()=> navigation.navigate('Favoris')}
+          iconName={'heart'}
+        />
+        <UserButton
+          onPress={()=> navigation.navigate('Crypto cours')}
+          iconName={'line-chart'}
+        />
+      </View>
+      <View style={{}}>
+        <Button 
+          title='Se deconnecter'
+          onPress={logOut}
+          buttonStyle={styles.signOut}
+          titleStyle={{ color:colorsChart.red}}
           />
-        </View>
-    </SafeAreaView>
+      </View>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   profileContainer:{
-    flex:1,
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+    backgroundColor:colorsChart.primary,
+    paddingVertical:10
   },
   container:{
-    paddingHorizontal:10
+    backgroundColor:colorsChart.white,
+    flex:1
   },
   title :
   {
-    // borderTopWidth:1,
-    // borderBottomWidth:1,
-    marginVertical:10,
-    // textAlign:'center'
+    borderColor:colorsChart.white,
+    textAlign:'center'
   },
   signOut:{
-    backgroundColor:colors.secondary,
-    marginTop:10,
+    borderColor:colorsChart.red,
+    backgroundColor:'',
+    borderWidth:1,
+    borderRadius:100,
+    marginBottom:25,
+    marginHorizontal:10
   },
   buttonContainer : {
+    marginHorizontal:10,
     flex:1,
     flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'space-between'
   },
-  userButton:{
-    borderWidth:1,
-    padding:10,
-    backgroundColor:'#1c2e4a',
-    color:'#fff',
-    textTransform:'capitalize'
-  }
 });
