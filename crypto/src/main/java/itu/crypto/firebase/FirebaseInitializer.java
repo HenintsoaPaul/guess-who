@@ -59,16 +59,10 @@ public class FirebaseInitializer {
     private final WalletRepository walletRepository;
     private final SaleDetailRepository saleDetailRepository;
 
-    private boolean runInit;
-
     @PostConstruct
-    public void init(
-            @Value("${firestore.init}") String runInit
-    ) {
-        if (runInit.equals("true")) {
-            firestoreSyncManager.init();
-            firestoreChangeListenerManager.init();
-        }
+    public void init() {
+        firestoreSyncManager.init();
+        firestoreChangeListenerManager.init();
     }
 
     private void testAccount() {
@@ -149,6 +143,7 @@ public class FirebaseInitializer {
     }
 
     private void testPendingMvFund() {
+        pendingMvFundService.save(pendingMvFundService.cobaieAttente());
         pendingMvFundService.save(pendingMvFundService.cobaieAttente());
         System.out.println("\n");
         pendingMvFundService.save(pendingMvFundService.cobaieValide());
