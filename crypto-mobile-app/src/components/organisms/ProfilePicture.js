@@ -18,16 +18,25 @@ const ProfilePicture = () => {
 
   useEffect(() => {
     requestPermissions();
-    fetchProfileImage();
   }, []);
 
   const fetchProfileImage = async () => {
     try {
-      const response = await axios.get(`https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloudName}/image/upload/profile-${user.id}.jpg`);
+      const formData = new FormData();
+      formData.append('api_key', CLOUDINARY_CONFIG.apiKey);
+      formData.append('timestamp', Date.now().toString());
+      formData.append('signature', generateSignature());
+
+      const response = await axios.get(
+      `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloudName}/image/upload/profile-${user.id}.jpg`,
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
       if (response.status === 200) {
         setImage(response.data.secure_url);
       } 
     } catch (error) {
+      alert("ERROR : "+error.message)
     }
   };
 

@@ -85,7 +85,7 @@ const FavoritesScreen = () => {
       </View>
     );
   }
-
+  console.log(favorites);
   return (
     <View style={styles.container}>
       <View style={styles.table}>

@@ -54,6 +54,6 @@ export const extractDataFromPromise = async (promise) => {
         return [];
     })
     .catch((error) => {
-        console.error("Error data in:", error);
+        throw error
     });
 };

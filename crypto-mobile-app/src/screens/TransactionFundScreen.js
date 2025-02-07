@@ -1,41 +1,7 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput, Picker, ActivityIndicator, Button} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { onSnapshot, doc, getDoc, setDoc, collection } from 'firebase/firestore';
 import { FIRESTORE_DB } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
-
-const fetchWalletData = async (setCryptos, setWalletTotalPrice,user) => {
-  try {
-    const walletDocRef = doc(FIRESTORE_DB, "wallets", user.id+"");
-    const docSnap = await getDoc(walletDocRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setCryptos(data.wallets || []);
-      setWalletTotalPrice(data.totalPrice);
-      console.log('Données du document:', data);
-
-      const unsubscribe = onSnapshot(walletDocRef, (doc) => {
-        if (doc.exists()) {
-          const updatedData = doc.data();
-          setCryptos(updatedData.wallets || []);
-          setWalletTotalPrice(updatedData.totalPrice);
-          console.log('Données mises à jour:', updatedData);
-        }
-      });
-
-      return unsubscribe;
-    } else {
-      console.log('Aucun document trouvé');
-      setCryptos([]);
-      setWalletTotalPrice(null);
-    }
-  } catch (error) {
-    console.error('Erreur:', error);
-    throw error;
-  }
-};
 
 const sendTransactionData = async (amount, transactionType, user) => {
   try {
@@ -60,42 +26,10 @@ const sendTransactionData = async (amount, transactionType, user) => {
 };
 
 function TransactionFundScreen() {
-  const [cryptos, setCryptos] = useState([]);
-  const [walletTotalPrice, setWalletTotalPrice] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [filterText, setFilterText] = useState('');
   const [amount, setAmount] = useState('');
   const [transactionType, setTransactionType] = useState('deposit');
-  const {user, setUser} = useContext(AppContext); 
+  const {user} = useContext(AppContext);
 
-  useEffect(() => {
-    const fetchCryptos = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice,user);
-        return () => {
-          if (unsubscribe) unsubscribe();
-        };
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCryptos();
-  }, []);
-
-  const filteredCryptos = useMemo(
-    () =>
-      cryptos.filter(
-        (crypto) =>
-          crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
-          crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
-      ),
-    [cryptos, filterText]
-  );
 
   const handleTransaction = () => {
     if (!amount || isNaN(amount)) {
@@ -104,23 +38,6 @@ function TransactionFundScreen() {
     }
     sendTransactionData(amount, transactionType, user);
   };
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#000" />
-        <Text style={styles.loadingText}>Chargement...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Erreur: {error}</Text>
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>

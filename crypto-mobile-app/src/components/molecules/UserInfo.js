@@ -1,19 +1,21 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons'
-import { colors } from '../../constants/Colors'
+import { colorsChart } from '../../constants/ColorsChart'
 import StyleText from '../atoms/StyleText'
 
 export default function UserInfo({icon,label,children}) {
   return (
-    <View style={{flexDirection:'row'}}>
+    <View style={{flexDirection:'row',alignItems:'center' , gap:10}}>
       <View style={styles.label}>
-        <FontAwesome name={icon} size={16} ></FontAwesome>
-        <StyleText style={styles.labelText}  fs={16}> {label} </StyleText>
+        <FontAwesome name={icon} size={16} color={colorsChart.white} />
       </View> 
+      <View>
+        <StyleText>{label}</StyleText>
+      </View>
     <View style={styles.container}>
       <View>
-        <StyleText fs={16} color={colors.dark}>{children}</StyleText>
+        <StyleText fs={16} color={colorsChart.dark}>{children}</StyleText>
       </View>
     </View>
   </View>
@@ -24,18 +26,18 @@ const styles = StyleSheet.create({
   container : {
     flex:1,
     flexDirection:'row',
-    backgroundColor: colors.light,
     alignItems:'center',
     padding:10,
     justifyContent:'flex-end',
-
-
+    borderEndEndRadius:4,
+    borderStartEndRadius:4,
   },
   label:{
-    backgroundColor:colors.white,
-  },
-  labelText:{
-    textAlign:'center',
-    color:colors.pink
+    borderRadius:100,
+    width:50,
+    height:50,
+    backgroundColor:colorsChart.primary,
+    alignItems:'center',
+    justifyContent:'center'
   }
 });

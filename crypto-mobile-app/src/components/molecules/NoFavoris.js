@@ -1,6 +1,6 @@
 import { View, Text ,StyleSheet} from 'react-native'
 import React from 'react'
-import { colors } from '../../constants/Colors'
+import { colorsChart } from '../../constants/ColorsChart'
 import { AntDesign } from '@expo/vector-icons'
 
 export default function NoFavoris() {
@@ -9,7 +9,7 @@ export default function NoFavoris() {
       <AntDesign 
           name='star'
           size={100}
-          color={colors.light}
+          color={colorsChart.light}
       />
       <Text>
           No Favoris

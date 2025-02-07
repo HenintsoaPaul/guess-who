@@ -10,6 +10,7 @@ import ProfilePicture from '../components/organisms/ProfilePicture';
 import UserScreen from '../screens/UserScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { AppContext } from '../../AppContext';
+import { colorsChart } from '../constants/ColorsChart';
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
@@ -46,7 +47,9 @@ const DrawerNavigation = () => {
           <Drawer.Screen
             name="Profil"
             component={UserScreen}
-            options={{
+            options={
+              {
+              // headerShown:false,
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>👤</Text>
               ),
@@ -140,9 +143,8 @@ const styles = StyleSheet.create({
   },
   drawerHeader: {
     padding: 20,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    backgroundColor: colorsChart.primary,
+    borderBottomColor: colorsChart.secondary,
   },
   profilePicture: {
     fontSize: 40,
@@ -158,6 +160,7 @@ const styles = StyleSheet.create({
   drawerMenu: {
     flex: 1,
     paddingTop: 10,
+    backgroundColor:colorsChart.white
   },
   menuItem: {
     padding: 15,

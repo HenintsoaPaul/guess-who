@@ -1,5 +1,5 @@
 
-export const colors = {
+export const colorsChart = {
     primary : '#14213d',
     secondary: '#fca311',
     light:'#e5e5e5',
