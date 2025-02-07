@@ -1,6 +1,5 @@
 package itu.crypto.firebase;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
