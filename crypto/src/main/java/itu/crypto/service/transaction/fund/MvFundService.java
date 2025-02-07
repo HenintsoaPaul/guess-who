@@ -22,6 +22,19 @@ public class MvFundService implements BaseService<MvFund> {
         return this.mvFundRepository.findAll();
     }
 
+    @Override
+    public Optional<MvFund> findById(int id) {
+        return mvFundRepository.findById(id);
+    }
+
+    public void updateOrCreate(MvFund mvFund) {
+        mvFundRepository.save(mvFund);
+    }
+
+    public void deleteById(int id) {
+        mvFundRepository.deleteById(id);
+    }
+
     @Transactional
     public MvFund save(MvFund mvFund) {
         return mvFundRepository.save(mvFund);

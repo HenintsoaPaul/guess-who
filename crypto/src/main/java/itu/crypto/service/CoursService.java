@@ -6,6 +6,8 @@ import itu.crypto.enums.CoursAnalysisType;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.CryptoRepository;
+import itu.crypto.service.crypto.CryptoPriceGeneratorService;
+import itu.crypto.service.crypto.CryptoService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -27,6 +29,10 @@ public class CoursService implements BaseService<Cours> {
 
     public List<Cours> findAll() {
         return coursRepository.findAll();
+    }
+
+    public Optional<Cours> findById(int id) {
+        return coursRepository.findById(id);
     }
 
     /**
@@ -212,5 +218,14 @@ public class CoursService implements BaseService<Cours> {
         List<Cours> cbdd = coursRepository.findMinCoursForeachCrypto(cours);
         cours.retainAll(cbdd);
         return cours;
+    }
+
+
+    public void updateOrCreate(Cours cours) {
+        coursRepository.save(cours);
+    }
+
+    public void deleteById(int id) {
+        coursRepository.deleteById(id);
     }
 }

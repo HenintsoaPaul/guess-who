@@ -1,4 +1,4 @@
-package itu.crypto.firebase.firestore.fav;
+package itu.crypto.firebase.firestore.crypto;
 
 import com.google.cloud.Timestamp;
 import itu.crypto.entity.account.Account;

@@ -63,7 +63,7 @@ public class CommissionController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute("commission") CommissionRate commissionRate) throws Exception {
+    public String save(@ModelAttribute("commission") CommissionRate commissionRate) {
         commissionRateService.save(commissionRate);
         return "redirect:/commissions/edit";
     }

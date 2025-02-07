@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @ToString
-@NoArgsConstructor
 @Table(name = "mv_fund")
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(MvFundListener.class)
 public class MvFund {
     @Id
@@ -38,14 +39,6 @@ public class MvFund {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_pending_mv_fund")
     private PendingMvFund pendingMvFund;
-
-    public MvFund(Integer id, LocalDateTime localDateTime, double amount, Account account, TypeMvFund typeMvFund) {
-        this.id = id;
-        this.dateMv = localDateTime;
-        this.amount = amount;
-        this.account = account;
-        this.typeMvFund = typeMvFund;
-    }
 
     public MvFund(PendingMvFund pendingMvFund) {
         this.id = null;

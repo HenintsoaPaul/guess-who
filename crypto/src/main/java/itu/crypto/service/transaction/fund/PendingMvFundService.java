@@ -1,6 +1,5 @@
 package itu.crypto.service.transaction.fund;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.fund.PendingMvFund;
 import itu.crypto.entity.fund.PendingState;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,6 +32,18 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
 
     public List<PendingMvFund> findAll() {
         return this.pendingMvFundRepository.findAll();
+    }
+
+    public Optional<PendingMvFund> findById(int id) {
+        return this.pendingMvFundRepository.findById(id);
+    }
+
+    public void updateOrCreate(PendingMvFund pendingMvFund) {
+        pendingMvFundRepository.save(pendingMvFund);
+    }
+
+    public void deleteById(int id) {
+        pendingMvFundRepository.deleteById(id);
     }
 
     @Transactional

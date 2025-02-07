@@ -3,6 +3,8 @@ package itu.crypto.entity.crypto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Data
 @Entity
 @ToString
@@ -25,4 +27,13 @@ public class Crypto {
         return name + " (" + symbol + ")";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        return Objects.equals(id, ((Crypto) o).id) &&
+                Objects.equals(name, ((Crypto) o).name) &&
+                Objects.equals(symbol, ((Crypto) o).symbol);
+    }
 }
