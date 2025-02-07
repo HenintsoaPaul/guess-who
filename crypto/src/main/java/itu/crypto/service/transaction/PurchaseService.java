@@ -1,5 +1,6 @@
 package itu.crypto.service.transaction;
 
+import itu.crypto.entity.fund.MvFund;
 import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.transaction.PurchaseRepository;
@@ -63,6 +64,7 @@ public class PurchaseService implements BaseService<Purchase> {
         return query.getResultList();
     }
 
+    @Override
     public List<Purchase> findAll() {
         return purchaseRepository.findAll();
     }
@@ -70,5 +72,13 @@ public class PurchaseService implements BaseService<Purchase> {
     @Override
     public Optional<Purchase> findById(int id) {
         return purchaseRepository.findById(id);
+    }
+
+    public void updateOrCreate(Purchase purchase) {
+        purchaseRepository.save(purchase);
+    }
+
+    public void deleteById(int id) {
+        purchaseRepository.deleteById(id);
     }
 }
