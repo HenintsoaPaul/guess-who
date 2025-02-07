@@ -16,7 +16,7 @@ public class FirestoreChangeListenerManager {
 
     protected FirestoreChangeListenerManager(
             List<FirestoreChangeListener<?, ?>> listeners,
-            @Value("${firestore.listen.collections.listen}") List<String> collectionNames) {
+            @Value("${firestore.listen.collections}") List<String> collectionNames) {
         this.listeners = listeners;
         this.collectionNames = collectionNames;
     }

@@ -25,6 +25,7 @@ import itu.crypto.service.transaction.fund.MvFundService;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -58,11 +59,16 @@ public class FirebaseInitializer {
     private final WalletRepository walletRepository;
     private final SaleDetailRepository saleDetailRepository;
 
-    @PostConstruct
-    public void init() {
-        firestoreSyncManager.init();
+    private boolean runInit;
 
-        firestoreChangeListenerManager.init();
+    @PostConstruct
+    public void init(
+            @Value("${firestore.init}") String runInit
+    ) {
+        if (runInit.equals("true")) {
+            firestoreSyncManager.init();
+            firestoreChangeListenerManager.init();
+        }
     }
 
     private void testAccount() {
