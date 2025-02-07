@@ -5,7 +5,7 @@ import itu.crypto.entity.commission.CommissionRate;
 import itu.crypto.entity.commission.CommissionType;
 import itu.crypto.repository.transaction.CommissionRateRepository;
 import itu.crypto.repository.transaction.CommissionTypeRepository;
-import itu.crypto.service.CryptoService;
+import itu.crypto.service.crypto.CryptoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

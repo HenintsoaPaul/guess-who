@@ -5,7 +5,7 @@ import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.entity.wallet.MvWallet;
 import itu.crypto.repository.transaction.wallet.MvWalletRepository;
 import itu.crypto.service.account.AccountService;
-import itu.crypto.service.CryptoService;
+import itu.crypto.service.crypto.CryptoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

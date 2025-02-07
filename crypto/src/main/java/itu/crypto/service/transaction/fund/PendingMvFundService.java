@@ -38,6 +38,14 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return this.pendingMvFundRepository.findById(id);
     }
 
+    public void updateOrCreate(PendingMvFund pendingMvFund) {
+        pendingMvFundRepository.save(pendingMvFund);
+    }
+
+    public void deleteById(int id) {
+        pendingMvFundRepository.deleteById(id);
+    }
+
     @Transactional
     public PendingMvFund save(PendingMvFund pmf) {
         pendingMvFundRepository.save(pmf);
