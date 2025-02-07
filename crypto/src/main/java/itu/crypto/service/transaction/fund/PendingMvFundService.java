@@ -1,8 +1,8 @@
 package itu.crypto.service.transaction.fund;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.fund.PendingMvFund;
+import itu.crypto.entity.fund.PendingMvFundException;
 import itu.crypto.entity.fund.PendingState;
 import itu.crypto.entity.fund.TypeMvFund;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
@@ -40,40 +40,79 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return this.pendingMvFundRepository.findById(id);
     }
 
+    @Transactional
     public void updateOrCreate(PendingMvFund pendingMvFund) {
         pendingMvFundRepository.save(pendingMvFund);
     }
 
+    @Transactional
     public void deleteById(int id) {
         pendingMvFundRepository.deleteById(id);
     }
 
     public List<PendingMvFund> findAllAttente() {
         return this.findAll().stream()
-                .filter(PendingMvFund::isAttente)
+                .filter(pmf -> (pmf.getDateValidation() == null && pmf.getPendingState().getId() == 1))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Validation d'un depot/retrait
+     */
+    @Transactional
+    public PendingMvFund validate(int id) throws PendingMvFundException {
+        PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
+
+        // controle
+        double solde = pmf.controlAmountRetrait();
+
+        // mampihena
+        Account a = pmf.getAccount();
+        a.setFund(solde);
+        accountService.save(a);
+
+        // validation
+        pmf.setDateValidation(LocalDateTime.now());
+        pmf.setPendingState(pendingStateRepository.findById(2).orElseThrow());
+
+        return this.save(pmf);
+    }
+
+    /**
+     * Refus d'un depot/retrait
+     */
+    @Transactional
+    public PendingMvFund refus(int id) throws PendingMvFundException {
+        PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
+
+        // refus
+        pmf.setDateValidation(LocalDateTime.now());
+        pmf.setPendingState(pendingStateRepository.findById(3).orElseThrow());
+
+        return this.save(pmf);
     }
 
     @Transactional
     public PendingMvFund save(PendingMvFund pmf) {
-        pendingMvFundRepository.save(pmf);
+        PendingMvFund saved = pendingMvFundRepository.save(pmf);
 
-        if (pmf.isValidated()) {
-            mvFundService.addFromPending(pmf);
+        // if etat devient valider + typevalidation n'est pas un refus
+        if (pmf.getDateValidation() != null && pmf.getPendingState().getId() == 2) {
+            mvFundService.addFromPending(saved);
         }
 
-        return null;
+        return saved;
     }
 
     public PendingMvFund cobaieAttente() {
         PendingState pendingState = pendingStateRepository.findAll().get(0);
-        TypeMvFund tmf = typeMvFundRepository.findAll().get(0);
+        TypeMvFund tmf = typeMvFundRepository.findAll().get(1); // retrait
         Account account = accountService.findAll().get(0);
 
         return new PendingMvFund(null,
                 LocalDateTime.now(),
                 null,
-                123.00,
+                1230000000000.00,
                 pendingState,
                 account,
                 tmf);
@@ -81,7 +120,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
 
     public PendingMvFund cobaieValide() {
         PendingState pendingState = pendingStateRepository.findAll().get(0);
-        TypeMvFund tmf = typeMvFundRepository.findAll().get(0);
+        TypeMvFund tmf = typeMvFundRepository.findAll().get(1); // retrait
         Account account = accountService.findAll().get(0);
 
         return new PendingMvFund(null,
