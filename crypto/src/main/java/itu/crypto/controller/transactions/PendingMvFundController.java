@@ -1,13 +1,12 @@
 package itu.crypto.controller.transactions;
 
+import itu.crypto.entity.fund.PendingMvFund;
 import itu.crypto.entity.fund.PendingMvFundException;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ public class PendingMvFundController {
 
     @GetMapping
     public String gotoListPendings(Model model) {
-        model.addAttribute("pendingMvFunds", pendingMvFundService.findAllAttente());
+        model.addAttribute("pendingMvFund", pendingMvFundService.findAllAttente());
         return "transactions/fund/pending";
     }
 
@@ -55,5 +54,11 @@ public class PendingMvFundController {
         model.addAttribute("typeMvFunds", pendingMvFundService.findAllTypeMvFundsDepotRetrait());
         return "transactions/fund/pending/add";
     }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute PendingMvFund pendingMvFund) {
+        pendingMvFund.setPendingState(pendingMvFundService.getEtatAttente());
+        pendingMvFundService.save(pendingMvFund);
+        return "redirect:/transactions/fund/pending";
     }
 }
