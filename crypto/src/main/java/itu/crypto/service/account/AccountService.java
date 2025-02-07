@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,8 +16,8 @@ public class AccountService implements BaseService<Account> {
 
     private final AccountRepository accountRepository;
 
-    public Account findById(Integer id) {
-        return accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Account not found"));
+    public Optional<Account> findById(int id) {
+        return accountRepository.findById(id);
     }
 
     public List<Account> findAll() {

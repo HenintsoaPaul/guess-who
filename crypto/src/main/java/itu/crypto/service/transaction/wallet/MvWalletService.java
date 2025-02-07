@@ -32,7 +32,7 @@ public class MvWalletService {
     }
 
     public Account findAccountById(Integer id) {
-        return accountService.findById(id);
+        return accountService.findById(id).orElseThrow();
     }
 
     public MvWallet findById(Integer id) throws Exception {

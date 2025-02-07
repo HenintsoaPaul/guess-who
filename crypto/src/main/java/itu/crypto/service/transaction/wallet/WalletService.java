@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,5 +17,10 @@ public class WalletService implements BaseService<Wallet> {
 
     public List<Wallet> findAll() {
         return walletRepository.findAll();
+    }
+
+    @Override
+    public Optional<Wallet> findById(int id) {
+        return walletRepository.findById(id);
     }
 }

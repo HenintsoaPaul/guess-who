@@ -45,7 +45,7 @@ public class SaleController {
     @GetMapping("/add")
     public String goToForm(Model model, HttpSession session) {
         Integer idAccount = (Integer) session.getAttribute("id_account");
-        Account myAccount = accountService.findById(idAccount);
+        Account myAccount = accountService.findById(idAccount).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
         model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());

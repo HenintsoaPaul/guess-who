@@ -29,6 +29,10 @@ public class CoursService implements BaseService<Cours> {
         return coursRepository.findAll();
     }
 
+    public Optional<Cours> findById(int id) {
+        return coursRepository.findById(id);
+    }
+
     /**
      * Retrieves the latest course for each crypto.
      *
@@ -212,5 +216,14 @@ public class CoursService implements BaseService<Cours> {
         List<Cours> cbdd = coursRepository.findMinCoursForeachCrypto(cours);
         cours.retainAll(cbdd);
         return cours;
+    }
+
+
+    public void updateOrCreate(Cours cours) {
+        coursRepository.save(cours);
+    }
+
+    public void deleteById(int id) {
+        coursRepository.deleteById(id);
     }
 }

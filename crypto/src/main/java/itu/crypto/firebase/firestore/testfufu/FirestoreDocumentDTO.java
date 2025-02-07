@@ -1,4 +1,4 @@
-package itu.crypto.firebase.firestore;
+package itu.crypto.firebase.firestore.testfufu;
 
 import lombok.Data;
 

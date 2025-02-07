@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +65,10 @@ public class PurchaseService implements BaseService<Purchase> {
 
     public List<Purchase> findAll() {
         return purchaseRepository.findAll();
+    }
+
+    @Override
+    public Optional<Purchase> findById(int id) {
+        return purchaseRepository.findById(id);
     }
 }
