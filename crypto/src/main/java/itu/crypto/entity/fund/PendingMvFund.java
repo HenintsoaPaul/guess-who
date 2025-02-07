@@ -41,11 +41,18 @@ public class PendingMvFund {
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
-    public boolean isAttente() {
-        return dateValidation == null && typeMvFund.isAttente();
-    }
-
-    public boolean isValidated() {
-        return dateValidation != null && typeMvFund.isValidated();
+    /**
+     * Verifier que le solde du fond du compte demandeur est suffisant pour le retrait.
+     * Si oui, on retourne le solde restant apres le retrait.
+     * Si non, lever une exception.
+     */
+    public double controlAmountRetrait() throws PendingMvFundException {
+        double solde = this.getAccount().getFund() - amount;
+        if (this.getTypeMvFund().deTypeRetrait()) {
+            if (solde < 0) {
+                throw new PendingMvFundException("Fonds insuffisant pour faire un retrait");
+            }
+        }
+        return solde;
     }
 }
