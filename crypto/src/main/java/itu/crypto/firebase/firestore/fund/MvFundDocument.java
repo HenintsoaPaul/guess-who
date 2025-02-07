@@ -4,6 +4,7 @@ import com.google.cloud.Timestamp;
 import itu.crypto.entity.fund.TypeMvFund;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.fund.MvFund;
+import itu.crypto.firebase.firestore.fund.pending.PendingMvFundDocument;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,11 @@ public class MvFundDocument implements TimestampedDocument {
     private Timestamp dateMv;
     private double amount;
 
+    private Integer idSource;
     private Account account;
     private TypeMvFund typeMvFund;
 
-    private Integer idPendingMvFund;
+    private PendingMvFundDocument pendingMvFundDocument;
 
     private String createdAt;
     private String updatedAt;
@@ -32,10 +34,11 @@ public class MvFundDocument implements TimestampedDocument {
         this.dateMv = Timestamp.of(Date.from(mvFund.getDateMv().toInstant(ZoneOffset.UTC)));
         this.amount = mvFund.getAmount();
 
+        this.idSource = mvFund.getIdSource();
         this.account = mvFund.getAccount();
         this.typeMvFund = mvFund.getTypeMvFund();
 
-        this.idPendingMvFund = mvFund.getPendingMvFund().getId();
+        this.pendingMvFundDocument = new PendingMvFundDocument(mvFund.getPendingMvFund());
     }
 
     public MvFund toEntity() {
@@ -43,8 +46,10 @@ public class MvFundDocument implements TimestampedDocument {
                 id,
                 dateMv.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
                 amount,
+                idSource,
                 account,
-                typeMvFund
+                typeMvFund,
+                pendingMvFundDocument.toEntity()
         );
     }
 }

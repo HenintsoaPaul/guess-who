@@ -9,6 +9,7 @@ import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 
@@ -44,10 +45,13 @@ public class PendingMvFundDocument implements TimestampedDocument {
     }
 
     public PendingMvFund toEntity() {
+        LocalDateTime dd = dateValidation == null ?
+                null : dateValidation.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
+
         return new PendingMvFund(
                 id,
                 datePending.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
-                dateValidation.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
+                dd,
                 amount,
                 pendingState,
                 account,
