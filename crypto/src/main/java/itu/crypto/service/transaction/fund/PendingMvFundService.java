@@ -11,7 +11,10 @@ import itu.crypto.repository.transaction.fund.PendingStateRepository;
 import itu.crypto.repository.transaction.fund.TypeMvFundRepository;
 import itu.crypto.service.EmailService;
 import itu.crypto.service.account.AccountService;
-import jakarta.transaction.Transactional;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,6 @@ import java.util.stream.Collectors;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class PendingMvFundService implements BaseService<PendingMvFund> {
 
@@ -57,12 +59,12 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return this.pendingMvFundRepository.findById(id);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(PendingMvFund pendingMvFund) {
         pendingMvFundRepository.save(pendingMvFund);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteById(int id) {
         pendingMvFundRepository.deleteById(id);
     }
@@ -76,12 +78,17 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     /**
      * Validation d'un depot/retrait
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund validate(int id) throws PendingMvFundException {
         PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
 
         // controle
-        double solde = pmf.controlAmountRetrait();
+        double solde = 0;
+        if (pmf.getTypeMvFund().deTypeRetrait()) {
+            solde = pmf.controlAmountRetrait();
+        } else if (pmf.getTypeMvFund().deTypeRetrait()) {
+            solde = pmf.getAmount() + pmf.getAccount().getFund();
+        }
 
         // mampihena
         Account a = pmf.getAccount();
@@ -98,7 +105,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     /**
      * Refus d'un depot/retrait
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund refus(int id) throws PendingMvFundException {
         PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
 
@@ -109,10 +116,12 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return this.save(pmf);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund save(PendingMvFund pmf) {
         PendingMvFund saved = pendingMvFundRepository.save(pmf);
 
+        // todo: separer l'envoi d'email
+        // todo: gestion des transactions
         PendingState etat = pmf.getPendingState();
         if (pmf.getDateValidation() == null && etat.getId() == 1) {
             emailService.writeEmailAttente(pmf);
