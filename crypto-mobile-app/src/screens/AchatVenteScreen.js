@@ -13,6 +13,7 @@ import { getDocs, collection } from 'firebase/firestore';
 import { FIRESTORE_DB } from '../services/firebaseService';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome for the search icon
 import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker
+import { colorsChart } from '../constants/ColorsChart';
 
 const AchatVenteScreen = () => {
   const [purchases, setPurchases] = useState([]);
@@ -251,14 +252,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#121212', // Change background color to dark
+    backgroundColor: colorsChart.white, // Change background color to dark
     paddingHorizontal: 16,
   },
   centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#121212', // Change background color to dark
+    backgroundColor: colorsChart.white, // Change background color to dark
   },
   loadingText: {
     color: '#ffffff', // Change text color to white for better contrast

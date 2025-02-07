@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 import { AppContext } from '../../AppContext';
+import {NoFavoris} from '../components/molecules/NoFavoris';
 import { FIRESTORE_DB } from '../services/firebaseService';
 
 
@@ -85,6 +86,7 @@ const FavoritesScreen = () => {
       </View>
     );
   }
+
   console.log(favorites);
   return (
     <View style={styles.container}>
@@ -100,22 +102,26 @@ const FavoritesScreen = () => {
               <Text style={styles.headerText}>Symbole</Text>
             </View>
           </View>
+          
+          
           {filteredFavoris.map((favorite, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.tableRow}
-          >
-            <View style={styles.cell}>
-              <Text style={styles.cellText}></Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{favorite.cryptoName}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{favorite.symbol}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+            <TouchableOpacity
+              key={index}
+              style={styles.tableRow}
+            >
+              <View style={styles.cell}>
+                <Text style={styles.cellText}></Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.cellText}>{favorite.cryptoName}</Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.cellText}>{favorite.symbol}</Text>
+              </View>
+            </TouchableOpacity>
+            ))
+          }
+
         </View>
     </View>
   );

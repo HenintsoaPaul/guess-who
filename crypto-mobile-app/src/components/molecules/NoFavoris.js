@@ -6,11 +6,11 @@ import { AntDesign } from '@expo/vector-icons'
 export default function NoFavoris() {
   return (
     <View style={styles.container}>
-      <AntDesign 
+      {/* <AntDesign 
           name='star'
           size={100}
           color={colorsChart.light}
-      />
+      /> */}
       <Text>
           No Favoris
       </Text>

@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorsChart.light,
   },
   button: {
-    backgroundColor: "#39406e",
+    backgroundColor: colorsChart.primary,
     borderRadius: 12,
     height: 50,
     justifyContent: "center",
