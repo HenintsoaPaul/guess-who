@@ -2,14 +2,14 @@ package itu.crypto.firebase.firestore.fund.pending;
 
 import com.google.cloud.firestore.Firestore;
 import itu.crypto.entity.fund.PendingMvFund;
-import itu.crypto.firebase.firestore.generalisation.GenericSyncService;
+import itu.crypto.firebase.firestore.generalisation.FirestoreSyncService;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class PendingMvFundSyncService extends GenericSyncService<PendingMvFund, PendingMvFundDocument> {
+public class PendingMvFundSyncService extends FirestoreSyncService<PendingMvFund, PendingMvFundDocument> {
 
     public PendingMvFundSyncService(Firestore firestore, PendingMvFundService pendingMvFundService) {
         super(firestore, pendingMvFundService, "pending_mv_fund");

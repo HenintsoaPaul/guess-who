@@ -2,12 +2,12 @@ package itu.crypto.firebase.firestore.purchase;
 
 import com.google.cloud.firestore.Firestore;
 import itu.crypto.entity.purchase.Purchase;
-import itu.crypto.firebase.firestore.generalisation.GenericSyncService;
+import itu.crypto.firebase.firestore.generalisation.FirestoreSyncService;
 import itu.crypto.service.transaction.PurchaseService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PurchaseSyncService extends GenericSyncService<Purchase, PurchaseDocument> {
+public class PurchaseSyncService extends FirestoreSyncService<Purchase, PurchaseDocument> {
 
     public PurchaseSyncService(Firestore firestore, PurchaseService purchaseService) {
         super(firestore, purchaseService, "purchase");

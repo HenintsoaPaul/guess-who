@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public abstract class GenericSyncService<T, D> implements ISyncService<T> {
+public abstract class FirestoreSyncService<T, D> implements ISyncService<T> {
 
     protected final Firestore firestore;
     private final BaseService<T> baseService;

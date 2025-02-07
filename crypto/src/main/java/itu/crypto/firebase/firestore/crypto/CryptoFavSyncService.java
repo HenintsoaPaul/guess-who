@@ -2,12 +2,12 @@ package itu.crypto.firebase.firestore.crypto;
 
 import com.google.cloud.firestore.Firestore;
 import itu.crypto.entity.crypto.CryptoFav;
-import itu.crypto.firebase.firestore.generalisation.GenericSyncService;
+import itu.crypto.firebase.firestore.generalisation.FirestoreSyncService;
 import itu.crypto.service.crypto.CryptoFavService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CryptoFavSyncService extends GenericSyncService<CryptoFav, CryptoFavDocument> {
+public class CryptoFavSyncService extends FirestoreSyncService<CryptoFav, CryptoFavDocument> {
 
     public CryptoFavSyncService(Firestore firestore, CryptoFavService cryptoFavService) {
         super(firestore, cryptoFavService, "crypto_fav");

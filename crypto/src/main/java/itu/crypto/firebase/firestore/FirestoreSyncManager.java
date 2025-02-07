@@ -1,6 +1,6 @@
 package itu.crypto.firebase.firestore;
 
-import itu.crypto.firebase.firestore.generalisation.GenericSyncService;
+import itu.crypto.firebase.firestore.generalisation.FirestoreSyncService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,11 +12,11 @@ import java.util.List;
 @Component
 public class FirestoreSyncManager {
 
-    private final List<GenericSyncService<?, ?>> listeners;
+    private final List<FirestoreSyncService<?, ?>> listeners;
     private final List<String> collectionNames;
 
     protected FirestoreSyncManager(
-            List<GenericSyncService<?, ?>> listeners,
+            List<FirestoreSyncService<?, ?>> listeners,
             @Value("${firestore.listen.collections.sync}") List<String> collectionNames) {
         this.listeners = listeners;
         this.collectionNames = collectionNames;
