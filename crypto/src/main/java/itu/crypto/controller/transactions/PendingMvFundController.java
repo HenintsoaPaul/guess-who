@@ -31,9 +31,7 @@ public class PendingMvFundController {
         } catch (PendingMvFundException pmfe) {
             msg = pmfe.getMessage();
         }
-
         model.addAttribute("msg", msg);
-
         return this.gotoListPendings(model);
     }
 
@@ -46,9 +44,16 @@ public class PendingMvFundController {
         } catch (PendingMvFundException pmfe) {
             msg = pmfe.getMessage();
         }
-
         model.addAttribute("msg", msg);
-
         return this.gotoListPendings(model);
+    }
+
+    @GetMapping("/add")
+    public String gotoFormPending(Model model) {
+        model.addAttribute("pendingMvFund", new PendingMvFund());
+        model.addAttribute("accounts", pendingMvFundService.findAllAccounts());
+        model.addAttribute("typeMvFunds", pendingMvFundService.findAllTypeMvFundsDepotRetrait());
+        return "transactions/fund/pending/add";
+    }
     }
 }

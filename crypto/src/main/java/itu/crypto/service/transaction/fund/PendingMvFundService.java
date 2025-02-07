@@ -35,8 +35,22 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     private final PendingStateRepository pendingStateRepository;
     private final TypeMvFundRepository typeMvFundRepository;
 
+    public PendingState getEtatAttente() {
+        return pendingStateRepository.findById(1).orElseThrow();
+    }
+
     public List<PendingMvFund> findAll() {
         return this.pendingMvFundRepository.findAll();
+    }
+
+    public List<Account> findAllAccounts() {
+        return this.accountService.findAll();
+    }
+
+    public List<TypeMvFund> findAllTypeMvFundsDepotRetrait() {
+        return this.typeMvFundRepository.findAll().stream()
+                .filter(tmf -> (tmf.getId() == 1 || tmf.getId() == 2))
+                .collect(Collectors.toList());
     }
 
     public Optional<PendingMvFund> findById(int id) {
