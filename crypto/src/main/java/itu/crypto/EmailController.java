@@ -16,8 +16,7 @@ public class EmailController {
     public String sendEmail(
             @RequestParam String to,
             @RequestParam String subject,
-            @RequestParam String text)
-    {
+            @RequestParam String text) {
         emailService.sendEmail(to, subject, text);
         return "Email envoyé avec succès à " + to;
     }

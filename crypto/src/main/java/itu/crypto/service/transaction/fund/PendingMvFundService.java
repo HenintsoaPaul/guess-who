@@ -9,6 +9,7 @@ import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.transaction.fund.PendingMvFundRepository;
 import itu.crypto.repository.transaction.fund.PendingStateRepository;
 import itu.crypto.repository.transaction.fund.TypeMvFundRepository;
+import itu.crypto.service.EmailService;
 import itu.crypto.service.account.AccountService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,8 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class PendingMvFundService implements BaseService<PendingMvFund> {
+
+    private final EmailService emailService;
 
     private final MvFundService mvFundService;
     private final PendingMvFundRepository pendingMvFundRepository;
@@ -96,9 +99,14 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     public PendingMvFund save(PendingMvFund pmf) {
         PendingMvFund saved = pendingMvFundRepository.save(pmf);
 
-        // if etat devient valider + typevalidation n'est pas un refus
-        if (pmf.getDateValidation() != null && pmf.getPendingState().getId() == 2) {
-            mvFundService.addFromPending(saved);
+        PendingState etat = pmf.getPendingState();
+        if (pmf.getDateValidation() == null && etat.getId() == 1) {
+            emailService.writeEmailAttente(pmf);
+        } else {
+            if (etat.getId() == 2) {
+                mvFundService.addFromPending(saved);
+            }
+            emailService.writeEmailReponse(pmf);
         }
 
         return saved;
