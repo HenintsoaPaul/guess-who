@@ -1,4 +1,4 @@
-package itu.crypto.service;
+package itu.crypto.service.crypto;
 
 import itu.crypto.entity.cours.Cours;
 import org.springframework.stereotype.Service;

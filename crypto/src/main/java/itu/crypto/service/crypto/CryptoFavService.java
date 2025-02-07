@@ -1,4 +1,4 @@
-package itu.crypto.service;
+package itu.crypto.service.crypto;
 
 import itu.crypto.entity.crypto.CryptoFav;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
@@ -17,6 +17,14 @@ public class CryptoFavService implements BaseService<CryptoFav> {
 
     public List<CryptoFav> findAll() {
         return cryptoFavRepository.findAll();
+    }
+
+    public void updateOrCreate(CryptoFav cryptoFav) {
+        cryptoFavRepository.save(cryptoFav);
+    }
+
+    public void deleteById(int id) {
+        cryptoFavRepository.deleteById(id);
     }
 
     @Override
