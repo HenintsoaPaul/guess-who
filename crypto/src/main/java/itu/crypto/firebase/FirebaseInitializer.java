@@ -56,14 +56,14 @@ public class FirebaseInitializer {
 
     @PostConstruct
     public void init() {
-        log.info("Initializing Firebase begins...");
+        log.info("[local->firebase]Initializing Firebase begins...");
 
 //        testAccount();
 //        testCours();
 //        testCryptoFav();
 //        testPurchase();
 
-        log.info("Firebase initialization complete.");
+        log.info("[local->firebase]Firebase initialization complete.");
     }
 
     private void testAccount() {
