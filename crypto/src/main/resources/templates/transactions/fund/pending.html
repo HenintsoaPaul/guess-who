@@ -12,6 +12,7 @@
                 <th>Montant</th>
                 <th>Utilisateur</th>
                 <th>Type</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -21,9 +22,25 @@
                 <td th:text="${pmf.getAmount()}"></td>
                 <td th:text="${pmf.getAccount().getPseudo()}"></td>
                 <td th:text="${pmf.getTypeMvFund().getName()}"></td>
+                <td>
+                    <a th:href="@{/transactions/fund/pending/ok/{id}(id=${pmf.getId()})}"
+                       class="btn btn-success">
+                        Valider
+                    </a>
+                    <a th:href="@{/transactions/fund/pending/no/{id}(id=${pmf.getId()})}"
+                       class="btn btn-danger">
+                        Refuser
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>
+
+        <div>
+            <p th:if="${msg != null}">
+                <span th:text="${msg}"></span>
+            </p>
+        </div>
     </div>
 </main>
 </html>
