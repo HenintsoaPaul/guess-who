@@ -228,4 +228,12 @@ public class CoursService implements BaseService<Cours> {
     public void deleteById(int id) {
         coursRepository.deleteById(id);
     }
+
+    public List<Cours> findAllCurrentCours() {
+        return coursRepository.findAllCurrentCours();
+    }
+
+    public List<Cours> findAllByCryptoId(Integer cryptoId) {
+        return coursRepository.findByIdCrypto(cryptoId);
+    }
 }

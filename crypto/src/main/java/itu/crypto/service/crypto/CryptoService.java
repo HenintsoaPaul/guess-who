@@ -28,3 +28,4 @@ public class CryptoService {
                 .orElse(0.0);
     }
 }
+
