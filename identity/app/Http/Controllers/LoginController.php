@@ -30,7 +30,7 @@ class LoginController extends Controller
      *     path="/api/login",
      *     summary="Login user",
      *     description="Login utilisateur",
-     *     tags={"Authentification"},
+     *     tags={"authentification"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -102,7 +102,7 @@ class LoginController extends Controller
      *     summary="Validation du PIN",
      *     description="Valide le PIN envoyé par email et génère un token d'accès.",
      *     operationId="validateLoginPin",
-     *     tags={"Authentification"},
+     *     tags={"authentification"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(

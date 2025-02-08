@@ -185,7 +185,7 @@ class AccountController extends Controller
      *     path="/api/account/change-password",
      *     summary="Changer le mot de passe d'un compte",
      *     description="Initie le processus de changement de mot de passe en envoyant un code PIN par email.",
-     *     tags={"compte", "Authentification", "gestion", "password"},
+     *     tags={"compte", "authentification", "gestion", "password"},
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -220,7 +220,7 @@ class AccountController extends Controller
      *                 property="données",
      *                 type="object",
      *                 @OA\Property(
-     *                     property="id",
+     *                     property="id_pending_pwd_change",
      *                     type="integer",
      *                     example=1
      *                 ),
@@ -326,7 +326,7 @@ class AccountController extends Controller
             Mail::to($account->email)->send(new SendEmail($pin));
 
             $data = [
-                'id' => $pendingPwdChange->id_pending_pwd_change,
+                'id_pending_pwd_change' => $pendingPwdChange->id_pending_pwd_change,
                 'id_account' => $pendingPwdChange->id_account,
                 'pin' => $pendingPwdChange->pin
             ];
@@ -369,9 +369,9 @@ class AccountController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             type="object",
-     *             required={"id", "pin"},
+     *             required={"id_pending_pwd_change", "pin"},
      *             @OA\Property(
-     *                 property="id",
+     *                 property="id_pending_pwd_change",
      *                 type="integer",
      *                 description="Identifiant de la demande de changement de mot de passe",
      *                 example=123
@@ -501,7 +501,7 @@ class AccountController extends Controller
     {
         try {
             $payload = $request->validate([
-                'id' => 'required|numeric',
+                'id_pending_pwd_change' => 'required|numeric',
                 'pin' => 'required',
             ]);
 
@@ -510,7 +510,7 @@ class AccountController extends Controller
                 return $this->jsonResponse->tokenError(); // 401
             }
 
-            $pendingPwdChange = PendingPwdChange::getById($payload['id']);
+            $pendingPwdChange = PendingPwdChange::getById($payload['id_pending_pwd_change']);
 
             $account = Account::getById($pendingPwdChange->id_account);
 
@@ -549,7 +549,7 @@ class AccountController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->jsonResponse->error(
-                'Erreur lors du traitement de la demande.',
+                $e->getMessage(),
                 null,
                 500
             );
