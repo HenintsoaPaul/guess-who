@@ -14,6 +14,7 @@ import { colorsChart } from '../constants/ColorsChart';
 import EditUserScreen from '../screens/EditUserScreen';
 import AchatVenteScreen from '../screens/AchatVenteScreen';
 import { LinearGradient } from "expo-linear-gradient";
+import CoursScreen from '../screens/CoursScreen';
 
 
 const SCREEN_LABELS = {
@@ -47,8 +48,7 @@ const DrawerNavigation = () => {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         initialRouteName='Login'
       >
-        {user ? (
-        <>
+          <Drawer.Screen name='Login'component={LoginScreen} options={{headerShown:false}}/>
           <Drawer.Screen
             name="Profil"
             component={UserScreen}
@@ -79,7 +79,7 @@ const DrawerNavigation = () => {
           />
           <Drawer.Screen
             name="Crypto cours"
-            component={CoursActuelleScreen} 
+            component={CoursScreen} 
             options={{
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
@@ -116,11 +116,6 @@ const DrawerNavigation = () => {
               ),
             }}
           />
-        </>
-      ):
-      (
-        <Drawer.Screen name='Login'component={LoginScreen} options={{headerShown:false}}/>
-      )}
       </Drawer.Navigator>
     </NavigationContainer>
   );

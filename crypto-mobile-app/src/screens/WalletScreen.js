@@ -135,10 +135,11 @@ export default function WalletScreen() {
           </View>
         </View>
         {filteredCryptos.map((cpt, index) => (
+          
           <TouchableOpacity
             key={index}
             style={styles.tableRow}
-            onPress={() => navigation.navigate('CryptotDetail', { cpt })}
+            // onPress={() => navigation.navigate('CryptotDetail', { cpt })}
           >
             <View style={styles.cell}>
               <Text style={styles.cellText}></Text>

@@ -10,8 +10,7 @@
     },
     "preview": {
       "android": {
-        "buildType": "apk",
-        "resourceClass": "medium"
+        "buildType": "apk"
       },
       "distribution": "internal"
     },

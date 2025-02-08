@@ -30,20 +30,20 @@ Make custom configuration on eas.json
 
     ...
     "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "android": {
-        "buildType": "apk"
+      "development": {
+        "developmentClient": true,
+        "distribution": "internal"
       },
-      "distribution": "internal"
+      "preview": {
+        "android": {
+          "buildType": "apk"
+        },
+        "distribution": "internal"
+      },
+      "production": {
+        "autoIncrement": true
+      }
     },
-    "production": {
-      "autoIncrement": true
-    }
-  },
 
 ### Build
 

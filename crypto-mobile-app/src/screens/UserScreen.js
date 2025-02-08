@@ -14,6 +14,13 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function UserScreen() {
   const {user,logOut} = useContext(AppContext);
   const navigation  = useNavigation();
+  const deconnecter = () => {
+    logOut();
+    navigation.navigate('Login');
+  }
+  if (user === null) {
+      return <></>
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -46,7 +53,7 @@ export default function UserScreen() {
       <View style={{}}>
         <Button 
           title='Se deconnecter'
-          onPress={logOut}
+          onPress={deconnecter}
           buttonStyle={styles.signOut}
           titleStyle={{ color:colorsChart.red}}
           />

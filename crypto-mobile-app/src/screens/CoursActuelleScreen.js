@@ -131,8 +131,8 @@ const CoursActuelleScreen = () => {
       await fetchFavorites(setFavoritesList,user);
     };
 
-    fetchCryptos();
-    fetchFavoritesData();
+    // fetchCryptos();
+    // fetchFavoritesData();
   }, []);
 
   const toggleFavorite = useCallback((index) => {

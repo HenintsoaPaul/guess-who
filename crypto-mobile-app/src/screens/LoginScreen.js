@@ -13,18 +13,21 @@ import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
 import { AppContext } from '../../AppContext';
 import { colorsChart } from "../constants/ColorsChart";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
   const [email,setEmail] = useState("rocruxappafra-4143@yopmail.com");
   const [password, setPassword] = useState('mypassword');
   const [loading, setLoading] = useState(false);
 
+  const navigation = useNavigation();
   const {logIn} = useContext(AppContext)
   const signIn = async() => {
     setLoading(true)
     try {
       const userLog = await LoginService.logInWithMailAndPassword(email,password)
       logIn(userLog)
+      navigation.navigate('Profil')
     }
     catch (error){
       console.log(error);
