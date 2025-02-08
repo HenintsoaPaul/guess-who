@@ -185,7 +185,7 @@ class AccountController extends Controller
      *     path="/api/account/change-password",
      *     summary="Changer le mot de passe d'un compte",
      *     description="Initie le processus de changement de mot de passe en envoyant un code PIN par email.",
-     *     tags={"compte", "Authentification", "gestion"},
+     *     tags={"compte", "Authentification", "gestion", "password"},
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -358,7 +358,143 @@ class AccountController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @OA\Post(
+     *     path="/api/password/change/validation",
+     *     summary="Valider changement de mot de passe",
+     *     description="Point d'accès permettant de valider une demande de changement de mot de passe en utilisant un PIN temporaire.",
+     *     tags={"compte", "Authentitfiaction, "gestion", "password"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"id", "pin"},
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 description="Identifiant de la demande de changement de mot de passe",
+     *                 example=123
+     *             ),
+     *             @OA\Property(
+     *                 property="pin",
+     *                 type="string",
+     *                 description="Code PIN temporaire envoyé par email",
+     *                 example="123456"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Validation réussie",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="données",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="id_account",
+     *                     type="integer",
+     *                     example=1
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Validation du changement de mot de passe envoyée avec succès."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Paramètres invalides",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="L'identifiant et le PIN sont requis."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Jetons non valides ou manquants",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Jeton d'authentification invalide ou manquant."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Accès refusé",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Impossible de valider le jeton pour ce compte."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="PIN invalide",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Le PIN fourni ne correspond pas à celui attendu."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur interne",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Une erreur technique est survenue."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function validateChangePassword(Request $request): JsonResponse
     {
@@ -367,36 +503,35 @@ class AccountController extends Controller
                 'id' => 'required|numeric',
                 'pin' => 'required',
             ]);
+
             $token = TokenService::getBarerToken($request);
             if (!$token) {
                 return $this->jsonResponse->tokenError();
             }
 
             DB::beginTransaction();
-            try {
-                $pendingPwdChange = PendingPwdChange::getById($payload['id']);
+            $pendingPwdChange = PendingPwdChange::getById($payload['id']);
 
-                $account = Account::getById($pendingPwdChange->id_account);
-                if (!TokenService::isValidBarerToken($account->id_account, $token)) {
-                    return $this->jsonResponse->tokenError();
-                }
-
-                if ($payload['pin'] !== $pendingPwdChange->pin) {
-                    return $this->jsonResponse->error('Invalid pin.', $payload, 422);
-                }
-
-                $pendingPwdChange->validate($account);
-                DB::commit();
-
-                $data = [
-                    'id_account' => $pendingPwdChange->id_account,
-                ];
-                return $this->jsonResponse->success('Password change email validation sent.', $data);
-            } catch (\Exception $e) {
-                return $this->jsonResponse->error('Invalid account.', $e->errors(), 422);
+            $account = Account::getById($pendingPwdChange->id_account);
+            if (!TokenService::isValidBarerToken($account->id_account, $token)) {
+                return $this->jsonResponse->tokenError();
             }
+
+            if ($payload['pin'] !== $pendingPwdChange->pin) {
+                return $this->jsonResponse->error('Invalid pin.', $payload, 422);
+            }
+
+            $pendingPwdChange->validate($account);
+            DB::commit();
+
+            $data = [
+                'id_account' => $pendingPwdChange->id_account,
+            ];
+            return $this->jsonResponse->success('Password change email validation sent.', $data);
         } catch (ValidationException $e) {
             return $this->jsonResponse->error('Invalid payload.', $e->errors(), 422);
+        } catch (\Exception $e) {
+            return $this->jsonResponse->error('Invalid account.', $e->errors(), 500);
         }
     }
 }
