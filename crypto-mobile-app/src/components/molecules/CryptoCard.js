@@ -1,8 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import React from 'react'
 import StyleText from '../atoms/StyleText';
 import { colorsChart } from '../../constants/ColorsChart';
-import { Button } from '@ant-design/react-native';
 
 export default function CryptoCard({crypo}) {
   return (

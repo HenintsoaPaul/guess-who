@@ -12,6 +12,12 @@ Pour build l'application react native en application Android ou IOS on utilise l
 
     eas login
 
+    {
+      email : chanalexjacques@gmail.com
+      pseudo : shinojca
+      password : expoAppMob!l3
+    } 
+
 Verifier le compte connecter actuelle avec
 
     eas whoami
@@ -20,6 +26,25 @@ Verifier le compte connecter actuelle avec
 
     eas build:configure
 
+Make custom configuration on eas.json
+
+    ...
+    "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      },
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+
 ### Build
 
-    eas build --platform android
+    eas build -p android --profile preview

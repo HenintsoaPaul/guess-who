@@ -4,33 +4,42 @@ import { useNavigation } from '@react-navigation/native';
 import { FIRESTORE_DB } from '../services/firebaseService';
 import { onSnapshot, doc, getDoc } from 'firebase/firestore';
 import { AppContext } from '../../AppContext';
+import { query,getDocs ,collection ,where} from 'firebase/firestore';
 
-const fetchWalletData = async (setCryptos, setWalletTotalPrice , user) => {
+const fetchWalletData = async (setCryptos, user) => {
   try {
-    const walletDocRef = doc(FIRESTORE_DB, "wallets", user.id+"");
-    const docSnap = await getDoc(walletDocRef);
+    const walletQuery = query(collection(FIRESTORE_DB, "wallet"), where("account.id", "==", user.id));
+    const querySnapshot = await getDocs(walletQuery);
 
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setCryptos(data.wallets || []);
-      setWalletTotalPrice(data.totalPrice);
-      console.log('Données du document:', data);
+    if (!querySnapshot.empty) {
+      const wallets = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        wallets.push(data);
+      });
+
+      setCryptos(wallets);
+      console.log('Données des documents:', wallets);
 
       // Listen for real-time updates
-      const unsubscribe = onSnapshot(walletDocRef, (doc) => {
-        if (doc.exists()) {
+      const unsubscribe = onSnapshot(walletQuery, (snapshot) => {
+        const updatedWallets = [];
+        let updatedTotalPrice = 0;
+
+        snapshot.forEach((doc) => {
           const updatedData = doc.data();
-          setCryptos(updatedData.wallets || []);
-          setWalletTotalPrice(updatedData.totalPrice);
-          console.log('Données mises à jour:', updatedData);
-        }
+          updatedWallets.push(updatedData);
+        });
+
+        setCryptos(updatedWallets);
+        console.log('Données mises à jour:', updatedWallets);
       });
 
       return unsubscribe;
     } else {
-      console.log('Aucun document trouvé');
+      console.log('Aucun wallet trouvé');
       setCryptos([]);
-      setWalletTotalPrice(null);
     }
   } catch (error) {
     console.error('Erreur:', error);
@@ -41,7 +50,6 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice , user) => {
 export default function WalletScreen() {
   const {user} = useContext(AppContext) 
   const [cryptos, setCryptos] = useState([]);
-  const [walletTotalPrice, setWalletTotalPrice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterText, setFilterText] = useState('');
@@ -52,7 +60,7 @@ export default function WalletScreen() {
       try {
         setLoading(true);
         setError(null);
-        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice,user);
+        const unsubscribe = await fetchWalletData(setCryptos,user);
         return () => {
           if (unsubscribe) unsubscribe();
         };
@@ -69,8 +77,8 @@ export default function WalletScreen() {
     () =>
       cryptos.filter(
         (crypto) =>
-          crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
-          crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
+          crypto.crypto.name.toLowerCase().includes(filterText.toLowerCase()) ||
+          crypto.crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
       ),
     [cryptos, filterText]
   );
@@ -126,23 +134,23 @@ export default function WalletScreen() {
             <Text style={styles.headerText}>Quantité</Text>
           </View>
         </View>
-        {filteredCryptos.map((crypto, index) => (
+        {filteredCryptos.map((cpt, index) => (
           <TouchableOpacity
             key={index}
             style={styles.tableRow}
-            onPress={() => navigation.navigate('CryptoDetail', { crypto })}
+            onPress={() => navigation.navigate('CryptotDetail', { cpt })}
           >
             <View style={styles.cell}>
               <Text style={styles.cellText}></Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.cryptoName}</Text>
+              <Text style={styles.cellText}>{cpt.crypto.name}</Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.symbol}</Text>
+              <Text style={styles.cellText}>{cpt.crypto.symbol}</Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.cellText}>{crypto.quantity}</Text>
+              <Text style={styles.cellText}>{cpt.quantity}</Text>
             </View>
           </TouchableOpacity>
         ))}

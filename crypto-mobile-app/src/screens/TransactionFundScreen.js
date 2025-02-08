@@ -2,6 +2,8 @@ import React, { useState,useContext } from 'react';
 import { View, Text, StyleSheet, TextInput,Button} from 'react-native';
 import { FIRESTORE_DB } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
+import {Picker} from '@react-native-picker/picker';
+import { collection ,doc,setDoc} from 'firebase/firestore';
 
 const sendTransactionData = async (amount, transactionType, user) => {
   try {
@@ -27,7 +29,7 @@ const sendTransactionData = async (amount, transactionType, user) => {
 
 function TransactionFundScreen() {
   const [amount, setAmount] = useState('');
-  const [transactionType, setTransactionType] = useState('deposit');
+  const [transactionType, setTransactionType] = useState('depot');
   const {user} = useContext(AppContext);
 
 

@@ -1,16 +1,17 @@
-import { StyleSheet, View ,Text} from 'react-native'
-import React, { useContext, useState } from 'react'
-import { AppContext } from '../../AppContext'
-import { colorsChart } from '../constants/ColorsChart'
-import InputGroup from '../components/atoms/InputGroup'
-import { Button } from 'react-native-elements'
-import EditableProfilePicture from '../components/organisms/EditableProfilePicture'
-import { doc ,updateDoc} from 'firebase/firestore'
-import { FIRESTORE_DB } from '../services/firebaseService'
+import { StyleSheet, View, Text } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { AppContext } from '../../AppContext';
+import { colorsChart } from '../constants/ColorsChart';
+import InputGroup from '../components/atoms/InputGroup';
+import { Button } from 'react-native-elements';
+import EditableProfilePicture from '../components/organisms/EditableProfilePicture';
+import { doc, updateDoc } from 'firebase/firestore';
+import { FIRESTORE_DB } from '../services/firebaseService';
 
 const EditUserScreen = () => {
     const {user,refreshUser} = useContext(AppContext)
     const [pseudo , setPseudo] = useState(user.pseudo)
+    const [password , setPassword] = useState(user.password)
     const [loading,setLoading] = useState(false)
     const updateUser = async () => {
       setLoading(true)
@@ -38,11 +39,17 @@ const EditUserScreen = () => {
       <View style={styles.titleContainer}>
           <Text style={styles.title}>Editer information profil</Text>
       </View>
-      <View>
+      <View style={styles.uinfoinputs}>
         <InputGroup 
             inputValue={pseudo} 
             setInputValue={setPseudo}
             placeholder={'Pseudo'}
+            autoCapitalize={'none'}
+        />
+        <InputGroup 
+            inputValue={password} 
+            setInputValue={setPassword}
+            placeholder={'Password'}
             autoCapitalize={'none'}
         />
       </View>
@@ -93,5 +100,8 @@ const styles = StyleSheet.create({
       fontSize:24,
       color:colorsChart.dark,
       // borderTopWidth:1,
+    } ,
+    uinfoinputs: {
+
     }
-})
+});

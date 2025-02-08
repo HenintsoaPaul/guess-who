@@ -13,6 +13,8 @@ import { AppContext } from '../../AppContext';
 import { colorsChart } from '../constants/ColorsChart';
 import EditUserScreen from '../screens/EditUserScreen';
 import AchatVenteScreen from '../screens/AchatVenteScreen';
+import { LinearGradient } from "expo-linear-gradient";
+
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
@@ -129,8 +131,13 @@ const CustomDrawerContent = (props) => {
   
   return (
     <View style={styles.drawerContent}>
-      <View style={styles.drawerHeader}>
-        <ProfilePicture />
+      <View>
+        <LinearGradient
+          colors={["rgba(58,65,110,255)", "rgba(25,28,48,255)"]}
+          style={styles.headerOverlay}
+        >
+        <ProfilePicture></ProfilePicture>    
+        </LinearGradient>
       </View>
       <View style={styles.drawerMenu}>
         {state?.routes?.map((route, index) => (
@@ -187,6 +194,11 @@ const styles = StyleSheet.create({
   },
   activeIcon: {
     color: '#007AFF',
+  },
+  headerOverlay: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding:10,
   },
 });
 

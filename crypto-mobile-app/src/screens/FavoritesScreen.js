@@ -58,7 +58,7 @@ const FavoritesScreen = () => {
       }
     };
     fetchFavoris();
-  }, []);
+  }, [user]);
 
   const filteredFavoris = useMemo(
     () =>
