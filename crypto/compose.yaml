@@ -43,5 +43,5 @@ services:
     ports:
       - "911:8080"
     depends_on:
-      db:
+      crypto_pg:
           condition: service_healthy
