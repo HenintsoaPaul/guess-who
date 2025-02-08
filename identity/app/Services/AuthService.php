@@ -4,15 +4,11 @@ namespace App\Services;
 
 use App\Models\Account;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 
 class AuthService
 {
-    protected PasswordEncoderService $passwordEncoderService;
-
-    public function __construct(PasswordEncoderService $passwordEncoderService) {
-        $this->passwordEncoderService = $passwordEncoderService;
-    }
 
     /**
      * Verifier que l'email est relie a un compte qui existe, et qu'il n'est pas bloque.
@@ -36,8 +32,7 @@ class AuthService
             throw new \Exception('Account suspended!');
         }
 
-        $ok_pass = PasswordEncoderService::verifyPassword($password, $account->password);
-        if (!$ok_pass) {
+        if (Hash::check($password, $account->password)) {
             $reste = $account->increaseAttempt();
             DB::commit();
             throw new \Exception("Wrong password! $reste attempts left!");
