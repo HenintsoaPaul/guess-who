@@ -52,10 +52,7 @@ public class PendingMvFundDocument implements TimestampedDocument {
                 id,
                 datePending.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
                 dd,
-                amount,
-                pendingState,
-                account,
-                typeMvFund
+                amount
         );
     }
 }

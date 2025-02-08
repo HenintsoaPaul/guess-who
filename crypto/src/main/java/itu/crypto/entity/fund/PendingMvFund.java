@@ -41,6 +41,13 @@ public class PendingMvFund {
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
+    public PendingMvFund(Integer id, LocalDateTime localDateTime, LocalDateTime dd, double amount) {
+        this.id = id;
+        this.datePending = localDateTime;
+        this.dateValidation = dd;
+        this.amount = amount;
+    }
+
     /**
      * Verifier que le solde du fond du compte demandeur est suffisant pour le retrait.
      * Si oui, on retourne le solde restant apres le retrait.
