@@ -8,6 +8,7 @@ use App\Models\PendingPwdChange;
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
 use App\Services\TokenService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -24,9 +25,121 @@ class AccountController extends Controller
     }
 
     /**
-     * Wish to unlock an account.
-     *
-     * @throws \Exception
+     * @OA\Post(
+     *     path="/api/account/unlock",
+     *     summary="Déverrouiller un compte utilisateur",
+     *     description="Point d'accès permettant de déverrouiller un compte utilisateur existant en utilisant son adresse email.",
+     *     tags={"compte", "gestion"},
+     *     security={},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"email"},
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *                 format="email",
+     *                 description="Adresse email du compte à déverrouiller",
+     *                 example="utilisateur@exemple.com"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Compte déverrouillé avec succès",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succes",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="donnees",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="id_compte",
+     *                     type="integer",
+     *                     example=1
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Le compte a été déverrouillé avec succès."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Paramètres invalides",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succes",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="L'email est obligatoire et doit être valide."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Compte introuvable",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succes",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Le compte avec cet email n'a pas été trouvé."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erreur de validation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succes",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Format d'email invalide."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur interne",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succes",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Une erreur technique est survenue."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function unlock(Request $request)
     {
@@ -39,22 +152,30 @@ class AccountController extends Controller
             $account = Account::getByEmail($email);
 
             $account->unlockAccount();
+
             DB::commit();
 
-            $data = [
-                'id_account' => $account->id_account
-            ];
-
-            return $this->jsonResponse->success('Account unlocked.', $data);
+            return $this->jsonResponse->success(
+                'Account unlocked.',
+                ['id_account' => $account->id_account]
+            );
         } catch (ValidationException $e) {
             DB::rollBack();
             return $this->jsonResponse->validationError($e);
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
-            $this->jsonResponse->error('Email non trouvé', null, 404);
-        } catch (\Exception $ee) {
+            return $this->jsonResponse->error(
+                'Email non trouvé',
+                null,
+                404
+            );
+        } catch (\Exception $e) {
             DB::rollBack();
-            return $this->jsonResponse->error($ee->getMessage(), null, 401);
+            return $this->jsonResponse->error(
+                'Erreur lors du déverrouillage du compte',
+                null,
+                500
+            );
         }
     }
 
