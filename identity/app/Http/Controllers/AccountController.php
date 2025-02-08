@@ -181,7 +181,119 @@ class AccountController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @OA\Post(
+     *     path="/api/account/change-password",
+     *     summary="Changer le mot de passe d'un compte",
+     *     description="Initie le processus de changement de mot de passe en envoyant un code PIN par email.",
+     *     tags={"compte", "Authentification", "gestion"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"id_account", "new_password"},
+     *             @OA\Property(
+     *                 property="id_account",
+     *                 type="integer",
+     *                 description="Identifiant du compte",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="new_password",
+     *                 type="string",
+     *                 description="Nouveau mot de passe",
+     *                 example="nouveau_mot_de_passe"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email de validation envoyé avec succès",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="données",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer",
+     *                     example=1
+     *                 ),
+     *                 @OA\Property(
+     *                     property="id_account",
+     *                     type="integer",
+     *                     example=1
+     *                 ),
+     *                 @OA\Property(
+     *                     property="pin",
+     *                     type="string",
+     *                     example="1234"
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Email de validation envoyé avec succès"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Token invalide ou manquant",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Token invalide ou manquant"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Données de validation invalides",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Données de validation invalides"
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur interne du serveur",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="succès",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Erreur interne du serveur"
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function changePassword(Request $request): JsonResponse
     {
