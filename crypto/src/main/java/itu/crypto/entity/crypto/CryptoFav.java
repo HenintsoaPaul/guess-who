@@ -32,6 +32,9 @@ public class CryptoFav {
     @Column(name = "date_crypto_fav")
     private LocalDateTime dateCryptoFav;
 
+    @Column(name = "on_fav", nullable = false)
+    private boolean onFav;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

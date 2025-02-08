@@ -17,6 +17,7 @@ public class CryptoFavDocument implements TimestampedDocument {
 
     private Integer id;
     private Timestamp dateCryptoFav;
+    private boolean onFav;
     private Crypto crypto;
     private Account account;
 
@@ -26,6 +27,7 @@ public class CryptoFavDocument implements TimestampedDocument {
     public CryptoFavDocument(CryptoFav cryptoFav) {
         this.id = cryptoFav.getId();
         this.crypto = cryptoFav.getCrypto();
+        this.onFav = cryptoFav.isOnFav();
         this.account = cryptoFav.getAccount();
         this.dateCryptoFav = Timestamp.of(Date.from(cryptoFav.getDateCryptoFav().toInstant(ZoneOffset.UTC)));
     }
@@ -35,7 +37,8 @@ public class CryptoFavDocument implements TimestampedDocument {
                 id,
                 crypto,
                 account,
-                dateCryptoFav.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime()
+                dateCryptoFav.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
+                onFav
         );
     }
 }
