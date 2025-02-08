@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Service pour gérer les fonctions de dates
@@ -25,5 +26,16 @@ class TimesService
         $carbonDate->addSeconds($interval);
 
         return $carbonDate;
+    }
+
+    /**
+     * Génère une date d'expiration pour un register sur la durée configurée
+     *
+     * @return Carbon
+     */
+    public static function genExpirationDateForRegister(): Carbon
+    {
+        $delayInSeconds = Config::get('PENDING_REGISTER_LIFETIME_SECOND', 60 * 5);
+        return TimesService::generateDate(now(), $delayInSeconds);
     }
 }

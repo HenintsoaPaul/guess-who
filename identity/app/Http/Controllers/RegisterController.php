@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApiController;
 use App\Services\JsonResponseService;
 use App\Services\RandomService;
+use App\Services\TimesService;
 use App\Services\TokenService;
 use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\PendingRegister;
 use App\Models\Account;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Services\PendingRegisterService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
