@@ -18,7 +18,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    public void sendEmail(String to, String subject, String text) {
+    public String sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setTo(to);
@@ -28,30 +28,33 @@ public class EmailService {
         message.setFrom(fromEmail);
 
         mailSender.send(message);
-        log.info("Email envoye a " + to);
+
+        String msg = "Email envoye a " + to;
+        log.info(msg);
+        return msg;
     }
 
     /**
      * Ecrire et envoyer un email pour informer les utilisateurs que leurs
      * demande de depot/retrait sont en attente de validation des admins.
      */
-    public void writeEmailAttente(PendingMvFund pendingMvFund) {
+    public String writeEmailAttente(PendingMvFund pendingMvFund) {
         String typeAction = pendingMvFund.getTypeMvFund().getName();
 
         String to = pendingMvFund.getAccount().getEmail(),
                 subject = "Demande de " + typeAction,
                 text = "Nous vous informons que votre demande de " + typeAction
-                        + " est en attente d'une validation venant de nos admins. Veuillez patientez pour la confirmation/refus de votre "
+                        + " est en attente d'une validation venant de nos admins. \nVeuillez patientez pour la confirmation/refus de votre "
                         + typeAction + ".\n Nous vous remercions de votre patience. Notre equipe vous souhaite une bonne journee 😊.";
 
-        sendEmail(to, subject, text);
+        return sendEmail(to, subject, text);
     }
 
     /**
      * Ecrire et envoyer un email pour informer les utilisateurs que leurs
      * demande de depot/retrait ont ete repondu (validation/refus) par les admins.
      */
-    public void writeEmailReponse(PendingMvFund pendingMvFund) {
+    public String writeEmailReponse(PendingMvFund pendingMvFund) {
 
         String typeAction = pendingMvFund.getTypeMvFund().getName(),
                 to = pendingMvFund.getAccount().getEmail(),
@@ -65,6 +68,6 @@ public class EmailService {
                 };
         text += "\nNotre equipe vous souhaite une bonne journee 😊.";
 
-        sendEmail(to, subject, text);
+        return sendEmail(to, subject, text);
     }
 }

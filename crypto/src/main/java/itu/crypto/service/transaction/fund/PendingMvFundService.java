@@ -11,7 +11,10 @@ import itu.crypto.repository.transaction.fund.PendingStateRepository;
 import itu.crypto.repository.transaction.fund.TypeMvFundRepository;
 import itu.crypto.service.EmailService;
 import itu.crypto.service.account.AccountService;
-import jakarta.transaction.Transactional;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,6 @@ import java.util.stream.Collectors;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class PendingMvFundService implements BaseService<PendingMvFund> {
 
@@ -35,39 +37,56 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     private final PendingStateRepository pendingStateRepository;
     private final TypeMvFundRepository typeMvFundRepository;
 
+    public PendingState getEtatAttente() {
+        return pendingStateRepository.findById(1).orElseThrow();
+    }
+
     public List<PendingMvFund> findAll() {
         return this.pendingMvFundRepository.findAll();
+    }
+
+    public List<Account> findAllAccounts() {
+        return this.accountService.findAll();
+    }
+
+    public List<TypeMvFund> findAllTypeMvFundsDepotRetrait() {
+        return this.typeMvFundRepository.findAll().stream()
+                .filter(tmf -> (tmf.getId() == 1 || tmf.getId() == 2))
+                .collect(Collectors.toList());
     }
 
     public Optional<PendingMvFund> findById(int id) {
         return this.pendingMvFundRepository.findById(id);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(PendingMvFund pendingMvFund) {
         pendingMvFundRepository.save(pendingMvFund);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteById(int id) {
         pendingMvFundRepository.deleteById(id);
     }
 
     public List<PendingMvFund> findAllAttente() {
-        return this.findAll().stream()
-                .filter(pmf -> (pmf.getDateValidation() == null && pmf.getPendingState().getId() == 1))
-                .collect(Collectors.toList());
+        return pendingMvFundRepository.findAllAttente();
     }
 
     /**
      * Validation d'un depot/retrait
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund validate(int id) throws PendingMvFundException {
         PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
 
         // controle
-        double solde = pmf.controlAmountRetrait();
+        double solde = 0;
+        if (pmf.getTypeMvFund().deTypeRetrait()) {
+            solde = pmf.controlAmountRetrait();
+        } else if (pmf.getTypeMvFund().deTypeDepot()) {
+            solde = pmf.getAmount() + pmf.getAccount().getFund();
+        }
 
         // mampihena
         Account a = pmf.getAccount();
@@ -84,7 +103,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     /**
      * Refus d'un depot/retrait
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund refus(int id) throws PendingMvFundException {
         PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
 
@@ -95,21 +114,29 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return this.save(pmf);
     }
 
-    @Transactional
+    /**
+     * Insert ou update d'une demande.
+     * Si l'etat devient validee, nous creons la mv_fund pour la demande.
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund save(PendingMvFund pmf) {
         PendingMvFund saved = pendingMvFundRepository.save(pmf);
 
         PendingState etat = pmf.getPendingState();
-        if (pmf.getDateValidation() == null && etat.getId() == 1) {
-            emailService.writeEmailAttente(pmf);
-        } else {
-            if (etat.getId() == 2) {
-                mvFundService.addFromPending(saved);
-            }
-            emailService.writeEmailReponse(pmf);
+        if (pmf.getDateValidation() != null && etat.getId() == 2) {
+            mvFundService.addFromPending(saved);
         }
 
         return saved;
+    }
+
+    public String sendEmail(PendingMvFund pmf) {
+        PendingState etat = pmf.getPendingState();
+        if (pmf.getDateValidation() == null && etat.getId() == 1) {
+            return emailService.writeEmailAttente(pmf);
+        } else {
+            return emailService.writeEmailReponse(pmf);
+        }
     }
 
     public PendingMvFund cobaieAttente() {
