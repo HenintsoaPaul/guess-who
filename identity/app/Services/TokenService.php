@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Services\TimesService;
 use App\Models\Token;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -78,12 +78,14 @@ class TokenService
     }
 
     /**
+     * Génère une date d'expiration pour l'authentification basée sur la durée configurée
+     *
      * @return Carbon
      */
     public static function genExpirationDateForAuth(): Carbon
     {
-        $delayInSecond = 90;
-        return TimesService::generateDate(now(), $delayInSecond);
+        $delayInSeconds = Config::get('PENDING_AUTH_LIFETIME_SECOND', 90);
+        return TimesService::generateDate(now(), $delayInSeconds);
     }
 
     /**

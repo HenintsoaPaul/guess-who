@@ -79,7 +79,7 @@ class LoginController extends Controller
 
             // insert pending_auth
             $delai = TokenService::genExpirationDateForAuth();
-            $pendingAuth = PendingAuth::addNew($pin, $account->id_account, $delai);
+            PendingAuth::addNew($pin, $account->id_account, $delai);
 
             DB::commit();
 
