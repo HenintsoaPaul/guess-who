@@ -3,7 +3,7 @@
     "name": "crypto",
     "slug": "crypto",
     "version": "1.0.0",
-    "newArchEnabled":true,
+    "newArchEnabled": true,
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.mycorp.myapp"
@@ -24,6 +24,11 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "811cb632-0248-4a6f-b1fc-bbe693f77539"
+      }
+    }
   }
 }
