@@ -59,6 +59,10 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return this.pendingMvFundRepository.findById(id);
     }
 
+    public List<PendingMvFund> findAllAttente() {
+        return pendingMvFundRepository.findAllAttente();
+    }
+
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(PendingMvFund pendingMvFund) {
         pendingMvFundRepository.save(pendingMvFund);
@@ -69,8 +73,12 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         pendingMvFundRepository.deleteById(id);
     }
 
-    public List<PendingMvFund> findAllAttente() {
-        return pendingMvFundRepository.findAllAttente();
+    private void verificationValidable(PendingMvFund pmf) throws PendingMvFundException {
+        if (pmf.getPendingState().getId() == 2) {
+            throw new PendingMvFundException("Demande deja validee!");
+        } else if (pmf.getPendingState().getId() == 3) {
+            throw new PendingMvFundException("Demande deja refusee!");
+        }
     }
 
     /**
@@ -79,6 +87,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund validate(int id) throws PendingMvFundException {
         PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
+        verificationValidable(pmf);
 
         // controle
         double solde = 0;
@@ -106,6 +115,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund refus(int id) throws PendingMvFundException {
         PendingMvFund pmf = pendingMvFundRepository.findById(id).orElseThrow();
+        verificationValidable(pmf);
 
         // refus
         pmf.setDateValidation(LocalDateTime.now());
@@ -120,14 +130,14 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund save(PendingMvFund pmf) {
-        PendingMvFund saved = pendingMvFundRepository.save(pmf);
+        pendingMvFundRepository.save(pmf);
 
         PendingState etat = pmf.getPendingState();
         if (pmf.getDateValidation() != null && etat.getId() == 2) {
-            mvFundService.addFromPending(saved);
+            mvFundService.addFromPending(pmf);
         }
 
-        return saved;
+        return pmf;
     }
 
     public String sendEmail(PendingMvFund pmf) {

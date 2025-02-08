@@ -34,7 +34,7 @@ public abstract class FirestoreSyncService<T, D> implements ISyncService<T> {
     public void syncWithFirebase(Firestore firestore, List<T> entityList) {
         CollectionReference collectionRef = firestore.collection(collectionName);
 
-        log.info("Debut sync pour la collection '{}'", collectionName);
+        log.info("[sync][local->firebase] Debut sync pour la collection '{}'", collectionName);
 
         for (T entity : entityList) {
             String entityId = getEntityId(entity);
@@ -57,7 +57,7 @@ public abstract class FirestoreSyncService<T, D> implements ISyncService<T> {
             }
         }
 
-        log.info("Fin sync pour la collection '{}'", collectionName);
+        log.info("[sync][local->firebase] Fin sync pour la collection '{}'", collectionName);
 
     }
 
@@ -69,7 +69,7 @@ public abstract class FirestoreSyncService<T, D> implements ISyncService<T> {
         ((TimestampedDocument) document).setCreatedAt(creationTime);
 
         docRef.set(document);
-        log.info("Mise à jour de l'entité ID: {}", getEntityId(entity));
+        log.info("[local->firebase] Mise à jour de l'entité ID: {}", getEntityId(entity));
     }
 
     private void addDocument(DocumentReference docRef, T entity) {
@@ -77,7 +77,7 @@ public abstract class FirestoreSyncService<T, D> implements ISyncService<T> {
         setCreatedAt(document);
         setUpdatedAt(document);
         docRef.set(document);
-        log.info("Ajout de l'entité ID: {}", getEntityId(entity));
+        log.info("[local->firebase] Ajout de l'entité ID: {}", getEntityId(entity));
     }
 
     private void setCreatedAt(D document) {
@@ -129,7 +129,7 @@ public abstract class FirestoreSyncService<T, D> implements ISyncService<T> {
 
         this.addDocument(docRef, entity);
 
-        log.info("Add document id '{}' in collection '{}'", entityId, collectionName);
+        log.info("[local->firebase] Add document id '{}' in collection '{}'", entityId, collectionName);
     }
 
     public void updateAsDocument(T entity) {
@@ -141,7 +141,7 @@ public abstract class FirestoreSyncService<T, D> implements ISyncService<T> {
 
             this.updateDocument(docRef, entity, existingDoc);
 
-            log.info("Update document id '{}' in collection '{}'", entityId, collectionName);
+            log.info("[local->firebase] Update document id '{}' in collection '{}'", entityId, collectionName);
         } catch (InterruptedException | ExecutionException e) {
             log.error("Error on update document id '{}' in collection '{}'. Error: {}", entityId, collectionName, e.getMessage());
         }
