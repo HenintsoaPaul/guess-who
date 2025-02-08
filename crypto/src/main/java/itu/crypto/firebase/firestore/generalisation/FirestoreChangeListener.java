@@ -60,13 +60,13 @@ public abstract class FirestoreChangeListener<T, D> {
                     case MODIFIED:
                         if (hadChanges(entity, entityId, baseService)) {
                             updateDatabase(entity);
-                            log.info("📌 [listener][FirestoreSync] Update: [id: {}, collection: {}]", entityId, collectionName);
+                            log.info("📌 [listener][firestore -> local] Add/Update: [id: {}, collection: {}]", entityId, collectionName);
                         }
                         break;
 
                     case REMOVED:
                         deleteFromDatabase(entityId);
-                        log.info("🗑️ [listener][FirestoreSync] Suppression de l'entité ID: {}", entityId);
+                        log.info("🗑️ [listener][firestore -> local] Suppression de l'entité ID: {}", entityId);
                         break;
                 }
             }
