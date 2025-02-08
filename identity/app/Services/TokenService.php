@@ -56,7 +56,7 @@ class TokenService
             // Générer un token unique.
             $tokenModel->id_account = $id;
             $tokenModel->token = self::newToken();
-            $tokenModel->date_expiration = self::genExpirationDate();
+            $tokenModel->date_expiration = self::genExpirationDateForToken();
             // Sauvegarder dans la base de données.
             $tokenModel->save();
             return $tokenModel;
@@ -66,15 +66,15 @@ class TokenService
         }
     }
 
-    public static function genExpirationDate()
+    /**
+     * Génère une date d'expiration pour un token sur la durée configurée
+     *
+     * @return Carbon
+     */
+    public static function genExpirationDateForToken(): Carbon
     {
-        $oneMinute = 60;
-        $oneHourInSecond = $oneMinute * 60;
-        $threeHours = $oneHourInSecond * 3;
-
-        $delay = $oneMinute * 5;
-        $delayInSecond = $delay + $threeHours;
-        return TimesService::generateDate(now(), $delayInSecond);
+        $delayInSeconds = Config::get('SESSION_LIFETIME_SECOND', 60 * 5);
+        return TimesService::generateDate(now(), $delayInSeconds);
     }
 
     /**
@@ -121,7 +121,7 @@ class TokenService
                 ->where('token', $token)
                 ->update([
                     'token' => $newToken,
-                    'date_expiration' => self::genExpirationDate()
+                    'date_expiration' => self::genExpirationDateForToken()
                 ]);
 
             // Vérifie si la mise à jour a été effectuée.
