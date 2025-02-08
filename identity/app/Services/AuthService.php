@@ -32,7 +32,7 @@ class AuthService
             throw new \Exception('Account suspended!');
         }
 
-        if (Hash::check($password, $account->password)) {
+        if (!Hash::check($password, $account->password)) {
             $reste = $account->increaseAttempt();
             DB::commit();
             throw new \Exception("Wrong password! $reste attempts left!");

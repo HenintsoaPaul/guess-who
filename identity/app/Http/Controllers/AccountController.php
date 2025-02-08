@@ -362,7 +362,7 @@ class AccountController extends Controller
      *     path="/api/password/change/validation",
      *     summary="Valider changement de mot de passe",
      *     description="Point d'accès permettant de valider une demande de changement de mot de passe en utilisant un PIN temporaire.",
-     *     tags={"compte", "Authentitfiaction, "gestion", "password"},
+     *     tags={"compte", "Authentitfiaction", "gestion", "password"},
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(
      *         required=true,
