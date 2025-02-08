@@ -31,3 +31,4 @@ public class CryptoService implements BaseService<Crypto> {
                 .orElse(0.0);
     }
 }
+

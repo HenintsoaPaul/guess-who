@@ -36,4 +36,7 @@ public interface CoursRepository extends JpaRepository<Cours, Integer> {
                               on c.id_crypto = t.id_crypto and c.date_cours = t.dd
             """, nativeQuery = true)
     List<Cours> findLatestCoursForEachCrypto();
+
+    @Query("SELECT c FROM Cours c WHERE c.dateCours = (SELECT MAX(c2.dateCours) FROM Cours c2 WHERE c2.crypto = c.crypto)")
+    List<Cours> findAllCurrentCours();
 }
