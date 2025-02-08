@@ -30,27 +30,31 @@ class AccountController extends Controller
      */
     public function unlock(Request $request)
     {
+        DB::beginTransaction();
         try {
             $email = $request->validate([
                 'email' => 'required|email',
             ]);
 
-            DB::beginTransaction();
-            try {
-                $account = Account::getByEmail($email);
-                $account->unlockAccount();
-                DB::commit();
+            $account = Account::getByEmail($email);
 
-                $data = [
-                    'id_account' => $account->id_account
-                ];
-                return $this->jsonResponse->success('Account unlocked.', $data);
-            } catch (\Exception $e) {
-                DB::rollBack();
-                throw $e;
-            }
+            $account->unlockAccount();
+            DB::commit();
+
+            $data = [
+                'id_account' => $account->id_account
+            ];
+
+            return $this->jsonResponse->success('Account unlocked.', $data);
         } catch (ValidationException $e) {
-            return $this->jsonResponse->error('Invalid email.', $e->errors(), 422);
+            DB::rollBack();
+            return $this->jsonResponse->validationError($e);
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            $this->jsonResponse->error('Email non trouvé', null, 404);
+        } catch (\Exception $ee) {
+            DB::rollBack();
+            return $this->jsonResponse->error($ee->getMessage(), null, 401);
         }
     }
 
