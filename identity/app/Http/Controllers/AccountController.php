@@ -479,7 +479,7 @@ class AccountController extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Erreur serveur interne",
+     *         description="Erreur lors du traitement de la demande.",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
@@ -506,32 +506,52 @@ class AccountController extends Controller
 
             $token = TokenService::getBarerToken($request);
             if (!$token) {
-                return $this->jsonResponse->tokenError();
+                return $this->jsonResponse->tokenError(); // 401
             }
 
-            DB::beginTransaction();
             $pendingPwdChange = PendingPwdChange::getById($payload['id']);
 
             $account = Account::getById($pendingPwdChange->id_account);
+
             if (!TokenService::isValidBarerToken($account->id_account, $token)) {
-                return $this->jsonResponse->tokenError();
+                return $this->jsonResponse->tokenError(); // 401
             }
 
             if ($payload['pin'] !== $pendingPwdChange->pin) {
-                return $this->jsonResponse->error('Invalid pin.', $payload, 422);
+                return $this->jsonResponse->error('Invalid pin.', $payload, 403);
             }
 
+            DB::beginTransaction();
             $pendingPwdChange->validate($account);
             DB::commit();
 
             $data = [
                 'id_account' => $pendingPwdChange->id_account,
             ];
-            return $this->jsonResponse->success('Password change email validation sent.', $data);
+            return $this->jsonResponse->success(
+                'Password change email validation sent.',
+                $data
+            );
         } catch (ValidationException $e) {
-            return $this->jsonResponse->error('Invalid payload.', $e->errors(), 422);
+            return $this->jsonResponse->error(
+                'Données de validation invalides.',
+                $e->errors(),
+                422
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return $this->jsonResponse->error(
+                'Compte non trouvé',
+                null,
+                404
+            );
         } catch (\Exception $e) {
-            return $this->jsonResponse->error('Invalid account.', $e->errors(), 500);
+            DB::rollBack();
+            return $this->jsonResponse->error(
+                'Erreur lors du traitement de la demande.',
+                null,
+                500
+            );
         }
     }
 }

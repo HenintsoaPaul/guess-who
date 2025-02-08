@@ -19,7 +19,7 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    private JsonResponseService  $jsonResponse;
+    private JsonResponseService $jsonResponse;
 
     public function __construct(JsonResponseService $responseService)
     {
@@ -55,7 +55,11 @@ class LoginController extends Controller
      *     @OA\Response(
      *         response=403,
      *         description="Compte inactif"
-     *     )
+     *     ),
+     *     @OA\Response(
+     *          response=422,
+     *          description="Erreur de validation"
+     *      ),
      * )
      */
     public function login(Request $request)
@@ -82,7 +86,7 @@ class LoginController extends Controller
             $msg = "Pin sent to your email.";
             $data = [
                 'account' => $account->email,
-                'pin' =>  $pin,
+                'pin' => $pin,
             ];
             return $this->jsonResponse->success($msg, $data);
         } catch (ValidationException $e) {
