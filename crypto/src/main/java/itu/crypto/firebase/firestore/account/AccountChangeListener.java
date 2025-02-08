@@ -35,6 +35,10 @@ public class AccountChangeListener extends FirestoreChangeListener<Account, Acco
 
     @Override
     protected void deleteFromDatabase(String entityId) {
-        accountService.deleteById(Integer.parseInt(entityId)); // 🔥 Suppression de la ligne
+        try {
+            accountService.deleteById(Integer.parseInt(entityId)); // 🔥 Suppression de la ligne
+        } catch (NumberFormatException e) {
+            log.error(e.getMessage());
+        }
     }
 }
