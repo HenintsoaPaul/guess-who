@@ -82,12 +82,7 @@ class TokenService
      */
     public static function genExpirationDateForAuth(): Carbon
     {
-        $oneMinute = 60;
-        $oneHourInSecond = $oneMinute * 60;
-        $threeHours = $oneHourInSecond * 3;
-
-        $delay = 90;
-        $delayInSecond = $delay + $threeHours;
+        $delayInSecond = 90;
         return TimesService::generateDate(now(), $delayInSecond);
     }
 
