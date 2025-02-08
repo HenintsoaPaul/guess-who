@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "455716297248",
-    "project_id": "tirelir-app-71721",
-    "storage_bucket": "tirelir-app-71721.firebasestorage.app"
+    "project_number": "767704329772",
+    "project_id": "atlasian-6d4b6",
+    "storage_bucket": "atlasian-6d4b6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:455716297248:android:74971b4acd3e1986bf3a45",
-        "android_client_info": {
-          "package_name": "com.notif"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC87g2bzZlnvjX4VRqaB3eWLhRd3EcnGd8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:455716297248:android:5941ba6c5378052ebf3a45",
+        "mobilesdk_app_id": "1:767704329772:android:9d1f90817c59ed2ee7ab89",
         "android_client_info": {
           "package_name": "itu.crypto"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC87g2bzZlnvjX4VRqaB3eWLhRd3EcnGd8"
+          "current_key": "AIzaSyBAQj3mgOY_hSfSsZZfFtpLabcZ_Ur-qOw"
         }
       ],
       "services": {

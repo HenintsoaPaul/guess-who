@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { getDocs, collection } from 'firebase/firestore';
-import { FIRESTORE_DB } from '../services/firebaseService';
+import { fetchDataFromFirebase, FIRESTORE_DB } from '../services/firebaseService';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome for the search icon
 import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker
 import { colorsChart } from '../constants/ColorsChart';
@@ -30,11 +30,7 @@ const AchatVenteScreen = () => {
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
-        const querySnapshot = await getDocs(collection(FIRESTORE_DB, 'purchase'));
-        const purchasesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const purchasesData = fetchDataFromFirebase('purchase',null)
         setPurchases(purchasesData);
         setFilteredPurchases(purchasesData);
       } catch (err) {

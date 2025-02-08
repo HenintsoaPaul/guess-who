@@ -1,16 +1,15 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth} from "firebase/auth";
-import { getFirestore ,collection,getDocs} from "firebase/firestore";
+import { getFirestore ,collection,getDocs, query} from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCB8WP6g1VVBaK3MO85NloEOpWm6jl5fvI",
-  authDomain: "tirelir-app-71721.firebaseapp.com",
-  projectId: "tirelir-app-71721",
-  storageBucket: "tirelir-app-71721.firebasestorage.app",
-  messagingSenderId: "455716297248",
-  appId: "1:455716297248:web:80c60491595ae9d8bf3a45",
-  measurementId: "G-L2H4J2GDHW"
+  apiKey: "AIzaSyDEk0CkCtDN4Zd77dMAUykYdFSi0iflE_8",
+  authDomain: "atlasian-6d4b6.firebaseapp.com",
+  projectId: "atlasian-6d4b6",
+  storageBucket: "atlasian-6d4b6.firebasestorage.app",
+  messagingSenderId: "767704329772",
+  appId: "1:767704329772:web:ac31ab757f4c12b2e7ab89"
 };
 
 export const FIREBASE_APP = initializeApp(firebaseConfig);
@@ -22,26 +21,29 @@ export const firebaseCollection = function( collectionName ){
   return coll;
 }
 
-export const fetchDataFromFirebase = (collectionName, queryBuilder, errorMarks) => {
+export const fetchDataFromFirebase = async (collectionName, queryBuilder) => {
   try {
     const fcollection = firebaseCollection(collectionName);
     let q = fcollection;
     if (queryBuilder !== null) {
       q = queryBuilder(fcollection);
     }
-    return getDocs(q)
+    return await getDocs(q)
       .then(querySnapshot => {
         if (!querySnapshot.empty) {
-          return querySnapshot.docs.map(doc => doc.data());
+          return querySnapshot.docs.map(doc => ({
+            docId: doc.id,
+            ...doc.data()
+          }));
         } else {
-          throw new Error("No data found: " + errorMarks);
+          return [];
         }
       })
       .catch(error => {
         throw error;
       });
   } catch (error) {
-    console.error("Error fetching data from Firebase: ", error);
+    throw new Error("Error fetching data from Firebase: ", error);
   }
 };
 
