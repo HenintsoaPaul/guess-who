@@ -11,6 +11,7 @@ public class AccountDocument implements TimestampedDocument {
 
     private Integer id;
     private String pseudo;
+    private String account_img;
     private String email;
     private String password;
     private double fund;
@@ -30,6 +31,7 @@ public class AccountDocument implements TimestampedDocument {
         return new Account(
                 id,
                 pseudo,
+                account_img,
                 email,
                 password,
                 fund

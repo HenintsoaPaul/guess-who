@@ -12,6 +12,8 @@ import itu.crypto.repository.transaction.fund.TypeMvFundRepository;
 import itu.crypto.service.EmailService;
 import itu.crypto.service.account.AccountService;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PendingMvFundService implements BaseService<PendingMvFund> {
@@ -65,7 +68,17 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(PendingMvFund pendingMvFund) {
-        pendingMvFundRepository.save(pendingMvFund);
+        int retries = 3;
+        while (retries > 0) {
+            try {
+                pendingMvFundRepository.save(pendingMvFund);
+                return;
+            } catch (ObjectOptimisticLockingFailureException e) {
+                log.warn("Conflit de mise à jour sur pendingMvFund ID {}. Tentative restante: {}", pendingMvFund.getId(), retries - 1);
+                retries--;
+            }
+        }
+        throw new RuntimeException("Maj cours après plusieurs tentatives (mety fa misy exception)");
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
