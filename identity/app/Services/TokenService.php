@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Services\TimesService;
 use App\Models\Token;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -56,7 +56,7 @@ class TokenService
             // Générer un token unique.
             $tokenModel->id_account = $id;
             $tokenModel->token = self::newToken();
-            $tokenModel->date_expiration = self::genExpirationDate();
+            $tokenModel->date_expiration = TimesService::genExpirationDateForToken();
             // Sauvegarder dans la base de données.
             $tokenModel->save();
             return $tokenModel;
@@ -64,31 +64,6 @@ class TokenService
             // Gérer les erreurs éventuelles (log ou lancer une exception).
             throw new \RuntimeException("Erreur lors de la génération du token : " . $e->getMessage());
         }
-    }
-
-    public static function genExpirationDate()
-    {
-        $oneMinute = 60;
-        $oneHourInSecond = $oneMinute * 60;
-        $threeHours = $oneHourInSecond * 3;
-
-        $delay = $oneMinute * 5;
-        $delayInSecond = $delay + $threeHours;
-        return TimesService::generateDate(now(), $delayInSecond);
-    }
-
-    /**
-     * @return Carbon
-     */
-    public static function genExpirationDateForAuth(): Carbon
-    {
-        $oneMinute = 60;
-        $oneHourInSecond = $oneMinute * 60;
-        $threeHours = $oneHourInSecond * 3;
-
-        $delay = 90;
-        $delayInSecond = $delay + $threeHours;
-        return TimesService::generateDate(now(), $delayInSecond);
     }
 
     /**
@@ -124,7 +99,7 @@ class TokenService
                 ->where('token', $token)
                 ->update([
                     'token' => $newToken,
-                    'date_expiration' => self::genExpirationDate()
+                    'date_expiration' => TimesService::genExpirationDateForToken()
                 ]);
 
             // Vérifie si la mise à jour a été effectuée.
@@ -138,17 +113,17 @@ class TokenService
         }
     }
 
-    /**
-     * Regenerer un token pour un utilisateur a partir du token dans le header de la requete
-     * @param int $id L'identifiant du compte de l'utilisateur
-     * @param Request $request La requete a effectuer
-     * @return string Le nouveau token generer
-     */
-    public static function regenerate(int $id, Request $request): string
-    {
-        $token = self::getBarerToken($request);
-        return self::regenerateToken($id, $token);
-    }
+//    /**
+//     * Regenerer un token pour un utilisateur a partir du token dans le header de la requete
+//     * @param int $id L'identifiant du compte de l'utilisateur
+//     * @param Request $request La requete a effectuer
+//     * @return string Le nouveau token generer
+//     */
+//    public static function regenerate(int $id, Request $request): string
+//    {
+//        $token = self::getBarerToken($request);
+//        return self::regenerateToken($id, $token);
+//    }
 
     /**
      * Recuperer le model du dernier token valide cree.

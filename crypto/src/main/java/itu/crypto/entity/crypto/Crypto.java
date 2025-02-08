@@ -10,6 +10,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(CryptoListener.class)
 @Table(name = "crypto")
 public class Crypto {
     @Id

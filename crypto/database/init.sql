@@ -10,11 +10,12 @@ CREATE TABLE crypto
 
 CREATE TABLE account
 (
-    id_account SERIAL,
-    pseudo     VARCHAR(250) NOT NULL,
-    email      VARCHAR(250) NOT NULL,
-    password   VARCHAR(250) NOT NULL,
-    fund       NUMERIC(15, 2),
+    id_account  SERIAL,
+    pseudo      VARCHAR(250) NOT NULL,
+    account_img VARCHAR(250),
+    email       VARCHAR(250) NOT NULL,
+    password    VARCHAR(250) NOT NULL,
+    fund        NUMERIC(15, 2),
     PRIMARY KEY (id_account)
 );
 
@@ -44,19 +45,6 @@ CREATE TABLE type_mv_fund
     name            VARCHAR(250) NOT NULL,
     PRIMARY KEY (id_type_mv_fund),
     UNIQUE (name)
-);
-
-CREATE TABLE mv_fund
-(
-    id_mv_fund      SERIAL,
-    date_mv         TIMESTAMP      NOT NULL,
-    amount          NUMERIC(15, 2) NOT NULL,
-    id_source       INTEGER,
-    id_type_mv_fund INTEGER        NOT NULL,
-    id_account      INTEGER        NOT NULL,
-    PRIMARY KEY (id_mv_fund),
-    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
-    FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
 CREATE TABLE type_mv_wallet
@@ -97,6 +85,14 @@ CREATE TABLE crypto_fav
     PRIMARY KEY (id_crypto_fav),
     FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
     FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
+CREATE TABLE pending_state
+(
+    id_pending_state SERIAL,
+    name             VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id_pending_state),
+    UNIQUE (name)
 );
 
 CREATE TABLE wallet
@@ -159,6 +155,39 @@ CREATE TABLE commission_purchase
     FOREIGN KEY (id_commission_rate) REFERENCES commission_rate (id_commission_rate)
 );
 
+CREATE TABLE pending_mv_fund
+(
+    id_pending_mv_fund SERIAL,
+    date_pending       TIMESTAMP      NOT NULL,
+    date_validation    TIMESTAMP,
+    amount             NUMERIC(15, 2) NOT NULL,
+    id_pending_state   INTEGER        NOT NULL,
+    id_type_mv_fund    INTEGER        NOT NULL,
+    id_account         INTEGER        NOT NULL,
+    PRIMARY KEY (id_pending_mv_fund),
+    FOREIGN KEY (id_pending_state) REFERENCES pending_state (id_pending_state),
+    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
+CREATE TABLE mv_fund
+(
+    id_mv_fund         SERIAL,
+    date_mv            TIMESTAMP      NOT NULL,
+    amount             NUMERIC(15, 2) NOT NULL,
+    id_source          INTEGER,
+    id_pending_mv_fund INTEGER        NOT NULL,
+    id_type_mv_fund    INTEGER        NOT NULL,
+    id_account         INTEGER        NOT NULL,
+    PRIMARY KEY (id_mv_fund),
+    UNIQUE (id_pending_mv_fund),
+    FOREIGN KEY (id_pending_mv_fund) REFERENCES pending_mv_fund (id_pending_mv_fund),
+    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
+
+-- View
 
 create or replace view v_current_commission_rate as
 select tab1.*
@@ -198,6 +227,7 @@ CREATE OR REPLACE TRIGGER trg_innit_account_wallets
 EXECUTE FUNCTION innit_account_wallets();
 
 
+-- Trigger
 
 -- on insert crypto
 CREATE OR REPLACE FUNCTION add_account_wallet()
@@ -269,13 +299,15 @@ CREATE OR REPLACE TRIGGER trg_commission_purchase
 EXECUTE FUNCTION add_commission_purchase();
 
 
+-- Data
+
 INSERT INTO commission_type (name, symbol)
 VALUES ('Commission Vente', 'CV'),
        ('Commission Achat', 'CA');
 
 INSERT INTO commission_rate (rate, add_date, id_commission_type)
 VALUES (0.1, '2020-01-01', 1),
-       (0.05,'2020-01-01', 2);
+       (0.05, '2020-01-01', 2);
 
 -- Insertion de données dans la table 'type_mv_wallet'
 INSERT INTO type_mv_wallet (name)
@@ -288,6 +320,12 @@ VALUES ('Dépôt'),
        ('Retrait'),
        ('Achat'),
        ('Vente');
+
+--
+INSERT INTO pending_state (name)
+VALUES ('En Attente'),
+       ('Validée'),
+       ('Refusée');
 
 -- 10 crypto
 INSERT INTO crypto (name, symbol)
@@ -371,7 +409,7 @@ VALUES ('2025-01-08 09:00:00', 30000, 1),
        ('2025-01-08 10:00:00', 31000, 3),
        ('2025-01-08 10:30:00', 31500, 4),
        ('2025-01-08 11:00:00', 32000, 5),
-       ('2025-01-08 11:30:00', 32500,6),
+       ('2025-01-08 11:30:00', 32500, 6),
        ('2025-01-08 12:00:00', 33000, 7),
        ('2025-01-08 12:30:00', 33500, 8),
        ('2025-01-08 13:00:00', 34000, 9),
@@ -442,6 +480,7 @@ VALUES (1000, 800, 1, 1),
        (2000, 1800, 3, 3);
 
 -- Insertion de données dans la table 'purchase'
-INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller, id_sale_detail)
+INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller,
+                      id_sale_detail)
 VALUES ('2025-01-09 11:30:00', 500, 500, 1, 1, 2, 1),
        ('2025-01-10 12:30:00', 600, 600, 1, 2, 1, 2);

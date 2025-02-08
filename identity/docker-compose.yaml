@@ -1,6 +1,33 @@
+networks:
+  cloud_network:
+    external: true
+
+volumes:
+  identity_pg_volume:
+
 services:
-  laravel_app:
-    container_name: laravel_guess_who
+  identity_pg:
+    container_name: identity_pg
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: itu16
+      POSTGRES_DB: guess_who
+    volumes:
+      - identity_pg_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-d", "postgres", "-U", "postgres" ]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  identity_app:
+    container_name: identity_app
+    networks:
+      - cloud_network
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,7 +36,7 @@ services:
     env_file:
       - .env
     depends_on:
-      postgres_guess_who:
+      identity_pg:
         condition: service_healthy
     volumes:
       - .:/var/www/html
@@ -25,28 +52,3 @@ services:
           php artisan db:seed --force &&
           php artisan serve --host=0.0.0.0 --port=8000
     " ]
-
-  postgres_guess_who:
-    container_name: postgres_guess_who
-    image: postgres:15
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: itu16
-      POSTGRES_DB: guess_who
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-d", "postgres", "-U", "postgres" ]
-      timeout: 5s
-      retries: 5
-      start_period: 60s
-    restart: unless-stopped
-
-volumes:
-  postgres_data:
-
-networks:
-  app_network:
-    driver: bridge

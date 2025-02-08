@@ -12,12 +12,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CoursService implements BaseService<Cours> {
@@ -220,11 +225,22 @@ public class CoursService implements BaseService<Cours> {
         return cours;
     }
 
-
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(Cours cours) {
-        coursRepository.save(cours);
+        int retries = 3;
+        while (retries > 0) {
+            try {
+                coursRepository.save(cours);
+                return;
+            } catch (ObjectOptimisticLockingFailureException e) {
+                log.warn("Conflit de mise à jour sur cours ID {}. Tentative restante: {}", cours.getId(), retries - 1);
+                retries--;
+            }
+        }
+        throw new RuntimeException("Maj cours après plusieurs tentatives (mety fa misy exception)");
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteById(int id) {
         coursRepository.deleteById(id);
     }

@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id('id_pending_pwd_change');
             $table->timestamp('date_expiration');
             $table->timestamp('date_creation');
-            $table->timestamp('date_validation');
+            $table->timestamp('date_validation')->nullable();
             $table->string('pin', 50);
             $table->unsignedBigInteger('id_account');
-            $table->unsignedBigInteger('new_password');
+            $table->string('new_password', 250);
             $table->timestamps();
 
             $table->foreign('id_account')->references('id_account')->on('account');

@@ -10,11 +10,12 @@ CREATE TABLE crypto
 
 CREATE TABLE account
 (
-    id_account SERIAL,
-    pseudo     VARCHAR(250) NOT NULL,
-    email      VARCHAR(250) NOT NULL,
-    password   VARCHAR(250) NOT NULL,
-    fund       NUMERIC(15, 2),
+    id_account  SERIAL,
+    pseudo      VARCHAR(250) NOT NULL,
+    account_img VARCHAR(250),
+    email       VARCHAR(250) NOT NULL,
+    password    VARCHAR(250) NOT NULL,
+    fund        NUMERIC(15, 2),
     PRIMARY KEY (id_account)
 );
 

@@ -25,7 +25,6 @@ import itu.crypto.service.transaction.fund.MvFundService;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -68,7 +67,7 @@ public class FirebaseInitializer {
     private void testAccount() {
         accountSyncService.syncWithFirebase();
 
-        Account account = new Account(null, "fufu", "fufu@gmail.com", "mypassword", 500),
+        Account account = new Account(null, "fufu", "fufu@gmail.com", "mypassword", 500.00),
                 vao = accountRepository.save(account);
 
         vao.setEmail("blabla.com");
