@@ -35,8 +35,6 @@ public class CryptoFavDocument implements TimestampedDocument {
     public CryptoFav toEntity() {
         return new CryptoFav(
                 id,
-                crypto,
-                account,
                 dateCryptoFav.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
                 onFav
         );

@@ -1,8 +1,10 @@
 package itu.crypto.firebase.firestore.generalisation;
 
 import com.google.cloud.firestore.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +13,14 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public abstract class FirestoreChangeListener<T, D> {
 
     private final Firestore firestore;
     private final BaseService<T> baseService;
+    @Setter
     @Getter
-    private final String collectionName;
+    private String collectionName;
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     protected abstract T toEntity(D document);
@@ -30,11 +33,18 @@ public abstract class FirestoreChangeListener<T, D> {
 
     // Verification des changements entre doc-entity
     protected boolean hadChanges(T entity, String entityId, BaseService<T> service) {
-        T existingEntity = service.findById(Integer.parseInt(entityId)).orElse(null);
-        if (existingEntity == null) {
+        if (entityId == null) return true;
+
+        try {
+            T existingEntity = service.findById(Integer.parseInt(entityId)).orElse(null);
+            if (existingEntity == null) {
+                return true;
+            }
+            return !entity.equals(existingEntity);
+        } catch (NumberFormatException e) {
+            // if id is a string
             return true;
         }
-        return !entity.equals(existingEntity);
     }
 
     /**
@@ -54,13 +64,14 @@ public abstract class FirestoreChangeListener<T, D> {
                 String entityId = docSnapshot.getId();
 
                 D document = docSnapshot.toObject(getDocumentClass());
+                System.out.println(document);
                 T entity = toEntity(document);
                 switch (change.getType()) {
                     case ADDED:
                     case MODIFIED:
                         if (hadChanges(entity, entityId, baseService)) {
                             updateDatabase(entity);
-                            log.info("📌 [listener][firestore -> local] Add/Update: [id: {}, collection: {}]", entityId, collectionName);
+                            log.info("📌 [listener][firestore -> local] Persist change from mobile: [id: {}, collection: {}]", entityId, collectionName);
                         }
                         break;
 
