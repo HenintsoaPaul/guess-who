@@ -17,7 +17,7 @@ public class PendingMvFundController {
 
     @GetMapping
     public String gotoListPendings(Model model) {
-        model.addAttribute("pendingMvFund", pendingMvFundService.findAllAttente());
+        model.addAttribute("pendingMvFunds", pendingMvFundService.findAllAttente());
         return "transactions/fund/pending";
     }
 
@@ -26,7 +26,8 @@ public class PendingMvFundController {
                            @PathVariable int id) {
         String msg = "Validation OK";
         try {
-            pendingMvFundService.validate(id);
+            PendingMvFund pmf = pendingMvFundService.validate(id);
+            msg += ". " + pendingMvFundService.sendEmail(pmf);
         } catch (PendingMvFundException pmfe) {
             msg = pmfe.getMessage();
         }
@@ -39,7 +40,8 @@ public class PendingMvFundController {
                         @PathVariable int id) {
         String msg = "Refus OK";
         try {
-            pendingMvFundService.refus(id);
+            PendingMvFund pmf = pendingMvFundService.refus(id);
+            msg += ". " + pendingMvFundService.sendEmail(pmf);
         } catch (PendingMvFundException pmfe) {
             msg = pmfe.getMessage();
         }
@@ -56,9 +58,11 @@ public class PendingMvFundController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute PendingMvFund pendingMvFund) {
+    public String save(Model model, @ModelAttribute PendingMvFund pendingMvFund) {
         pendingMvFund.setPendingState(pendingMvFundService.getEtatAttente());
         pendingMvFundService.save(pendingMvFund);
-        return "redirect:/transactions/fund/pending";
+
+        model.addAttribute("msg", pendingMvFundService.sendEmail(pendingMvFund));
+        return gotoFormPending(model);
     }
 }
