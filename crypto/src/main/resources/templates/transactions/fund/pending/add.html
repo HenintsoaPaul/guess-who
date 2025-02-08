@@ -3,6 +3,10 @@
 <main id="main" class="main">
     <h2>Faire un nouveau depot/retrait</h2>
 
+    <p th:if="${msg != null and !msg.isEmpty()}">
+    <span th:text="${msg}"></span>
+    </p>
+
     <form th:action="@{/transactions/fund/pending/save}" th:object="${pendingMvFund}"
           method="POST" id="productPriceForm">
         <div>
