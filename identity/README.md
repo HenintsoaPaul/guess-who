@@ -1,7 +1,14 @@
 # guess-who
+
 Identity provider App
 
 ## Build the project
+
+Generate swagger docs:
+
+```bash
+  php artisan l5-swagger:generate
+```
 
 Run the following command in the terminal:
 ```bash
@@ -71,8 +78,3 @@ Run the following command in the terminal:
     "pin": "yourpin"
 }
 ```
-
------
-## Attention
-
-Tsy alefa ao anaty zip ilay folder `./vendor`

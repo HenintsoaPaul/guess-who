@@ -1,4 +1,4 @@
-docker network create cloud_network
+docker network create cloud-network --driver bridge
 
 cd identity
 

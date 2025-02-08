@@ -47,10 +47,7 @@ public class PurchaseDocument implements TimestampedDocument {
                 datePurchase.toDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime(),
                 totalPrice,
                 unitPrice,
-                quantityCrypto,
-                accountPurchaser,
-                accountSeller,
-                saleDetailDocument.toEntity()
+                quantityCrypto
         );
     }
 }

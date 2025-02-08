@@ -7,6 +7,7 @@ identity/vendor
 identity/.env
 identity/.env.backup
 identity/.env.production
+identity/composer.lock
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml

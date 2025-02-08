@@ -157,7 +157,7 @@
             "post": {
                 "tags": [
                     "compte",
-                    "Authentification",
+                    "authentification",
                     "gestion",
                     "password"
                 ],
@@ -203,7 +203,7 @@
                                         },
                                         "données": {
                                             "properties": {
-                                                "id": {
+                                                "id_pending_pwd_change": {
                                                     "type": "integer",
                                                     "example": 1
                                                 },
@@ -313,11 +313,11 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "id",
+                                    "id_pending_pwd_change",
                                     "pin"
                                 ],
                                 "properties": {
-                                    "id": {
+                                    "id_pending_pwd_change": {
                                         "description": "Identifiant de la demande de changement de mot de passe",
                                         "type": "integer",
                                         "example": 123
@@ -474,7 +474,7 @@
         "/api/login": {
             "post": {
                 "tags": [
-                    "Authentification"
+                    "authentification"
                 ],
                 "summary": "Login user",
                 "description": "Login utilisateur",
@@ -520,7 +520,7 @@
         "/api/login/validate": {
             "post": {
                 "tags": [
-                    "Authentification"
+                    "authentification"
                 ],
                 "summary": "Validation du PIN",
                 "description": "Valide le PIN envoyé par email et génère un token d'accès.",
@@ -800,8 +800,8 @@
             "description": "gestion"
         },
         {
-            "name": "Authentification",
-            "description": "Authentification"
+            "name": "authentification",
+            "description": "authentification"
         },
         {
             "name": "password",

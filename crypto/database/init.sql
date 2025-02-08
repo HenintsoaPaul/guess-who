@@ -80,6 +80,7 @@ CREATE TABLE crypto_fav
 (
     id_crypto_fav   SERIAL,
     date_crypto_fav TIMESTAMP,
+    on_fav          BOOLEAN NOT NULL,
     id_crypto       INTEGER NOT NULL,
     id_account      INTEGER NOT NULL,
     PRIMARY KEY (id_crypto_fav),

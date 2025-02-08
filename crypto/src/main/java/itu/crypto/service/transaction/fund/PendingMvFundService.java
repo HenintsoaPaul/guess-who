@@ -189,4 +189,16 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
                 account,
                 tmf);
     }
+
+    public PendingState findPendingStateById(Integer id) {
+        return pendingStateRepository.findById(id).orElseThrow();
+    }
+
+    public TypeMvFund findTypeMvFundById(Integer id) {
+        return typeMvFundRepository.findById(id).orElseThrow();
+    }
+
+    public Account findAccountById(Integer id) {
+        return accountService.findById(id).orElseThrow();
+    }
 }
