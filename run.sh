@@ -1,3 +1,5 @@
+docker network create cloud_network
+
 cd identity
 
 docker compose up --build -d

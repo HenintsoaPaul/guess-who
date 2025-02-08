@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApiController;
 use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;
@@ -19,7 +18,7 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    private JsonResponseService  $jsonResponse;
+    private JsonResponseService $jsonResponse;
 
     public function __construct(JsonResponseService $responseService)
     {
@@ -31,7 +30,7 @@ class LoginController extends Controller
      *     path="/api/login",
      *     summary="Login user",
      *     description="Login utilisateur",
-     *     tags={"Authentification"},
+     *     tags={"authentification"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -55,7 +54,11 @@ class LoginController extends Controller
      *     @OA\Response(
      *         response=403,
      *         description="Compte inactif"
-     *     )
+     *     ),
+     *     @OA\Response(
+     *          response=422,
+     *          description="Erreur de validation"
+     *      ),
      * )
      */
     public function login(Request $request)
@@ -73,16 +76,14 @@ class LoginController extends Controller
             $pin = RandomService::newPin();
             Mail::to($credentials['email'])->send(new SendEmail($pin));
 
-            // insert pending_auth
-            $delai = TokenService::genExpirationDateForAuth();
-            $pendingAuth = PendingAuth::addNew($pin, $account->id_account, $delai);
+            PendingAuth::addNew($pin, $account->id_account);
 
             DB::commit();
 
             $msg = "Pin sent to your email.";
             $data = [
                 'account' => $account->email,
-                'pin' =>  $pin,
+                'pin' => $pin,
             ];
             return $this->jsonResponse->success($msg, $data);
         } catch (ValidationException $e) {
@@ -101,7 +102,7 @@ class LoginController extends Controller
      *     summary="Validation du PIN",
      *     description="Valide le PIN envoyé par email et génère un token d'accès.",
      *     operationId="validateLoginPin",
-     *     tags={"Authentification"},
+     *     tags={"authentification"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
