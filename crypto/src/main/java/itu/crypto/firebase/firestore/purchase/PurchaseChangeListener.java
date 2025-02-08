@@ -20,7 +20,13 @@ public class PurchaseChangeListener extends FirestoreChangeListener<Purchase, Pu
 
     @Override
     protected Purchase toEntity(PurchaseDocument document) {
-        return document.toEntity();
+        Purchase entity = document.toEntity();
+
+        entity.setAccountPurchaser(purchaseService.findAccountById(document.getAccountPurchaser().getId()));
+        entity.setAccountSeller(purchaseService.findAccountById(document.getAccountSeller().getId()));
+        entity.setSaleDetail(purchaseService.findSaleDetailById(document.getSaleDetailDocument().toEntity().getId()));
+
+        return entity;
     }
 
     @Override
