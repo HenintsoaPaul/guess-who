@@ -23,7 +23,8 @@ public class FirestoreChangeListenerManager {
 
     public void init() {
         listeners.forEach(listener -> {
-            if (collectionNames.contains(listener.getCollectionName())) {
+            String collectionName = "mob_" + listener.getCollectionName();
+            if (collectionNames.contains(collectionName)) {
                 listener.startListening();
             }
         });
