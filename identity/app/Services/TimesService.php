@@ -60,4 +60,15 @@ class TimesService
         $delayInSeconds = Config::get('PENDING_AUTH_LIFETIME_SECOND', 90);
         return self::generateDate(now(), $delayInSeconds);
     }
+
+    /**
+     * Génère une date d'expiration pour le changement de mot de passe basée sur la durée configurée
+     *
+     * @return Carbon
+     */
+    public static function genExpirationDateForPasswordChange(): Carbon
+    {
+        $delayInSeconds = Config::get('PENDING_PASSWORD_CHANGE_LIFETIME_SECOND', 90);
+        return self::generateDate(now(), $delayInSeconds);
+    }
 }

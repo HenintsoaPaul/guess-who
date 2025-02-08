@@ -320,8 +320,7 @@ class AccountController extends Controller
 
 
             DB::beginTransaction();
-            $delai = null;
-            $pendingPwdChange = PendingPwdChange::addNew($pin, $account->id_account, $payload['new_password'], $delai);
+            $pendingPwdChange = PendingPwdChange::addNew($pin, $account->id_account, $payload['new_password']);
             DB::commit();
 
             Mail::to($account->email)->send(new SendEmail($pin));
@@ -332,8 +331,10 @@ class AccountController extends Controller
                 'pin' => $pendingPwdChange->pin
             ];
 
-            return $this->jsonResponse->success('Email de validation envoyé avec succès.', $data);
-
+            return $this->jsonResponse->success(
+                'Email de validation envoyé avec succès.',
+                $data
+            );
         } catch (ValidationException $e) {
             return $this->jsonResponse->error(
                 'Données de validation invalides.',
@@ -350,7 +351,7 @@ class AccountController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->jsonResponse->error(
-                'Erreur lors du traitement de la demande.',
+                $e->getMessage(),
                 null,
                 500
             );

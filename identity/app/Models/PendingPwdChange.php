@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Services\TimesService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class PendingPwdChange extends Model
 {
@@ -42,17 +44,14 @@ class PendingPwdChange extends Model
      *
      * @throws \Exception
      */
-    public static function addNew(string $pin, int $idAccount, string $pwd, \DateInterval $delai = null): PendingPwdChange
+    public static function addNew(string $pin, int $idAccount, string $pwd): PendingPwdChange
     {
-        $daty = new \DateTime();
-        $delai = $delai ?? new \DateInterval('PT90S'); // Utilisation de la valeur par défaut si $delai est null
-
         $pendingAuth = new PendingPwdChange();
-        $pendingAuth->date_creation = $daty;
-        $pendingAuth->date_expiration = (clone $daty)->add($delai); // Clone $daty pour ne pas modifier l'original
+        $pendingAuth->date_creation = new \DateTime();
+        $pendingAuth->date_expiration = TimesService::genExpirationDateForPasswordChange();
         $pendingAuth->pin = $pin;
         $pendingAuth->id_account = $idAccount;
-        $pendingAuth->new_password = $pwd;
+        $pendingAuth->new_password = Hash::make($pwd);
 
         if (!$pendingAuth->save()) {
             throw new \Exception("Failed to insert pending password change");
