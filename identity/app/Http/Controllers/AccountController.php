@@ -9,6 +9,7 @@ use App\Services\JsonResponseService;
 use App\Services\RandomService;
 use App\Services\TokenService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -182,54 +183,72 @@ class AccountController extends Controller
     /**
      * @throws \Exception
      */
-    public function changePassword(Request $request): \Illuminate\Http\JsonResponse
+    public function changePassword(Request $request): JsonResponse
     {
         try {
             $payload = $request->validate([
                 'id_account' => 'required|numeric',
                 'new_password' => 'required',
             ]);
+
             $token = TokenService::getBarerToken($request);
             if (!$token) {
-                return $this->jsonResponse->tokenError();
+                return $this->jsonResponse->tokenError(); // 401
             }
+
+            $account = Account::getById($payload['id_account']);
+
+            // Vérification de la validité du token
+            $mety = TokenService::isValidBarerToken($account->id_account, $token);
+            if (!$mety) {
+                return $this->jsonResponse->tokenError(); // 401
+            }
+
+            $pin = RandomService::newPin();
+
 
             DB::beginTransaction();
-            try {
-                $account = Account::getById($payload['id_account']);
+            $delai = null;
+            $pendingPwdChange = PendingPwdChange::addNew($pin, $account->id_account, $payload['new_password'], $delai);
+            DB::commit();
 
-                $mety = TokenService::isValidBarerToken($account->id_account, $token);
-                if (!$mety) {
-                    return $this->jsonResponse->tokenError();
-                }
+            Mail::to($account->email)->send(new SendEmail($pin));
 
-                // Send pin to email
-                $pin = RandomService::newPin();
-                Mail::to($account->email)->send(new SendEmail($pin));
+            $data = [
+                'id' => $pendingPwdChange->id_pending_pwd_change,
+                'id_account' => $pendingPwdChange->id_account,
+                'pin' => $pendingPwdChange->pin
+            ];
 
-                // Save in pending auth
-                $delai = null;
-                $pendingPwdChange = PendingPwdChange::addNew($pin, $account->id_account, $payload['new_password'], $delai);
+            return $this->jsonResponse->success('Email de validation envoyé avec succès.', $data);
 
-                DB::commit();
-                $data = [
-                    'id' => $pendingPwdChange->id_pending_pwd_change,
-                    'id_account' => $pendingPwdChange->id_account,
-                    'pin' => $pendingPwdChange->pin
-                ];
-                return $this->jsonResponse->success('Password change email validation sent.', $data);
-            } catch (\Exception $e) {
-                return $this->jsonResponse->error('Invalid account.', $e->errors(), 422);
-            }
         } catch (ValidationException $e) {
-            return $this->jsonResponse->error('Invalid payload.', $e->errors(), 422);
+            return $this->jsonResponse->error(
+                'Données de validation invalides.',
+                $e->errors(),
+                422
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return $this->jsonResponse->error(
+                'Compte non trouvé',
+                null,
+                404
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->jsonResponse->error(
+                'Erreur lors du traitement de la demande.',
+                null,
+                500
+            );
         }
     }
 
     /**
      * @throws \Exception
      */
-    public function validateChangePassword(Request $request): \Illuminate\Http\JsonResponse
+    public function validateChangePassword(Request $request): JsonResponse
     {
         try {
             $payload = $request->validate([
