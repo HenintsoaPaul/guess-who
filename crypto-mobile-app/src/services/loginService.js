@@ -14,6 +14,8 @@ export async function findAccountByMail(email) {
     try {
         await promise
         .then((data)=>{
+            console.log("USER FOUND ....");
+            
             console.log(data[0])
             if (data.length > 0) {
               response = data[0];

@@ -1,26 +1,21 @@
-import { View, Text ,StyleSheet} from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { colorsChart } from '../../constants/ColorsChart'
-import { AntDesign } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 
-export default function NoFavoris() {
+const NoFavoris = () => {
   return (
     <View style={styles.container}>
-      <AntDesign 
-          name='star'
-          size={100}
-          color={colorsChart.light}
-      />
-      <Text>
-          No Favoris
-      </Text>
+      <FontAwesome name='star-o' size={100}/>
+      <Text>NoFavoris</Text>
     </View>
   )
 }
 
+export default NoFavoris
+
 const styles = StyleSheet.create({
     container:{
-        flex:1,
+        height:'50%',
         justifyContent:'center',
         alignItems:'center',
     }
