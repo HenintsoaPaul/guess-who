@@ -21,6 +21,9 @@ public class Account {
     @Column(name = "pseudo", nullable = false, length = 250)
     private String pseudo;
 
+    @Column(name = "account_img", length = 250)
+    private String account_img;
+
     @Column(name = "email", nullable = false, length = 250)
     private String email;
 
@@ -29,6 +32,14 @@ public class Account {
 
     @Column(name = "fund", nullable = false)
     private double fund;
+
+    public Account(Integer id, String pseudo, String mail, String mypassword, Double fund) {
+        this.id = id;
+        this.pseudo = pseudo;
+        this.email = mail;
+        this.password = mypassword;
+        this.fund = fund;
+    }
 
     @Override
     public boolean equals(Object o) {
