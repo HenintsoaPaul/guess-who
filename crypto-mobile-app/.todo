@@ -1,0 +1,27 @@
+# TODO
+
+[ ] purchase update
+    [ ] recuperer purchase docs
+    [ ] listener snapshot
+    [ ] Cree composant PurchaseCard(purchase)
+        [ ] getAccount for seller
+        [ ] getAccount for purchaser
+
+[ ] Maj firebase
+    [ ] mob_account
+        [ ] genrer doc when update
+            [ ] cree clone de l'user connecter
+            [ ] modifier les nouvelles infos
+            [ ] send doc whith the original id to update
+        [ ] fetch user from account
+    [ ] mob_pending_mv_fund
+        [ ] generer doc
+            [ ] cree un doc avec id null
+            [ ] send the doc with generated id for add
+    [ ] mob_crypto_fav
+        [ ] generer doc
+            [ ] recuperer fav (accountId,cryptoId)
+            [ ] si null
+                [ ] cree nouveau doc avec status true et id = null
+            [ ] sinon cloner le fav et maj le status = !status
+            [ ] send doc the the original id to update or add
