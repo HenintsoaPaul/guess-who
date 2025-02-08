@@ -1,13 +1,17 @@
+version: "3.8"
+
 networks:
-  cloud_network:
+  cloud-network:
     external: true
 
 volumes:
-  identity_pg_volume:
+  identity-pg-volume:
 
 services:
-  identity_pg:
-    container_name: identity_pg
+  identity-pg:
+    container_name: identity-pg
+    networks:
+      - cloud-network
     image: postgres:15
     ports:
       - "5433:5432"
@@ -16,7 +20,7 @@ services:
       POSTGRES_PASSWORD: itu16
       POSTGRES_DB: guess_who
     volumes:
-      - identity_pg_volume:/var/lib/postgresql/data
+      - identity-pg-volume:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD", "pg_isready", "-d", "postgres", "-U", "postgres" ]
       timeout: 5s
@@ -24,10 +28,10 @@ services:
       start_period: 60s
     restart: unless-stopped
 
-  identity_app:
-    container_name: identity_app
+  identity-app:
+    container_name: identity-app
     networks:
-      - cloud_network
+      - cloud-network
     build:
       context: .
       dockerfile: Dockerfile
@@ -36,7 +40,7 @@ services:
     env_file:
       - .env
     depends_on:
-      identity_pg:
+      identity-pg:
         condition: service_healthy
     volumes:
       - .:/var/www/html

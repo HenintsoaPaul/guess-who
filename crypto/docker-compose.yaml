@@ -1,24 +1,26 @@
 version: '3.8'
 
 networks:
-  cloud_network:
+  cloud-network:
     external: true
 
 volumes:
-  pg_crypto_data:
+  crypto-pg-volume:
 
 services:
-  crypto_pg:
+  crypto-pg:
     image: postgres:15
-    container_name: crypto_pg
+    networks:
+      - cloud-network
+    container_name: crypto-pg
+    ports:
+      - "5435:5432"
     environment:
       POSTGRES_DB: crypto
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: itu16
-    ports:
-      - "912:5432"
     volumes:
-      - pg_crypto_data:/var/lib/postgresql/data
+      - crypto-pg-volume:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d crypto" ]
@@ -26,22 +28,20 @@ services:
       timeout: 5s
       retries: 5
 
-  crypto_app:
-    container_name: crypto_app
+  crypto-app:
+    container_name: crypto-app
     networks:
-      - cloud_network
+      - cloud-network
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      API_URL: http://identity_app:8000
-      DB_URL: jdbc:postgresql://crypto_pg:5432/crypto
-      DB_PORT: 912
-      DB_NAME: crypto
+      API_URL: http://identity-app:8000
+      DB_URL: jdbc:postgresql://crypto-pg:5432/crypto
       DB_USERNAME: postgres
       DB_PASSWORD: itu16
     ports:
-      - "911:8080"
+      - "8080:8080"
     depends_on:
-      crypto_pg:
+      crypto-pg:
           condition: service_healthy
