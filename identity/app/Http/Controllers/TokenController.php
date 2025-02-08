@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ApiResponseService;
 use App\Services\TokenService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class TokenController extends Controller
@@ -58,7 +59,12 @@ class TokenController extends Controller
         return ApiResponseService::apiResponse($status, $message, $data, $errors);
     }
 
-    public function validate($request)
+    public function validateMe(
+        Request $request,
+        array   $rules = [],
+        array   $messages = [],
+        array   $customAttributes = []
+    )
     {
         $token = $request->header('Authorization');
 

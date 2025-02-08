@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\RegisterController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PendingAuthController;
@@ -43,4 +42,4 @@ Route::post('/register/validate', [RegisterController::class, 'validateRegister'
 // Token
 Route::get('/token/gen/{id_account}', [TokenController::class, 'generate']);
 Route::get('/token/regen/{id_account}', [TokenController::class, 'regenerate']);
-Route::get('/token/validate', [TokenController::class, 'validate']);
+Route::get('/token/validate', [TokenController::class, 'validateMe']);
