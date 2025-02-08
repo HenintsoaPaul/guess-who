@@ -74,55 +74,67 @@ class RegisterController extends Controller
                 'email' => 'required|email',
                 'password' => 'required|string|min:1',
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return $this->jsonResponse->error('Les données sont invalides.', [], 399);
-        }
 
-        $pin = $this->random->newPin();
-        $validated = [
-            'email' => $requestData['email'],
-            'password' => $requestData['password'],
-            'date_register' => Carbon::now(),
-            'date_expiration' => Carbon::now()->addHours(3)->addMinutes(2),
-            'pin' => $pin,
-        ];
-
-        DB::beginTransaction();
-        try {
             // Verifier hoe mbola tsy misy mampiasa ilay email
-            $d = Account::where('email', $requestData['email'])->first();
-            if ($d != null) {
-                throw new \Exception('Email already used by an account.');
+            if (Account::where('email', $requestData['email'])->first() != null) {
+                return $this->jsonResponse->error(
+                    "Email deja utilise",
+                    null,
+                    401
+                );
             }
 
             // Verifier hoe efa nandefasana PIN ilay olona
+            DB::beginTransaction();
             $pendingRegister = PendingRegister::where('email', $requestData['email'])->first();
             if ($pendingRegister != null) {
                 if ($pendingRegister->isExpired()) {
                     $pendingRegister->delete();
-                }
-                else {
-                    throw new \Exception('PIN already sent to your email. Verify your emails please.');
-                    // todo: mamerina mamorona pin hoanle efa mi-exist
-                    // ...
+                } else {
+                    return $this->jsonResponse->error(
+                        "PIN deja envoye vers votre email.",
+                        null,
+                        401
+                    );
                 }
             }
 
+            $validated = [
+                'email' => $requestData['email'],
+                'password' => Hash::make($requestData['password']),
+                'date_register' => Carbon::now(),
+                'date_expiration' => TimesService::genExpirationDateForRegister(),
+                'pin' => $this->random->newPin(),
+            ];
             $pendingRegister = PendingRegister::create($validated);
+            DB::commit();
 
             // TODO: Alefa email hoe firy ny delai de validation nle pin
-            Mail::to($requestData['email'])->send(new SendEmail($pin));
+            Mail::to($requestData['email'])->send(new SendEmail($pendingRegister->pin));
 
-            DB::commit();
             $data = [
                 'email' => $pendingRegister->email,
                 'pin' => $pendingRegister->pin,
                 'date_expiration' => $pendingRegister->date_expiration
             ];
-            return $this->jsonResponse->success("Pending register created successfully.", $data);
+
+            return $this->jsonResponse->success(
+                "Pending register created successfully.",
+                $data
+            );
+        } catch (ValidationException $e) {
+            return $this->jsonResponse->error(
+                'Les données sont invalides.',
+                $e->errors(),
+                422
+            );
         } catch (\Exception $e) {
             DB::rollback();
-            return $this->jsonResponse->error("Une erreur est survenue lors de l'enregistrement: " . $e->getMessage(), [], 398);
+            return $this->jsonResponse->error(
+                $e->getMessage(),
+                [],
+                500
+            );
         }
     }
 
@@ -199,7 +211,11 @@ class RegisterController extends Controller
 
         } catch (\Exception $err) {
             DB::rollBack();
-            return $this->jsonResponse->error("Erreur lors de validation de votre enregistrement : " . $err->getMessage(), [], 398);
+            return $this->jsonResponse->error(
+                $err->getMessage(),
+                null,
+                500
+            );
         }
     }
 }
