@@ -74,11 +74,14 @@ class PendingPwdChange extends Model
             $res = $this->update([
                 'date_validation' => now()
             ]);
+
             if (!$res) {
                 throw new \Exception("Failed to update pending password change");
             }
+
             $res = $account->resetPassword($this->new_password);
             DB::commit();
+
             return $res;
         } catch (\Exception $e) {
             DB::rollBack();
