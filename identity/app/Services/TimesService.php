@@ -36,6 +36,28 @@ class TimesService
     public static function genExpirationDateForRegister(): Carbon
     {
         $delayInSeconds = Config::get('PENDING_REGISTER_LIFETIME_SECOND', 60 * 5);
-        return TimesService::generateDate(now(), $delayInSeconds);
+        return self::generateDate(now(), $delayInSeconds);
+    }
+
+    /**
+     * Génère une date d'expiration pour un token sur la durée configurée
+     *
+     * @return Carbon
+     */
+    public static function genExpirationDateForToken(): Carbon
+    {
+        $delayInSeconds = Config::get('SESSION_LIFETIME_SECOND', 60 * 5);
+        return self::generateDate(now(), $delayInSeconds);
+    }
+
+    /**
+     * Génère une date d'expiration pour l'authentification basée sur la durée configurée
+     *
+     * @return Carbon
+     */
+    public static function genExpirationDateForAuth(): Carbon
+    {
+        $delayInSeconds = Config::get('PENDING_AUTH_LIFETIME_SECOND', 90);
+        return self::generateDate(now(), $delayInSeconds);
     }
 }

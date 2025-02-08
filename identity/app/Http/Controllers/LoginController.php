@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApiController;
 use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingAuth;
@@ -77,9 +76,7 @@ class LoginController extends Controller
             $pin = RandomService::newPin();
             Mail::to($credentials['email'])->send(new SendEmail($pin));
 
-            // insert pending_auth
-            $delai = TokenService::genExpirationDateForAuth();
-            PendingAuth::addNew($pin, $account->id_account, $delai);
+            PendingAuth::addNew($pin, $account->id_account);
 
             DB::commit();
 
