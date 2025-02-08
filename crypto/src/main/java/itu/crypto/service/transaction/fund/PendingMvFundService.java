@@ -70,9 +70,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
     }
 
     public List<PendingMvFund> findAllAttente() {
-        return this.findAll().stream()
-                .filter(pmf -> (pmf.getDateValidation() == null && pmf.getPendingState().getId() == 1))
-                .collect(Collectors.toList());
+        return pendingMvFundRepository.findAllAttente();
     }
 
     /**
@@ -86,7 +84,7 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         double solde = 0;
         if (pmf.getTypeMvFund().deTypeRetrait()) {
             solde = pmf.controlAmountRetrait();
-        } else if (pmf.getTypeMvFund().deTypeRetrait()) {
+        } else if (pmf.getTypeMvFund().deTypeDepot()) {
             solde = pmf.getAmount() + pmf.getAccount().getFund();
         }
 
@@ -116,23 +114,29 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return this.save(pmf);
     }
 
+    /**
+     * Insert ou update d'une demande.
+     * Si l'etat devient validee, nous creons la mv_fund pour la demande.
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public PendingMvFund save(PendingMvFund pmf) {
         PendingMvFund saved = pendingMvFundRepository.save(pmf);
 
-        // todo: separer l'envoi d'email
-        // todo: gestion des transactions
         PendingState etat = pmf.getPendingState();
-        if (pmf.getDateValidation() == null && etat.getId() == 1) {
-            emailService.writeEmailAttente(pmf);
-        } else {
-            if (etat.getId() == 2) {
-                mvFundService.addFromPending(saved);
-            }
-            emailService.writeEmailReponse(pmf);
+        if (pmf.getDateValidation() != null && etat.getId() == 2) {
+            mvFundService.addFromPending(saved);
         }
 
         return saved;
+    }
+
+    public String sendEmail(PendingMvFund pmf) {
+        PendingState etat = pmf.getPendingState();
+        if (pmf.getDateValidation() == null && etat.getId() == 1) {
+            return emailService.writeEmailAttente(pmf);
+        } else {
+            return emailService.writeEmailReponse(pmf);
+        }
     }
 
     public PendingMvFund cobaieAttente() {
