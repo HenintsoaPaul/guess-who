@@ -1,13 +1,12 @@
 import React, { useState, useCallback, memo, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import FavoriteButton from '../components/atoms/FavoriteButton';
 import { doc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import {FIRESTORE_DB } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
 
-const fetchWalletData = async (setCryptos, setWalletTotalPrice,user) => {
+const fetchWalletData = async (setCryptos,user) => {
   try {
     const walletDocRef = doc(FIRESTORE_DB, "wallets", user.id+"");
     const docSnap = await getDoc(walletDocRef);
@@ -15,14 +14,12 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice,user) => {
     if (docSnap.exists()) {
       const data = docSnap.data();
       setCryptos(data.wallets || []);
-      setWalletTotalPrice(data.totalPrice);
       console.log('Données du document:', data);
 
       const unsubscribe = onSnapshot(walletDocRef, (doc) => {
         if (doc.exists()) {
           const updatedData = doc.data();
           setCryptos(updatedData.wallets || []);
-          setWalletTotalPrice(updatedData.totalPrice);
           console.log('Données mises à jour:', updatedData);
         }
       });
@@ -31,7 +28,6 @@ const fetchWalletData = async (setCryptos, setWalletTotalPrice,user) => {
     } else {
       console.log('Aucun document trouvé');
       setCryptos([]);
-      setWalletTotalPrice(null);
     }
   } catch (error) {
     console.error('Erreur:', error);
@@ -128,9 +124,9 @@ const CoursActuelleScreen = () => {
 
   useEffect(() => {
     const fetchCryptos = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const unsubscribe = await fetchWalletData(setCryptos, setWalletTotalPrice,user);
+        const unsubscribe = await fetchWalletData(setCryptos,user);
         return () => {
           if (unsubscribe) unsubscribe();
         };

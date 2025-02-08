@@ -2,8 +2,8 @@ import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 import { AppContext } from '../../AppContext';
-import {NoFavoris} from '../components/molecules/NoFavoris';
 import { FIRESTORE_DB } from '../services/firebaseService';
+import NoFavoris from '../components/molecules/NoFavoris';
 
 
 const fetchWalletData = async (setFavorites,user) => {
@@ -88,6 +88,28 @@ const FavoritesScreen = () => {
   }
 
   console.log(favorites);
+
+  if( favorites === null||favorites.length === 0){
+    return (
+      <View style={styles.container}>
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <View style={styles.headerCell}>
+                <Text style={styles.headerText}>Image</Text>
+              </View>
+              <View style={styles.headerCell}>
+                <Text style={styles.headerText}>Cryptomonnaie</Text>
+              </View>
+              <View style={styles.headerCell}>
+                <Text style={styles.headerText}>Symbole</Text>
+              </View>
+            </View>
+            
+              <NoFavoris></NoFavoris>
+          </View>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View style={styles.table}>
