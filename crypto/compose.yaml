@@ -1,8 +1,16 @@
 version: '3.8'
+
+networks:
+  cloud_network:
+    external: true
+
+volumes:
+  pg_crypto_data:
+
 services:
-  db:
+  crypto_pg:
     image: postgres:15
-    container_name: pg-container
+    container_name: crypto_pg
     environment:
       POSTGRES_DB: crypto
       POSTGRES_USER: postgres
@@ -18,14 +26,16 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
-    container_name: crypto-container
+  crypto_app:
+    container_name: crypto_app
+    networks:
+      - cloud_network
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      API_URL: http://laravel_guess_who:8000
-      DB_URL: jdbc:postgresql://pg-container:5432/crypto
+      API_URL: http://identity_app:8000
+      DB_URL: jdbc:postgresql://crypto_pg:5432/crypto
       DB_PORT: 912
       DB_NAME: crypto
       DB_USERNAME: postgres
@@ -35,10 +45,3 @@ services:
     depends_on:
       db:
           condition: service_healthy
-
-volumes:
-  pg_crypto_data:
-
-networks:
-  app_network:
-    driver: bridge
