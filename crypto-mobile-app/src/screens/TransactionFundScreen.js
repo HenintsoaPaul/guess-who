@@ -4,6 +4,7 @@ import { FIRESTORE_DB, updateOrCreateMobDoc } from '../services/firebaseService'
 import { AppContext } from '../../AppContext';
 import {Picker} from '@react-native-picker/picker';
 import { collection, doc, setDoc, Timestamp } from 'firebase/firestore';
+import { colorsChart } from '../constants/ColorsChart';
 
 const sendTransactionData = async (amount, transactionType, user) => {
   try {
@@ -59,6 +60,7 @@ function TransactionFundScreen() {
 
         <View style={styles.selectorContainer}>
             <Picker
+            itemStyle={{color:colorsChart.primary,height:100}}
             selectedValue={transactionType}
             style={styles.transactionSelector}
             onValueChange={(itemValue) => setTransactionType(itemValue)}
@@ -79,7 +81,7 @@ function TransactionFundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#000',
+    backgroundColor:colorsChart.white,
     alignItems: 'center',
     padding: 16,
   },
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
   },
   formContainer:{
     width:'100%',
-    backgroundColor:'#000'
+    backgroundColor:colorsChart.white
   },
   fundLabel: {
     fontSize: 16,
@@ -123,6 +125,7 @@ const styles = StyleSheet.create({
   },
   transactionSelector: {
     width: '100%',
+    flex:1,
   },
   buttonContainer: {
     marginTop: 20,
