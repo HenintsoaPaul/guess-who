@@ -1,17 +1,22 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.purchase.PurchaseException;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.purchase.Purchase;
+import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.transaction.PurchaseRepository;
 import itu.crypto.repository.transaction.SaleDetailRepository;
 import itu.crypto.service.account.AccountService;
+import itu.crypto.service.transaction.wallet.WalletService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +32,7 @@ public class PurchaseService implements BaseService<Purchase> {
     private final PurchaseRepository purchaseRepository;
     private final AccountService accountService;
     private final SaleDetailRepository saleDetailRepository;
+    private final WalletService walletService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -79,10 +85,35 @@ public class PurchaseService implements BaseService<Purchase> {
         return purchaseRepository.findById(id);
     }
 
+    /**
+     * check crypto restant dans wallet avant validation de la vente
+     */
+    public void controllerAvantInsert(Purchase purchase) throws PurchaseException {
+        Wallet wallet = walletService.findByCryptoAndAccount(
+                purchase.getSaleDetail().getCrypto().getId(),
+                purchase.getAccountSeller().getId()
+        ).orElseThrow(
+                () -> new PurchaseException("Portfeuille vendeur introuvable.")
+        );
+
+        if (wallet.getQuantity() < purchase.getQuantityCrypto()) {
+            throw new PurchaseException("Crypto insuffisant dans le portefeuille.");
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Purchase save(Purchase purchase) throws PurchaseException {
+        controllerAvantInsert(purchase);
+
+        return purchaseRepository.save(purchase);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(Purchase purchase) {
         purchaseRepository.save(purchase);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteById(int id) {
         purchaseRepository.deleteById(id);
     }

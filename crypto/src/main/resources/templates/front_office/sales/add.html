@@ -1,123 +1,144 @@
 <!DOCTYPE html>
 <html
-  lang="fr"
-  class="light-style layout-menu-fixed"
-  data-theme="theme-default"
+        lang="fr"
+        class="light-style layout-menu-fixed"
+        data-theme="theme-default"
 >
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Mise En Vente</title>
     <div th:replace="~{layout/link_header}"></div>
-  </head>
+</head>
 
-  <body>
-    <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
+<body>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
         <!-- Menu -->
         <div th:replace="~{front_office/layout/menu}"></div>
 
         <!-- Layout container -->
         <div class="layout-page">
-          <div class="content-wrapper">
-            <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4">
-                <span class="text-muted fw-light">Vente /</span> Mise en vente
-              </h4>
+            <div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    <h4 class="fw-bold py-3 mb-4">
+                        <span class="text-muted fw-light">Vente /</span> Mise en vente
+                    </h4>
 
-              <div class="row">
-                <div class="col-xl">
-                  <div class="card mb-4">
-                    <div class="card-header">
-                      <h5 class="mb-0">Faire une mise en vente</h5>
-                    </div>
-                    <div class="card-body">
-                      <form
-                        th:action="@{/front-office/sales/save}"
-                        th:object="${saleFormData}"
-                        method="POST"
-                      >
-                        <input type="hidden" th:field="*{sale.account}" />
+                    <div class="row">
+                        <div class="col-xl">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Faire une mise en vente</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form
+                                            th:action="@{/front-office/sales/save}"
+                                            th:object="${saleFormData}"
+                                            method="POST"
+                                    >
+                                        <input type="hidden" th:field="*{sale.account}"/>
 
-                        <div class="mb-3">
-                          <label class="form-label"
-                            >Date de mise en vente :</label
-                          >
-                          <input
-                            class="form-control"
-                            id="dateSale"
-                            type="datetime-local"
-                            required
-                            th:field="*{sale.dateSale}"
-                          />
-                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label"
+                                            >Date de mise en vente :</label
+                                            >
+                                            <input
+                                                    class="form-control"
+                                                    id="dateSale"
+                                                    type="datetime-local"
+                                                    required
+                                                    th:field="*{sale.dateSale}"
+                                            />
+                                        </div>
 
-                        <div class="mb-3">
-                          <div id="filles_container">
-                            <div
-                              th:each="elmt, iterator : ${saleFormData.saleDetails}"
-                              th:id="'detail-' + iterator.index"
-                              class="fille_detail"
-                            >
-                              <div class="mb-3">
-                                <label th:for="'qte-' + iterator.index"
-                                  >Quantité à vendre :</label
-                                >
-                                <input
-                                  th:id="'qte-' + iterator.index"
-                                  th:field="*{saleDetails[__${iterator.index}__].quantity}"
-                                  class="form-control"
-                                  type="number"
-                                  min="0"
-                                  required
-                                />
-                              </div>
-                              <div class="mb-3">
-                                <label th:for="'cryptosList-' + iterator.index"
-                                  >Crypto :</label
-                                >
-                                <select
-                                  th:id="'cryptosList-' + iterator.index"
-                                  th:field="*{saleDetails[__${iterator.index}__].crypto}"
-                                  class="form-control"
-                                  required
-                                >
-                                  <option
-                                    th:each="elmt : ${cryptoCurrencies}"
-                                    th:value="${elmt.getId()}"
-                                    th:text="${elmt.getName()} + ' (' + ${elmt.getSymbol()} + ')'"
-                                    th:title="${elmt.getName()} + ' (' + ${elmt.getSymbol()} + ')'"
-                                  ></option>
-                                </select>
-                              </div>
+                                        <div class="mb-3">
+                                            <div id="filles_container">
+                                                <div
+                                                        th:each="elmt, iterator : ${saleFormData.saleDetails}"
+                                                        th:id="'detail-' + iterator.index"
+                                                        class="fille_detail mx-15"
+                                                >
+                                                    <hr>
+                                                    <div class="mb-3">
+                                                        <label th:for="'qte-' + iterator.index"
+                                                        >Quantité à vendre :</label
+                                                        >
+                                                        <input
+                                                                th:id="'qte-' + iterator.index"
+                                                                th:field="*{saleDetails[__${iterator.index}__].quantity}"
+                                                                class="form-control"
+                                                                type="number"
+                                                                min="0"
+                                                                required
+                                                        />
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label th:for="'cryptosList-' + iterator.index"
+                                                        >Crypto :</label
+                                                        >
+                                                        <select
+                                                                th:id="'cryptosList-' + iterator.index"
+                                                                th:field="*{saleDetails[__${iterator.index}__].crypto}"
+                                                                class="form-control"
+                                                                required
+                                                        >
+                                                            <option
+                                                                    th:each="elmt : ${cryptoCurrencies}"
+                                                                    th:value="${elmt.getId()}"
+                                                                    th:text="${elmt.getName()} + ' (' + ${elmt.getSymbol()} + ')'"
+                                                                    th:title="${elmt.getName()} + ' (' + ${elmt.getSymbol()} + ')'"
+                                                            ></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                id="addFilleBtn"
+                                        >
+                                            Ajouter Crypto
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-primary"
+                                        >
+                                            Valider
+                                        </button>
+                                    </form>
+                                    <div
+                                            th:if="${errorMessage}"
+                                            class="alert alert-danger mt-2"
+                                            role="alert"
+                                    >
+                                        <span th:text="${errorMessage}"></span>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-
-                        <button type="submit" class="btn btn-primary">
-                          Valider
-                        </button>
-                      </form>
-                      <div
-                        th:if="${errorMessage}"
-                        class="alert alert-danger mt-2"
-                        role="alert"
-                      >
-                        <span th:text="${errorMessage}"></span>
-                      </div>
                     </div>
-                  </div>
                 </div>
-              </div>
+
+                <div th:replace="~{back_office/layout/footer}"></div>
             </div>
-
-            <div th:replace="~{back_office/layout/footer}"></div>
-          </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div class="layout-overlay layout-menu-toggle"></div>
-    <div th:replace="~{layout/script}"></div>
-  </body>
+<div class="layout-overlay layout-menu-toggle"></div>
+<div th:replace="~{layout/script}"></div>
+</body>
+<script th:src="@{/js/henin/ajout-input-fille.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const containerName = 'filles_container';
+        const childrenClass = '.fille_detail';
+        const btnId = 'addFilleBtn';
+
+        document.getElementById(`${btnId}`).addEventListener('click', function () {
+            ajouterInputFille(`${containerName}`, `${childrenClass}`);
+        });
+    });
+</script>
 </html>

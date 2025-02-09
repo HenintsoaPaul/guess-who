@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import itu.crypto.dto.SaleFormData;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
 import itu.crypto.enums.CoursAnalysisType;
@@ -31,7 +31,6 @@ import jakarta.servlet.http.HttpSession;
 @RequiredArgsConstructor
 @RequestMapping("/front-office")
 public class FrontOfficeController {
-
 
     private final CoursService coursService;
     private final SaleService saleService;
@@ -83,8 +82,11 @@ public class FrontOfficeController {
     // Sales
     @GetMapping("/sales")
     public String goToList(Model model, HttpSession session) {
+        // todo: Uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // List<Sale> mySales = saleService.findAllByIdAccount(idAccount);
+
+        // todo: comment on production
         List<Sale> mySales = saleService.findAllByIdAccount(1);
 
         model.addAttribute("sales", mySales);
@@ -104,9 +106,11 @@ public class FrontOfficeController {
 
     @GetMapping("/sales/add")
     public String goToForm(Model model, HttpSession session) {
+        // todo: Uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
+        // todo: comment on production
         Account myAccount = accountService.findById(1).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
@@ -135,9 +139,11 @@ public class FrontOfficeController {
     
     @GetMapping("/depot/add")
     public String saveDepot(Model model, HttpSession session) {
+        // todo: uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
+        // todo: comment on production
         Account myAccount = accountService.findById(1).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
@@ -154,9 +160,11 @@ public class FrontOfficeController {
     
     @GetMapping("/retrait/add")
     public String saveRetrait(Model model, HttpSession session) {
+        // todo: uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
+        // todo: comment on production
         Account myAccount = accountService.findById(1).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
