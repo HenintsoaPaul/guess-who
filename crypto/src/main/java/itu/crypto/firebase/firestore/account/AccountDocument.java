@@ -12,6 +12,7 @@ public class AccountDocument implements TimestampedDocument {
     private Integer id;
     private String pseudo;
     private String accountImg;
+    private String fcmToken;
     private String email;
     private String password;
     private double fund;
@@ -22,6 +23,8 @@ public class AccountDocument implements TimestampedDocument {
     public AccountDocument(Account account) {
         this.id = account.getId();
         this.pseudo = account.getPseudo();
+        this.accountImg = account.getAccountImg();
+        this.fcmToken = account.getFcmToken();
         this.email = account.getEmail();
         this.password = account.getPassword();
         this.fund = account.getFund();
@@ -32,6 +35,7 @@ public class AccountDocument implements TimestampedDocument {
                 id,
                 pseudo,
                 accountImg,
+                fcmToken,
                 email,
                 password,
                 fund

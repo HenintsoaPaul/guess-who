@@ -24,6 +24,9 @@ public class Account {
     @Column(name = "account_img", length = 250)
     private String accountImg;
 
+    @Column(name = "fcm_token", length = 250)
+    private String fcmToken;
+
     @Column(name = "email", nullable = false, length = 250)
     private String email;
 
