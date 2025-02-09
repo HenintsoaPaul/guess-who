@@ -1,5 +1,6 @@
 package itu.crypto.controller;
 
+import itu.crypto.service.transaction.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -36,6 +37,7 @@ public class FrontOfficeController {
     private final SaleService saleService;
     private final AccountService accountService;
     private final CryptoRepository cryptoRepository;
+    private final WalletService  walletService;
 
     // Home page
     @GetMapping
@@ -170,5 +172,19 @@ public class FrontOfficeController {
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
         model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
         return "front_office/sales/add";
+    }
+
+    //Wallet
+    @GetMapping("/wallet")
+    public String goToWallet(Model model) {
+        // todo: uncomment on production
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+        // todo: comment on production
+        Account myAccount = accountService.findById(1).orElseThrow();
+
+        model.addAttribute("wallets", walletService.findAllByAccount(myAccount));
+        return "front_office/transaction/wallet/index";
     }
 }
