@@ -18,10 +18,10 @@
         [x] generer doc
             [x] cree un doc avec id null
             [x] send the doc with generated id for add
-    [ ] mob_crypto_fav
-        [] generer doc
-            [] recuperer fav (accountId,cryptoId)
-            [ ] si null
-                [ ] cree nouveau doc avec status true et id = null
-            [ ] sinon cloner le fav et maj le status = !status
-            [ ] send doc the the original id to update or add
+    [x] mob_crypto_fav
+        [x] generer doc
+            [x] recuperer fav (accountId,cryptoId)
+            [x] si null
+                [x] cree nouveau doc avec status true et id = null
+            [x] sinon cloner le fav et maj le status = !status
+            [x] send doc the the original id to update or add

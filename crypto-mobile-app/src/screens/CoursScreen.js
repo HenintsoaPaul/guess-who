@@ -26,7 +26,6 @@ const fetchCryptoData = async (setCryptos) => {
         updatedCryptos.push(doc.data());
       });
       setCryptos(updatedCryptos);
-      console.log('Crypto data:', updatedCryptos);
     });
     return unsubscribe;
   } catch (error) {

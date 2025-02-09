@@ -1,12 +1,15 @@
-import { View, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View,
+     StyleSheet } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import StyleText from '../atoms/StyleText';
 import { colorsChart } from '../../constants/ColorsChart';
 import { Image } from 'react-native-elements';
 import { collection, limit, orderBy, query, where , onSnapshot, getDocs} from 'firebase/firestore';
-import { FIRESTORE_DB } from '../../services/firebaseService';
+import { fetchDataFromFirebase, firebaseCollection, FIRESTORE_DB, updateOrCreateMobDoc } from '../../services/firebaseService';
 import { ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { AppContext } from '../../../AppContext';
+import FavButton from '../atoms/FavButton';
 
 const fetchCoursData = async (setCours,crypto) => {
   try {
@@ -19,7 +22,6 @@ const fetchCoursData = async (setCours,crypto) => {
         updatedCryptos.push(doc.data());
       });
       setCours(updatedCryptos);
-      console.log('Données mises à jour:', updatedCryptos);
     });
     return unsubscribe;
   } catch (error) {
@@ -28,13 +30,40 @@ const fetchCoursData = async (setCours,crypto) => {
   }
 };
 
+const unsubscribeFavorite = (favorite,setFavorite,setOnFav,user,crypto) => {
+  
+  const unsubscribe = onSnapshot(query(firebaseCollection('crypto_fav'),
+  where("account.id","==",user.id),where("crypto.id",'==',crypto.id)),(snapshot) => {
+    const uptFav = [];
+    snapshot.forEach((doc) => {
+      if(doc.data().onFav){
+        uptFav.push(doc.data());
+      }
+    });
+    if (uptFav.length > 0) {
+        setFavorite(uptFav[0]);
+    }
+    else {
+        setFavorite(null);
+    }
+    
+    if (favorite !== null) {
+        setOnFav(favorite.onFav);
+    }
+  });
+  return unsubscribe;
+}
+
 export default function CryptoFavCard({crypto}) {
   const [cours,setCours] = useState([]);
-  const [loading,setLoading] = useState(true);  
+  const [loading,setLoading] = useState(true);
+  const [favorite,setFavorite] = useState(null);
+  const [onFav ,setOnFav] = useState(false);
+  const {user} = useContext(AppContext)
   useEffect(()=>{
     async function fecthData(){
       try {
-        const unsubscribe = await fetchCoursData(setCours, crypto);
+        const unsubscribe = await fetchCoursData(setCours, crypto);        
         return () => {
           if (unsubscribe) unsubscribe();
         };
@@ -44,8 +73,64 @@ export default function CryptoFavCard({crypto}) {
         setLoading(false);
       }
     } 
+    const fetchFavoris = async () => {
+        setLoading(true);
+        try {        
+        const data = await fetchDataFromFirebase(
+            "crypto_fav",
+            (cll) => {
+            return query(cll,where("account.id","==",user.id),where("crypto.id",'==',crypto.id));
+            }
+        );
+        if (data.length > 0) {
+            setFavorite(data[0]);
+        }
+        else (
+            setFavorite(null)
+        )
+        if (favorite !== null) {
+            setOnFav(favorite.onFav);
+        }
+        const unsubscribe = unsubscribeFavorite(favorite,setFavorite,setOnFav,user,crypto);
+        return () => {
+            if(unsubscribe) unsubscribe();
+        };
+        } catch (error) {
+            alert(error.message);
+        } finally {
+        setLoading(false);
+        }
+    };
+
     fecthData();
+    fetchFavoris();
   },[]);
+
+
+  const updateFav = () =>{
+    if (favorite === null) {
+        const favData = {
+            id:null,
+            account : {id:user.id},
+            onFav: true,
+            dateCryptoFav:new Date().toISOString(),
+            crypto: {id:crypto.id}
+        }
+            updateOrCreateMobDoc("crypto_fav",favData,{})
+    }
+    else {
+        const favData = {
+            onFav: !favorite.onFav,
+            dateCryptoFav:new Date().toISOString()
+        }
+            updateOrCreateMobDoc("crypto_fav",favorite,favData)
+    }
+    setOnFav(!onFav)
+  }
+
+  const favView = ()=>{
+        return <FavButton style={styles.favContainer} onPress={updateFav} onFav={onFav}></FavButton>
+  }
 
   return (
     <View style={styles.container}>
@@ -69,9 +154,9 @@ export default function CryptoFavCard({crypto}) {
             </View>
           )
         }
-        <View style={{justifyContent:'center',alignItems:'center',backgroundColor:colorsChart.white,justifyContent:'center',padding:10,marginLeft:10,borderLeftWidth:2}}>
-            <FontAwesome color={colorsChart.red} name='heart'size={20}></FontAwesome>
-        </View>
+        
+        {favView()}
+        
       </View>
     </View>
   )
@@ -89,5 +174,15 @@ const styles = StyleSheet.create({
     ,detail :{
       flex:1,
       flexDirection:'column',
+    }
+    ,favContainer : {
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:colorsChart.white,
+        justifyContent:'center',
+        paddingLeft:10,
+        marginLeft:10,
+        borderLeftWidth:3
+        ,borderColor:colorsChart.primary
     }
 });

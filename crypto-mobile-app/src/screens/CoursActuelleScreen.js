@@ -1,6 +1,5 @@
 import React, { useState, useCallback, memo, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import FavoriteButton from '../components/atoms/FavoriteButton';
 import { doc, updateDoc, getDocs, onSnapshot , collection,orderBy,query,limit} from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import {FIRESTORE_DB } from '../services/firebaseService';
@@ -181,10 +180,7 @@ const CoursActuelleScreen = () => {
         <Text style={styles.cellText}>{item.pu} $</Text>
       </View>
       <View style={styles.cell}>
-        <FavoriteButton
-          isFavorite={favoritesList.some(fav => fav.cryptoName === item.crypto.name)} // Vérifie si la crypto est dans les favoris
-          onPress={() => toggleFavorite(index)}
-        />
+        
       </View>
     </View>
   ));
