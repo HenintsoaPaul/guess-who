@@ -1,9 +1,13 @@
 import React, { useEffect, useContext } from 'react';
-import { View, StyleSheet,Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { AppContext } from '../../../AppContext';
+import EditIcon from '../atoms/EditIcon';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfilePicture = () => {
   const { image, setImage, user } = useContext(AppContext);
+  const navigation = useNavigation();
+
   useEffect(() => {
     try {
       const profile = user.account_img;
@@ -17,12 +21,16 @@ const ProfilePicture = () => {
   }, []);
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer} >
+      <View style={styles.imageContainer}>
         <Image
           source={image ? { uri: image } : require('../../../assets/profile.jpg')}
           style={styles.image}
         />
       </View>
+
+      <TouchableOpacity style={styles.editButton} onPress={() => navigation.push('ProfileEdit')}>
+        <EditIcon />
+      </TouchableOpacity>
     </View>
   );
 };

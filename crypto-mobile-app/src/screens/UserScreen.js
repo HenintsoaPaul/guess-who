@@ -10,7 +10,6 @@ import { AppContext } from '../../AppContext';
 import UserButton from '../components/atoms/UserButton';
 import { LinearGradient } from "expo-linear-gradient";
 
-
 export default function UserScreen() {
   const {user,logOut} = useContext(AppContext);
   const navigation  = useNavigation();

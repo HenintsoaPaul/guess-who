@@ -11,7 +11,7 @@
 
 -npm install axios form-data crypto-js
 -mila asina image ilay bitcoin
-
+-npm install react-native-reanimated
 
 # Installation de Firebase CLI
 npm install -g firebase-tools
