@@ -3,6 +3,7 @@ CREATE TABLE crypto
     id_crypto SERIAL,
     name      VARCHAR(250) NOT NULL,
     symbol    VARCHAR(5)   NOT NULL,
+    logo      VARCHAR(250),
     PRIMARY KEY (id_crypto),
     UNIQUE (name),
     UNIQUE (symbol)
