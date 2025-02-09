@@ -1,5 +1,6 @@
 package itu.crypto.controller;
 
+import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.service.transaction.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 
@@ -184,7 +185,12 @@ public class FrontOfficeController {
         // todo: comment on production
         Account myAccount = accountService.findById(1).orElseThrow();
 
+        List<Wallet> wallets = walletService.findAllByAccount(myAccount);
+        int nbTotal = wallets.stream().mapToInt(Wallet::getQuantity).sum();
+
         model.addAttribute("wallets", walletService.findAllByAccount(myAccount));
-        return "front_office/transaction/wallet/index";
+        model.addAttribute("nbTotal", nbTotal);
+        model.addAttribute("user", myAccount.getPseudo() + "(" + myAccount.getEmail() + ")");
+        return "front_office/wallet/index";
     }
 }
