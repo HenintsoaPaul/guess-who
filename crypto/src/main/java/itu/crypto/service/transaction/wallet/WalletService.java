@@ -1,5 +1,6 @@
 package itu.crypto.service.transaction.wallet;
 
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.transaction.wallet.WalletRepository;
@@ -26,5 +27,9 @@ public class WalletService implements BaseService<Wallet> {
 
     public Optional<Wallet> findByCryptoAndAccount(Integer idCrypto, Integer idAccount) {
         return walletRepository.findByCryptoAndAccount(idCrypto, idAccount);
+    }
+
+    public List<Wallet> findAllByAccount(Account myAccount) {
+        return walletRepository.findAllByAccount(myAccount);
     }
 }
