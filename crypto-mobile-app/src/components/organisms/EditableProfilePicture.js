@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FormData from 'form-data';
 import CryptoJS from 'crypto-js';
 import { AppContext } from '../../../AppContext';
 import { FontAwesome } from '@expo/vector-icons';
-import { doc ,updateDoc} from 'firebase/firestore';
-import { FIRESTORE_DB } from '../../services/firebaseService';
+import { collection, doc ,getDoc,query,updateDoc, where} from 'firebase/firestore';
+import { cloneMobData, fetchDataFromFirebase, FIRESTORE_DB } from '../../services/firebaseService';
+import StyleText from '../atoms/StyleText';
 
 const CLOUDINARY_CONFIG = {
   cloudName: 'dulx9capq',
@@ -15,26 +16,7 @@ const CLOUDINARY_CONFIG = {
   apiSecret: 'k7dnDcMEbe24SF1jNB3YSPM1krA'
 };
 
-const EditableProfilePicture = ({editable=false}) => {
-  const { image, setImage, user ,refreshUser} = useContext(AppContext);
-  const [uploading, setUploading] = useState(false);
-  const [loading,setLoading] = useState(false)
-  const updateUser = async (imageUrl) => {
-      setLoading(true)
-      try {
-        const accountRef = doc(FIRESTORE_DB, "account", user.id+"");  
-        await updateDoc(accountRef, {
-          profilImg : imageUrl
-        });
-        await refreshUser();
-      } catch (error) {
-        console.error('Erreur lors de la mise à jour de la liste des favoris dans Firestore:', error);
-      }
-      finally {
-        setLoading(false)
-      }
-    };
-
+const EditableProfilePicture = ({image,setImage,uploading=false}) => {
   useEffect(() => {
     requestPermissions();
   }, []);
@@ -42,42 +24,6 @@ const EditableProfilePicture = ({editable=false}) => {
   const requestPermissions = async () => {
     await ImagePicker.requestCameraPermissionsAsync();
     await ImagePicker.requestMediaLibraryPermissionsAsync();
-  };
-
-  const generateSignature = () => {
-    const timestamp = Date.now().toString();
-    const toSign = `timestamp=${timestamp}${CLOUDINARY_CONFIG.apiSecret}`;
-    return CryptoJS.SHA1(toSign).toString();
-  };
-
-  const uploadImage = async (imageAsset) => {
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri: imageAsset.uri,
-        type: 'image/jpeg',
-        name: `profile-${user.id}.jpg`,
-      });
-      formData.append('api_key', CLOUDINARY_CONFIG.apiKey);
-      formData.append('timestamp', Date.now().toString());
-      formData.append('signature', generateSignature());
-
-      const response = await axios.post(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
-
-      console.log('Image uploadée avec succès:', response.data);
-      return response.data.secure_url;
-    } catch (error) {
-      console.error('Erreur d\'upload:', error);
-      Alert.alert('Erreur', 'Impossible d\'uploader l\'image');
-      return null;
-    } finally {
-      setUploading(false);
-    }
   };
 
   const pickImage = () => {
@@ -115,30 +61,30 @@ const EditableProfilePicture = ({editable=false}) => {
   const handleImagePick = async (result) => {
     if (!result.canceled) {
       try {
-        const imageUrl = await uploadImage(result.assets[0]);
-        if (imageUrl) {
-          setImage(result.assets[0].uri);
-          console.log('URL de l\'image:', imageUrl);
-          updateUser(imageUrl)
-        }
+        const uri = result.assets[0].uri;
+        setImage(uri)        
       } catch (error) {
-        alert("Upload Failded ! :"+error.message)
+        alert("Picking image Failded ! :"+error.message)
       }
     }
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.imageContainer} onPress={pickImage} disabled={editable} >
+      <StyleText fs={20} style={{marginBottom: 10}}> Profil Preview </StyleText>
+      <TouchableOpacity style={styles.imageContainer} onPress={pickImage} >
         <Image
           source={image ? { uri: image } : require('../../../assets/profile.jpg')}
           style={styles.image}
         />
-        <View style={styles.overlay}>
-          <FontAwesome name='pencil' size={32} style={styles.overlaytext}/>
+        {uploading == true ? (
+          <View style={styles.overlay}>
+          <ActivityIndicator color={'#111'} size={'large'} />
         </View>
+        ) : (<></>)}
+        
+        
       </TouchableOpacity>
-      {uploading && <Text style={styles.uploadingText}>Upload en cours...</Text>}
     </View>
   );
 };
@@ -150,6 +96,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 180,
     height: 180,
+    gap:15
   },
   imageContainer: {
     width: 160,

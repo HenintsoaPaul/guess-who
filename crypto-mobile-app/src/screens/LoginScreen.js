@@ -6,6 +6,7 @@ import {
   ImageBackground,
   ScrollView,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import React, { useContext, useState } from 'react';
 import  * as LoginService from '../services/loginService';
@@ -14,6 +15,8 @@ import Svg, { Path } from "react-native-svg";
 import { AppContext } from '../../AppContext';
 import { colorsChart } from "../constants/ColorsChart";
 import { useNavigation } from "@react-navigation/native";
+import { Button } from "react-native-elements";
+import { ActivityIndicator } from "react-native";
 
 const LoginScreen = () => {
   const [email,setEmail] = useState("rocruxappafra-4143@yopmail.com");
@@ -24,7 +27,7 @@ const LoginScreen = () => {
   const {logIn} = useContext(AppContext)
   const signIn = async() => {
     setLoading(true)
-    try {
+    try {      
       const userLog = await LoginService.logInWithMailAndPassword(email,password)
       logIn(userLog)
       navigation.navigate('Profil')
@@ -40,22 +43,25 @@ const LoginScreen = () => {
   }
 
   return (
+    <SafeAreaView style={{backgroundColor:colorsChart.dark}}>
+
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
+
       {/* Header Section */}
       <ImageBackground
         source={{
           uri: "https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/img/curved-images/curved14.jpg",
         }}
         style={styles.headerContainer}
-      >
+        >
         <LinearGradient
           colors={["rgba(58,65,110,255)", "rgba(25,28,48,255)"]}
           style={styles.headerOverlay}
-        >
+          >
           <View style={styles.logoContainer}>
             <Svg width={128} height={128} viewBox="0 0 16 16" fill="#fff">
               <Path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
@@ -74,6 +80,8 @@ const LoginScreen = () => {
       {/* Login Form */}
       <View style={styles.formContainer}>
         <View style={styles.card}>
+          <View style={styles.inpuContainer}>
+
           <TextInput
             style={styles.input}
             placeholder="Adresse email"
@@ -82,7 +90,7 @@ const LoginScreen = () => {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
-          />
+            />
 
           <TextInput
             style={styles.input}
@@ -92,25 +100,28 @@ const LoginScreen = () => {
             onChangeText={setPassword}
             secureTextEntry
             autoCapitalize="none"
-          />
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={signIn}
-            disabled={loading}
-          >
-            <Text style={styles.buttonText}>Se connecter</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.signupLink}
-            onPress={() => navigation.navigate("Signup")}
-          >
-            {/* <Text style={styles.signupText}>
-              Vous n'avez pas encore de compte ?{" "}
-              <Text style={styles.signupHighlight}>Créer un compte</Text>
-            </Text> */}
-          </TouchableOpacity>
+            />
+          </View>
+          <View>
+            
+            {loading == true ? (
+              <TouchableOpacity style={styles.button}>
+                <ActivityIndicator size="large" color={colorsChart.white} />
+              </TouchableOpacity>
+            ) : 
+            (
+              <Button 
+              loading={loading} 
+              buttonStyle={styles.button} 
+                type="clear" 
+                loadingStyle={[styles.buttonText,]} 
+                titleStyle={styles.buttonText}  
+                title={'Se Connecter'} 
+                onPress={signIn}
+                />
+                
+              )}
+            </View>
         </View>
       </View>
 
@@ -121,6 +132,7 @@ const LoginScreen = () => {
         </Text>
       </View>
     </ScrollView>
+  </SafeAreaView>
   );
 };
 
@@ -148,6 +160,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: "OpenSans-Bold",
   },
+  inpuContainer: {
+   marginBottom: 10,
+  },
   headerSubtitle: {
     // fontSize: 16,
     color: "rgba(255,255,255,0.8)",
@@ -172,10 +187,10 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     borderWidth: 1,
-    borderColor: "#e9ecef",
+    borderColor: colorsChart.gray,
     borderRadius: 12,
     paddingHorizontal: 15,
-    marginBottom: 20,
+    marginBottom: 10,
     // fontSize: 16,
     backgroundColor: colorsChart.light,
   },
@@ -189,7 +204,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color:colorsChart.white,
-    // fontSize: 16,
+    fontSize: 16,
     fontWeight: "600",
   },
   signupLink: {

@@ -5,7 +5,7 @@ import { colorsChart } from '../../constants/ColorsChart';
 import { Image } from 'react-native-elements';
 import { collection, limit, orderBy, query, where , onSnapshot, getDocs} from 'firebase/firestore';
 import { FIRESTORE_DB } from '../../services/firebaseService';
-import { ActivityIndicator } from 'react-native-web';
+import { ActivityIndicator } from 'react-native';
 
 const fetchCoursData = async (setCours,crypto) => {
   try {
@@ -31,16 +31,19 @@ export default function CryptoCard({crypto}) {
   const [cours,setCours] = useState([]);
   const [loading,setLoading] = useState(true);  
   useEffect(()=>{
-    try {
-      const unsubscribe = fetchCoursData(setCours, crypto);
-      return () => {
-        if (unsubscribe) unsubscribe();
-      };
-    } catch (error) {
-      console.error('Erreur lors du cours de la cryptomonnaie : '+crypto.name, error);
-    } finally {
-      setLoading(false);
-    }
+    async function fecthData(){
+      try {
+        const unsubscribe = await fetchCoursData(setCours, crypto);
+        return () => {
+          if (unsubscribe) unsubscribe();
+        };
+      } catch (error) {
+        console.error('Erreur lors du cours de la cryptomonnaie : '+crypto.name, error);
+      } finally {
+        setLoading(false);
+      }
+    } 
+    fecthData();
   },[]);
 
   return (

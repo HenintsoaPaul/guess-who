@@ -1,15 +1,13 @@
-import React, { useState, useCallback, memo, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import FavoriteButton from '../components/atoms/FavoriteButton';
-import {onSnapshot , collection, getDocs, query} from 'firebase/firestore';
+import React, { useState,useEffect,} from 'react';
+import { View, Text, StyleSheet, TextInput,FlatList, ActivityIndicator } from 'react-native';
+import {onSnapshot , collection, getDocs} from 'firebase/firestore';
 import {FIRESTORE_DB } from '../services/firebaseService';
-import { AppContext } from '../../AppContext';
 import CryptoCard from '../components/molecules/CryptoCard';
 import { colorsChart } from '../constants/ColorsChart';
 import { LinearGradient } from "expo-linear-gradient";
 
 
-const fetchCryptoData = async (setCryptos,setLoading) => {
+const fetchCryptoData = async (setCryptos) => {
   try {
     const cryptoRef = collection(FIRESTORE_DB, "crypto");
     const querySnapshot = await getDocs(cryptoRef);
@@ -18,14 +16,14 @@ const fetchCryptoData = async (setCryptos,setLoading) => {
       cryptos.push(doc.data());
     });
     
-    // setCryptos(cryptos);
+    setCryptos(cryptos);
     const unsubscribe = onSnapshot(cryptoRef,(snapshot) => {
       const updatedCryptos = [];
       snapshot.forEach((doc) => {
         updatedCryptos.push(doc.data());
       });
       setCryptos(updatedCryptos);
-      console.log('Données mises à jour:', updatedCryptos);
+      console.log('Crypto data:', updatedCryptos);
     });
     return unsubscribe;
   } catch (error) {
@@ -33,7 +31,6 @@ const fetchCryptoData = async (setCryptos,setLoading) => {
     throw error;
   }
 };
-
 const CoursScreen = () => {
   const [cryptos, setCryptos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +40,7 @@ const CoursScreen = () => {
     setLoading(true);
     const fetchCryptos = async () => {
       try {
-        const unsubscribe = await fetchCryptoData(setCryptos,setLoading);
+        const unsubscribe = await fetchCryptoData(setCryptos);
         return () => {
           if (unsubscribe) unsubscribe();
         };
@@ -103,7 +100,9 @@ const CoursScreen = () => {
                     flex:1,
                 }}
                 renderItem={({ item, index }) => (
+                  <>
                     <CryptoCard key={index} crypto={item}></CryptoCard>
+                  </>
                 )}
             />
         </LinearGradient>
@@ -116,7 +115,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    // alignItems: 'center',
     backgroundColor:colorsChart.light,
   },
   header: {

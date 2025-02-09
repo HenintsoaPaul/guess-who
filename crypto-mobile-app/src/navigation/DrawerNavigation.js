@@ -15,6 +15,7 @@ import EditUserScreen from '../screens/EditUserScreen';
 import AchatVenteScreen from '../screens/AchatVenteScreen';
 import { LinearGradient } from "expo-linear-gradient";
 import CoursScreen from '../screens/CoursScreen';
+import PictureEditScreen from '../screens/PictureEditScreen';
 
 
 const SCREEN_LABELS = {
@@ -62,6 +63,15 @@ const DrawerNavigation = () => {
           <Drawer.Screen
             name="ProfileEdit"
             component={EditUserScreen}
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>📝</Text>
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="PictureEdit"
+            component={PictureEditScreen}
             options={{
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>📝</Text>

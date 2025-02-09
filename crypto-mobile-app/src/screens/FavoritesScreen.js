@@ -1,39 +1,25 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import {  onSnapshot, query, where } from 'firebase/firestore';
 import { AppContext } from '../../AppContext';
-import { FIRESTORE_DB } from '../services/firebaseService';
+import { fetchDataFromFirebase, firebaseCollection } from '../services/firebaseService';
 import NoFavoris from '../components/molecules/NoFavoris';
+import CryptoCard from '../components/molecules/CryptoCard';
 
-
-const fetchWalletData = async (setFavorites,user) => {
-  try {
-    const Listfav = doc(FIRESTORE_DB, "favorites", user.id+"");
-    const docSnap = await getDoc(Listfav);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setFavorites(data.favorites || []);
-      console.log('Données du document:', data);
-
-      const unsubscribe = onSnapshot(Listfav, (doc) => {
-        if (doc.exists()) {
-          const updatedData = doc.data();
-          setFavorites(updatedData.favorites || []);
-          console.log('Données mises à jour:', updatedData);
-        }
-      });
-
-      return unsubscribe;
-    } else {
-      console.log('Aucun document trouvé');
-      setFavorites([]);
-    }
-  } catch (error) {
-    console.error('Erreur:', error);
-    throw error;
-  }
-};
+const unsubscribeFavorites = (setFavorites,user) => {
+  
+  const unsubscribe = onSnapshot(query(firebaseCollection('crypto_fav'),where('account.id',"==",user.id)),(snapshot) => {
+    const uptFav = [];
+    snapshot.forEach((doc) => {
+      if(doc.data().onFav){
+        uptFav.push(doc.data());
+      }
+    });
+    setFavorites(uptFav);
+    console.log('Favoris a jour:', uptFav);
+  });
+  return unsubscribe;
+}
 
 const FavoritesScreen = () => {
   const [favorites, setFavorites] = useState([]);
@@ -43,13 +29,21 @@ const FavoritesScreen = () => {
   const {user} = useContext(AppContext);
 
   useEffect(() => {
-    const fetchFavoris = async () => {
+    const fetchFavoris = async (user) => {
+      console.log("USER: ",user);
+      
+      setLoading(true);
       try {
-        setLoading(true);
-        setError(null);
-        const unsubscribe = await fetchWalletData(setFavorites,user);
+        const data = await fetchDataFromFirebase(
+          "crypto_fav",
+          (cll) => {
+            return query(cll,where("account.id","==",user.id),where("onFav",'==',true));
+          }
+        );        
+        setFavorites(data);
+        const unsubscribe = unsubscribeFavorites(setFavorites,user);
         return () => {
-          if (unsubscribe) unsubscribe();
+          unsubscribe();
         };
       } catch (error) {
         setError(error.message);
@@ -57,15 +51,15 @@ const FavoritesScreen = () => {
         setLoading(false);
       }
     };
-    fetchFavoris();
-  }, [user]);
+    fetchFavoris(user);
+  }, []);
 
   const filteredFavoris = useMemo(
     () =>
       favorites.filter(
         (favorite) =>
-          favorite.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
-          favorite.symbol.toLowerCase().includes(filterText.toLowerCase())
+          favorite.crypto.name.toLowerCase().includes(filterText.toLowerCase()) ||
+          favorite.crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
       ),
     [favorites, filterText]
   );
@@ -92,59 +86,17 @@ const FavoritesScreen = () => {
   if( favorites === null||favorites.length === 0){
     return (
       <View style={styles.container}>
-        <View style={styles.table}>
-          <View style={styles.tableHeader}>
-            <View style={styles.headerCell}>
-                <Text style={styles.headerText}>Image</Text>
-              </View>
-              <View style={styles.headerCell}>
-                <Text style={styles.headerText}>Cryptomonnaie</Text>
-              </View>
-              <View style={styles.headerCell}>
-                <Text style={styles.headerText}>Symbole</Text>
-              </View>
-            </View>
-            
-              <NoFavoris></NoFavoris>
-          </View>
+        <NoFavoris></NoFavoris>
       </View>
     );
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.table}>
-        <View style={styles.tableHeader}>
-          <View style={styles.headerCell}>
-              <Text style={styles.headerText}>Image</Text>
-            </View>
-            <View style={styles.headerCell}>
-              <Text style={styles.headerText}>Cryptomonnaie</Text>
-            </View>
-            <View style={styles.headerCell}>
-              <Text style={styles.headerText}>Symbole</Text>
-            </View>
-          </View>
-          
-          
+    <View style={styles.container}>     
           {filteredFavoris.map((favorite, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.tableRow}
-            >
-              <View style={styles.cell}>
-                <Text style={styles.cellText}></Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellText}>{favorite.cryptoName}</Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellText}>{favorite.symbol}</Text>
-              </View>
-            </TouchableOpacity>
+            <CryptoCard key={index} crypto={favorite.crypto}></CryptoCard>
             ))
           }
 
-        </View>
     </View>
   );
 };

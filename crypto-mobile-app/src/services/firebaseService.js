@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth} from "firebase/auth";
-import { getFirestore ,collection,getDocs, query} from "firebase/firestore";
+import { getFirestore ,collection,getDocs, query, where} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDEk0CkCtDN4Zd77dMAUykYdFSi0iflE_8",
@@ -28,8 +28,9 @@ export const fetchDataFromFirebase = async (collectionName, queryBuilder) => {
     if (queryBuilder !== null) {
       q = queryBuilder(fcollection);
     }
+    
     return await getDocs(q)
-      .then(querySnapshot => {
+    .then(querySnapshot => {
         if (!querySnapshot.empty) {
           return querySnapshot.docs.map(doc => ({
             docId: doc.id,
@@ -47,6 +48,71 @@ export const fetchDataFromFirebase = async (collectionName, queryBuilder) => {
   }
 };
 
+export function cloneMobData(obj, excludedKeys = []) {
+  excludedKeys.push('docId');  
+  return cloneData(obj, excludedKeys);
+}
+
+export function cloneData(obj, excludedKeys = []) {
+  const clonedObj = JSON.parse(JSON.stringify(obj));
+  if (Array.isArray(clonedObj)) {
+    return clonedObj.map(item => removeExcludedKeys(item, excludedKeys));
+  } else {
+    return removeExcludedKeys(clonedObj, excludedKeys);
+  }
+}
+
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+export const updateOrCreateMobDocWithCheck = async (baseCollection,queryCheck, mobObj, updateData) => {
+    const data = fetchDataFromFirebase(baseCollection,queryCheck);
+    if(data.length > 0){
+      console.log("data exist");
+      
+      return updateOrCreateMobDoc(baseCollection,data[0],updateData);
+    }
+    console.log("no data fetch");
+    
+    return updateOrCreateMobDoc(baseCollection,mobObj,updateData);
+}
+
+export const updateOrCreateMobDoc = async (baseCollection, mobObj, updateData) => {
+    const mobCollection = "mob_" + baseCollection;
+    let mobRef;
+    if (mobObj.docId) {
+        mobRef = doc(FIRESTORE_DB, mobCollection, mobObj.docId);
+    } else {
+        mobRef = doc(collection(FIRESTORE_DB, mobCollection));
+    }
+    const accountDoc = await getDoc(mobRef);
+    let mobClone = cloneMobData(mobObj);
+    if (updateData !== null && updateData !== undefined) {
+        Object.assign(mobClone, updateData);
+    }
+    if (accountDoc.exists()) {
+        console.log("Existing");
+        await updateDoc(mobRef, {
+            ...mobClone
+        });
+    } else {
+        console.log("Doesn't Exist");
+        await setDoc(mobRef, {
+            ...mobClone,
+        });
+    }
+}
+
+
+function removeExcludedKeys(obj, excludedKeys) {
+  if (typeof obj !== 'object' || obj === null) {
+    return obj;
+  }
+  return Object.keys(obj).reduce((acc, key) => {
+    if (!excludedKeys.includes(key)) {
+      acc[key] = obj[key];
+    }
+    return acc;
+  }, Array.isArray(obj) ? [] : {});
+}
 export const extractDataFromPromise = async (promise) => {
   await promise
     .then((data)=>{

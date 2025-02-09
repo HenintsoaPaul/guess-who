@@ -9,7 +9,6 @@ export async function findAccountByMail(email) {
             return query(accountCollection, where('email', '==', email));
         }
     );
-    console.log(usersData);
     
     if (usersData.length === 0) {
         return null;
@@ -18,7 +17,7 @@ export async function findAccountByMail(email) {
 }
 
 export async function logInWithMailAndPassword(email,password){
-    try {
+    try {        
         const user = await findAccountByMail(email)
         if(user === null || user === undefined){
             throw new Error("Authetification failed")
@@ -31,3 +30,5 @@ export async function logInWithMailAndPassword(email,password){
         throw error;
     }
 }
+
+
