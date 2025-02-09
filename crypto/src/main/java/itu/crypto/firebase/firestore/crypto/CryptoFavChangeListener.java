@@ -20,7 +20,12 @@ public class CryptoFavChangeListener extends FirestoreChangeListener<CryptoFav, 
 
     @Override
     protected CryptoFav toEntity(CryptoFavDocument document) {
-        return document.toEntity();
+        CryptoFav entity = document.toEntity();
+
+        entity.setCrypto(cryptoFavService.findCryptoById(document.getCrypto().getId()));
+        entity.setAccount(cryptoFavService.findAccountById(document.getAccount().getId()));
+
+        return entity;
     }
 
     @Override

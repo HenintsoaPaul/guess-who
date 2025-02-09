@@ -2,6 +2,7 @@ package itu.crypto.controller;
 
 import lombok.RequiredArgsConstructor;
 
+
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import jakarta.servlet.http.HttpSession;
 @RequiredArgsConstructor
 @RequestMapping("/front-office")
 public class FrontOfficeController {
+
 
     private final CoursService coursService;
     private final SaleService saleService;

@@ -22,7 +22,7 @@ public class Account {
     private String pseudo;
 
     @Column(name = "account_img", length = 250)
-    private String account_img;
+    private String accountImg;
 
     @Column(name = "email", nullable = false, length = 250)
     private String email;

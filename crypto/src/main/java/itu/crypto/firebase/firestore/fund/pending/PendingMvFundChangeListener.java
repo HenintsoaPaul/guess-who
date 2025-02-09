@@ -21,7 +21,13 @@ public class PendingMvFundChangeListener extends FirestoreChangeListener<Pending
 
     @Override
     protected PendingMvFund toEntity(PendingMvFundDocument document) {
-        return document.toEntity();
+        PendingMvFund pmf = document.toEntity();
+
+        pmf.setPendingState(pendingMvFundService.findPendingStateById(pmf.getPendingState().getId()));
+        pmf.setAccount(pendingMvFundService.findAccountById(pmf.getAccount().getId()));
+        pmf.setTypeMvFund(pendingMvFundService.findTypeMvFundById(pmf.getTypeMvFund().getId()));
+
+        return pmf;
     }
 
     @Override

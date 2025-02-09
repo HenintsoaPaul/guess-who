@@ -1,8 +1,12 @@
 package itu.crypto.service.transaction;
 
+import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.account.Account;
 import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.transaction.PurchaseRepository;
+import itu.crypto.repository.transaction.SaleDetailRepository;
+import itu.crypto.service.account.AccountService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -21,6 +25,8 @@ import java.util.Optional;
 public class PurchaseService implements BaseService<Purchase> {
 
     private final PurchaseRepository purchaseRepository;
+    private final AccountService accountService;
+    private final SaleDetailRepository saleDetailRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -79,5 +85,13 @@ public class PurchaseService implements BaseService<Purchase> {
 
     public void deleteById(int id) {
         purchaseRepository.deleteById(id);
+    }
+
+    public Account findAccountById(Integer id) {
+        return accountService.findById(id).orElseThrow();
+    }
+
+    public SaleDetail findSaleDetailById(Integer id) {
+        return saleDetailRepository.findById(id).orElseThrow();
     }
 }

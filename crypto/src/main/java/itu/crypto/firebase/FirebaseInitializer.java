@@ -98,7 +98,8 @@ public class FirebaseInitializer {
                 null,
                 cryptoRepository.findAll().get(0),
                 accountRepository.findAll().get(0),
-                zao
+                zao,
+                true
         ));
 
         CryptoFav w = cryptoFavRepository.findById(1).orElse(null);

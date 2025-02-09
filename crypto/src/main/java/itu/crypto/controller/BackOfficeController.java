@@ -20,6 +20,7 @@ import itu.crypto.dto.commission.CommissionTypeAnalysis;
 import itu.crypto.entity.commission.CommissionPurchase;
 import itu.crypto.entity.commission.CommissionRate;
 import itu.crypto.entity.cours.Cours;
+
 import itu.crypto.entity.fund.PendingMvFund;
 import itu.crypto.entity.fund.PendingMvFundException;
 import itu.crypto.entity.wallet.MvWallet;
@@ -29,6 +30,7 @@ import itu.crypto.service.CoursService;
 import itu.crypto.service.account.AccountOverviewService;
 import itu.crypto.service.transaction.CommissionPurchaseService;
 import itu.crypto.service.transaction.CommissionRateService;
+
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import itu.crypto.service.transaction.wallet.MvWalletService;
 
@@ -46,6 +48,7 @@ public class BackOfficeController {
     private final CommissionPurchaseService commissionPurchaseService;
     private final AccountOverviewService accountOverviewService;
     private final MvWalletService mvWalletService;
+
     private final PendingMvFundService pendingMvFundService;
 
     // Cours Crypto
@@ -219,6 +222,7 @@ public class BackOfficeController {
     public String goToCryptoGraphe(Model model) {
         return "/back_office/cryptoGraphe";
     }
+
 
     // Validation transaction 
      @GetMapping("/transactions")
