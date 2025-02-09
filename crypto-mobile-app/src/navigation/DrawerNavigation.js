@@ -13,6 +13,10 @@ import { AppContext } from '../../AppContext';
 import { colorsChart } from '../constants/ColorsChart';
 import EditUserScreen from '../screens/EditUserScreen';
 import AchatVenteScreen from '../screens/AchatVenteScreen';
+import { LinearGradient } from "expo-linear-gradient";
+import CoursScreen from '../screens/CoursScreen';
+import PictureEditScreen from '../screens/PictureEditScreen';
+
 
 const SCREEN_LABELS = {
   'Profil': 'Profil',
@@ -45,8 +49,7 @@ const DrawerNavigation = () => {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         initialRouteName='Login'
       >
-        {user ? (
-        <>
+          <Drawer.Screen name='Login'component={LoginScreen} options={{headerShown:false}}/>
           <Drawer.Screen
             name="Profil"
             component={UserScreen}
@@ -67,6 +70,15 @@ const DrawerNavigation = () => {
             }}
           />
           <Drawer.Screen
+            name="PictureEdit"
+            component={PictureEditScreen}
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Text style={[styles.icon, focused && styles.activeIcon]}>📝</Text>
+              ),
+            }}
+          />
+          <Drawer.Screen
           name="Portefeuille"
           component={WalletScreen}
           options={{
@@ -77,7 +89,7 @@ const DrawerNavigation = () => {
           />
           <Drawer.Screen
             name="Crypto cours"
-            component={CoursActuelleScreen} 
+            component={CoursScreen} 
             options={{
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
@@ -114,11 +126,6 @@ const DrawerNavigation = () => {
               ),
             }}
           />
-        </>
-      ):
-      (
-        <Drawer.Screen name='Login'component={LoginScreen} options={{headerShown:false}}/>
-      )}
       </Drawer.Navigator>
     </NavigationContainer>
   );
@@ -129,8 +136,13 @@ const CustomDrawerContent = (props) => {
   
   return (
     <View style={styles.drawerContent}>
-      <View style={styles.drawerHeader}>
-        <ProfilePicture />
+      <View>
+        <LinearGradient
+          colors={["rgba(58,65,110,255)", "rgba(25,28,48,255)"]}
+          style={styles.headerOverlay}
+        >
+        <ProfilePicture></ProfilePicture>    
+        </LinearGradient>
       </View>
       <View style={styles.drawerMenu}>
         {state?.routes?.map((route, index) => (
@@ -187,6 +199,11 @@ const styles = StyleSheet.create({
   },
   activeIcon: {
     color: '#007AFF',
+  },
+  headerOverlay: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding:10,
   },
 });
 

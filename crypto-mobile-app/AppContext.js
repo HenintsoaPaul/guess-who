@@ -24,9 +24,7 @@ export const AppProvider = ({ children }) => {
     if (user === null) {
       return;
     }
-    console.log("Refreshing . . . "+user.email);
     const userData = await findAccountByMail(user.email)
-    console.log("USER REFRESH "+userData);
     setUser(userData)
   }
 

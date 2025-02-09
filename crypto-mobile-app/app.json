@@ -3,19 +3,16 @@
     "name": "crypto",
     "slug": "crypto",
     "version": "1.0.0",
-    "newArchEnabled":true,
+    "newArchEnabled": true,
     "android": {
       "googleServicesFile": "./google-services.json",
-      "package": "com.mycorp.myapp"
+      "package": "itu.crypto" // Ensure this matches the package name in google-services.json
     },
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
-      "bundleIdentifier": "com.mycorp.myapp"
+      "bundleIdentifier": "itu.crypto" // Ensure this matches the bundle identifier in GoogleService-Info.plist
     },
     "plugins": [
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth",
-      "@react-native-firebase/crashlytics",
       [
         "expo-build-properties",
         {
@@ -24,6 +21,11 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "811cb632-0248-4a6f-b1fc-bbe693f77539"
+      }
+    }
   }
 }

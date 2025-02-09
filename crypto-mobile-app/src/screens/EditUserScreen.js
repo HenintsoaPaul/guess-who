@@ -1,23 +1,23 @@
-import { StyleSheet, View ,Text} from 'react-native'
-import React, { useContext, useState } from 'react'
-import { AppContext } from '../../AppContext'
-import { colorsChart } from '../constants/ColorsChart'
-import InputGroup from '../components/atoms/InputGroup'
-import { Button } from 'react-native-elements'
-import EditableProfilePicture from '../components/organisms/EditableProfilePicture'
-import { doc ,updateDoc} from 'firebase/firestore'
-import { FIRESTORE_DB } from '../services/firebaseService'
+import { StyleSheet, View, Text } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { AppContext } from '../../AppContext';
+import { colorsChart } from '../constants/ColorsChart';
+import InputGroup from '../components/atoms/InputGroup';
+import { Button } from 'react-native-elements';
+import {  updateOrCreateMobDoc } from '../services/firebaseService';
+import EditPictureView from '../components/organisms/EditPictureView';
 
 const EditUserScreen = () => {
     const {user,refreshUser} = useContext(AppContext)
     const [pseudo , setPseudo] = useState(user.pseudo)
+    const [password , setPassword] = useState(user.password)
     const [loading,setLoading] = useState(false)
     const updateUser = async () => {
       setLoading(true)
       try {
-        const accountRef = doc(FIRESTORE_DB, "account", user.id+"");  
-        await updateDoc(accountRef, {
-          pseudo : pseudo
+        updateOrCreateMobDoc("account",user,{
+          pseudo:pseudo,
+          password:password
         });
         await refreshUser();
       } catch (error) {
@@ -33,16 +33,22 @@ const EditUserScreen = () => {
           <Text style={styles.title}>Editer photo de profil</Text>
       </View>
       <View style={styles.profilcontainer} >
-        <EditableProfilePicture />
+        <EditPictureView />
       </View>
       <View style={styles.titleContainer}>
           <Text style={styles.title}>Editer information profil</Text>
       </View>
-      <View>
+      <View style={styles.uinfoinputs}>
         <InputGroup 
             inputValue={pseudo} 
             setInputValue={setPseudo}
             placeholder={'Pseudo'}
+            autoCapitalize={'none'}
+        />
+        <InputGroup 
+            inputValue={password} 
+            setInputValue={setPassword}
+            placeholder={'Password'}
             autoCapitalize={'none'}
         />
       </View>
@@ -93,5 +99,8 @@ const styles = StyleSheet.create({
       fontSize:24,
       color:colorsChart.dark,
       // borderTopWidth:1,
+    } ,
+    uinfoinputs: {
+
     }
-})
+});

@@ -1,24 +1,22 @@
 import React, { useState,useContext } from 'react';
 import { View, Text, StyleSheet, TextInput,Button} from 'react-native';
-import { FIRESTORE_DB } from '../services/firebaseService';
+import { FIRESTORE_DB, updateOrCreateMobDoc } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
+import {Picker} from '@react-native-picker/picker';
+import { collection, doc, setDoc, Timestamp } from 'firebase/firestore';
 
 const sendTransactionData = async (amount, transactionType, user) => {
   try {
-    const transactionRef = collection(FIRESTORE_DB, 'transactions');
-    const timestamp = Date.now();
     const transactionData = {
-      date: timestamp,
-      etat: 1, 
-      data: {
-        user: user.id,
-        type: transactionType, 
-        montant: parseFloat(amount)
-      },
-      response: {} 
-    };
-
-    await setDoc(doc(transactionRef), transactionData);
+      amount:parseFloat(amount),
+      id:null,
+      datePending: new Date().toISOString(),
+      dateValidation:null,
+      account:{id:user.id},
+      typeMvFund:{id:Number.parseInt(transactionType)},
+      pendingState:{id:1}
+    }
+    await updateOrCreateMobDoc("pending_mv_fund",transactionData,null)
     console.log('Transaction envoyée:', transactionData);
   } catch (error) {
     console.error('Erreur lors de l\'envoi de la transaction:', error);
@@ -27,7 +25,7 @@ const sendTransactionData = async (amount, transactionType, user) => {
 
 function TransactionFundScreen() {
   const [amount, setAmount] = useState('');
-  const [transactionType, setTransactionType] = useState('deposit');
+  const [transactionType, setTransactionType] = useState(1);
   const {user} = useContext(AppContext);
 
 
@@ -41,13 +39,13 @@ function TransactionFundScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View >
         <View style={styles.fundContainer}>
           <Text style={styles.fundLabel}>Solde total :</Text>
           <Text style={styles.fundAmount}>{user.fund} €</Text>
         </View>
       </View>
-
+    
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
             <TextInput
@@ -65,8 +63,8 @@ function TransactionFundScreen() {
             style={styles.transactionSelector}
             onValueChange={(itemValue) => setTransactionType(itemValue)}
             >
-            <Picker.Item label="Dépôt" value="depot" />
-            <Picker.Item label="Retrait" value="Retrait" />
+            <Picker.Item label="Dépôt" value={1} />
+            <Picker.Item label="Retrait" value={2} />
             </Picker>
         </View>
       </View>
@@ -81,7 +79,7 @@ function TransactionFundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
+    backgroundColor:'#000',
     alignItems: 'center',
     padding: 16,
   },
@@ -94,6 +92,10 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: '#f5f5f5',
     borderRadius: 4,
+  },
+  formContainer:{
+    width:'100%',
+    backgroundColor:'#000'
   },
   fundLabel: {
     fontSize: 16,

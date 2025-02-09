@@ -1,34 +1,23 @@
 import React, { useState, useCallback, memo, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import FavoriteButton from '../components/atoms/FavoriteButton';
-import { doc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, updateDoc, getDocs, onSnapshot , collection,orderBy,query,limit} from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import {FIRESTORE_DB } from '../services/firebaseService';
 import { AppContext } from '../../AppContext';
 
-const fetchWalletData = async (setCryptos,user) => {
+const fetchCoursData = async (setCryptos) => {
   try {
-    const walletDocRef = doc(FIRESTORE_DB, "wallets", user.id+"");
-    const docSnap = await getDoc(walletDocRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setCryptos(data.wallets || []);
-      console.log('Données du document:', data);
-
-      const unsubscribe = onSnapshot(walletDocRef, (doc) => {
-        if (doc.exists()) {
-          const updatedData = doc.data();
-          setCryptos(updatedData.wallets || []);
-          console.log('Données mises à jour:', updatedData);
-        }
+    const coursCollectionRef = collection(FIRESTORE_DB, "cours");
+    const querySnapshot = query(coursCollectionRef, orderBy("dateCours", "desc"), limit(10));
+    const unsubscribe = onSnapshot(querySnapshot,(snapshot) => {
+      const updatedCryptos = [];
+      snapshot.forEach((doc) => {
+        updatedCryptos.push(doc.data());
       });
-
-      return unsubscribe;
-    } else {
-      console.log('Aucun document trouvé');
-      setCryptos([]);
-    }
+      setCryptos(updatedCryptos);
+      console.log('Données mises à jour:', updatedCryptos);
+    });
+    return unsubscribe;
   } catch (error) {
     console.error('Erreur:', error);
     throw error;
@@ -126,7 +115,7 @@ const CoursActuelleScreen = () => {
     const fetchCryptos = async () => {
       setLoading(true);
       try {
-        const unsubscribe = await fetchWalletData(setCryptos,user);
+        const unsubscribe = await fetchCoursData(setCryptos);
         return () => {
           if (unsubscribe) unsubscribe();
         };
@@ -141,8 +130,8 @@ const CoursActuelleScreen = () => {
       await fetchFavorites(setFavoritesList,user);
     };
 
-    fetchCryptos();
-    fetchFavoritesData();
+    // fetchCryptos();
+    // fetchFavoritesData();
   }, []);
 
   const toggleFavorite = useCallback((index) => {
@@ -172,8 +161,8 @@ const CoursActuelleScreen = () => {
   }, []);    
 
   const filteredCryptos = cryptos.filter((crypto) =>
-    crypto.cryptoName.toLowerCase().includes(filterText.toLowerCase()) ||
-    crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
+    crypto.crypto.name.toLowerCase().includes(filterText.toLowerCase()) ||
+    crypto.crypto.symbol.toLowerCase().includes(filterText.toLowerCase())
   );
 
   const CryptoItem = memo(({ item, index }) => (
@@ -182,19 +171,16 @@ const CoursActuelleScreen = () => {
         <Text style={styles.cellText}>{item.image} </Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>{item.cryptoName}</Text>
+        <Text style={styles.cellText}>{item.crypto.name}</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>{item.symbol}</Text>
+        <Text style={styles.cellText}>{item.crypto.symbol}</Text>
       </View>
       <View style={styles.cell}>
-        <Text style={styles.cellText}>{item.currentPrice} $</Text>
+        <Text style={styles.cellText}>{item.pu} $</Text>
       </View>
       <View style={styles.cell}>
-        <FavoriteButton
-          isFavorite={favoritesList.some(fav => fav.cryptoName === item.cryptoName)} // Vérifie si la crypto est dans les favoris
-          onPress={() => toggleFavorite(index)}
-        />
+        
       </View>
     </View>
   ));

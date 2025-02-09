@@ -1,20 +1,12 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { View, StyleSheet,Image } from 'react-native';
-import axios from 'axios';
 import { AppContext } from '../../../AppContext';
-import { AdvancedImage } from '@cloudinary/react';
-
-const CLOUDINARY_CONFIG = {
-  cloudName: 'dulx9capq',
-  apiKey: '174986489287854',
-  apiSecret: 'k7dnDcMEbe24SF1jNB3YSPM1krA'
-};
 
 const ProfilePicture = () => {
   const { image, setImage, user } = useContext(AppContext);
   useEffect(() => {
     try {
-      const profile = user.profilImg;
+      const profile = user.account_img;
       if(profile === null || profile === undefined){
         throw new Error("No profile seted")
       }

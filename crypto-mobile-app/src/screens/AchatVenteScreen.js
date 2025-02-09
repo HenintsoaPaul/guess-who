@@ -9,12 +9,27 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { getDocs, collection } from 'firebase/firestore';
-import { FIRESTORE_DB } from '../services/firebaseService';
+import { fetchDataFromFirebase, firebaseCollection} from '../services/firebaseService';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome for the search icon
 import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker
 import { colorsChart } from '../constants/ColorsChart';
+import PurchaseCard from '../components/molecules/PurchaseCard';
+import { onSnapshot } from 'firebase/firestore';
 
+
+const unsubscribePurchase = (setPurchases,setFilteredPurchases) => {
+  const purchaseRef = firebaseCollection('purchase');
+  const unsubscribe = onSnapshot(purchaseRef,(snapshot) => {
+    const uptPurchases = [];
+    snapshot.forEach((doc) => {
+      uptPurchases.push(doc.data());
+    });
+    setPurchases(uptPurchases);
+    setFilteredPurchases(uptPurchases);
+    console.log('Données mises à jour:', uptPurchases);
+  });
+  return unsubscribe;
+}
 const AchatVenteScreen = () => {
   const [purchases, setPurchases] = useState([]);
   const [filteredPurchases, setFilteredPurchases] = useState([]);
@@ -30,16 +45,18 @@ const AchatVenteScreen = () => {
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
-        const querySnapshot = await getDocs(collection(FIRESTORE_DB, 'purchase'));
-        const purchasesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setPurchases(purchasesData);
-        setFilteredPurchases(purchasesData);
+        const purchases =  await fetchDataFromFirebase('purchase',null)
+        
+        setPurchases(purchases)
+        setFilteredPurchases(purchases);
+
+        const unsubscribe = unsubscribePurchase(setPurchases,setFilteredPurchases);
+        return () => {
+          if (unsubscribe) unsubscribe();
+        };
       } catch (err) {
-        setError('Erreur lors de la récupération des données');
-        console.error('Erreur:', err);
+        setError(err);
+        alert('Erreur:', err);
       } finally {
         setLoading(false);
       }
@@ -106,43 +123,7 @@ const AchatVenteScreen = () => {
   }
 
   const renderItem = ({ item }) => {
-    const cryptoName = item.saleDetailDocument?.crypto?.name || item.crypto?.name || 'N/A';
-    return (
-      <View style={styles.card} accessible={true} accessibilityLabel={`Transaction ${item.id}`}>
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Acheteur :</Text>
-            <Text style={styles.value}>{item.accountPurchaser?.pseudo || 'N/A'}</Text>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Vendeur :</Text>
-            <Text style={styles.value}>{item.accountSeller?.pseudo || 'N/A'}</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Crypto :</Text>
-            <Text style={styles.value}>{cryptoName}</Text>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Quantité :</Text>
-            <Text style={styles.value}>{item.quantityCrypto}</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Prix Total :</Text>
-            <Text style={styles.value}>{item.totalPrice} €</Text>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Date :</Text>
-            <Text style={styles.value}>
-              {item.datePurchase ? new Date(item.datePurchase.seconds * 1000).toLocaleDateString() : 'N/A'}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
+    return <PurchaseCard purchase={item}></PurchaseCard>
   };
 
   return (
