@@ -1,6 +1,6 @@
 package itu.crypto.service.transaction;
 
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.firebase.firestore.generalisation.BaseService;

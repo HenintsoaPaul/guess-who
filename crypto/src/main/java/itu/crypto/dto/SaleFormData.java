@@ -1,8 +1,8 @@
 package itu.crypto.dto;
 
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import lombok.Data;
 
 import java.util.ArrayList;
