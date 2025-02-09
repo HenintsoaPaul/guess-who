@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    
+
     <link
       rel="icon"
       type="image/png"
@@ -20,7 +20,7 @@
       rel="stylesheet"
     />
     <!-- Nucleo Icons -->
-    
+
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
       rel="stylesheet"
@@ -121,12 +121,6 @@
                   th:object="${registerRequest}"
                   method="POST"
                 >
-                  <div>
-                    <p th:if="${msg}" class="text-danger">
-                      <span th:text="${msg}"></span>
-                    </p>
-                  </div>
-
                   <div class="mb-3">
                     <label for="pseudo" class="form-label">Pseudo</label>
                     <input
@@ -140,25 +134,25 @@
                   </div>
 
                   <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
+                    <label for="email" class="form-label">Email </label>
                     <input
                       type="email"
                       required
                       class="form-control"
                       id="email"
-                      placeholder="Enter your email"
+                      placeholder="Entrer votre email"
                       th:field="*{email}"
                     />
                   </div>
 
                   <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">Mot de passe</label>
                     <input
                       type="password"
                       required
                       class="form-control"
                       id="password"
-                      placeholder="Enter your password"
+                      placeholder="Entrer votre mot de passe"
                       th:field="*{password}"
                     />
                   </div>
@@ -173,11 +167,17 @@
                   </div>
                   <p class="text-sm mt-3 mb-0">
                     Vous avez déjà un compte ?
-                    <a href="javascript:;" class="text-dark font-weight-bolder"
+                    <a href="/login" class="text-dark font-weight-bolder"
                       >Se connecter
                     </a>
                   </p>
                 </form>
+
+                <div>
+                  <p th:if="${msg}" class="text-danger">
+                    <span th:text="${msg}"></span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -202,12 +202,12 @@
     </footer>
     <!-- -------- END FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
     <!--   Core JS Files   -->
-    
+
     <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/core/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/core/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/plugins/smooth-scrollbar.min.js"></script>
-  
+
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->

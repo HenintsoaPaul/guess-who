@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Cours Crypto</title>
+    <meta name="description" content="" />
+    <div th:replace="~{front_office/layout/link_header}"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  <body>
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <div th:replace="~{front_office/layout/menu}"></div>
+        <div class="layout-page">
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4">
+                <span class="text-muted fw-light"></span> Crypto Graph/
+              </h4>
+
+              <div class="row">
+                <div class="col-lg-12 mb-4 order-0">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title text-primary">Crypto Values</h5>
+                      <div class="mb-3">
+                        <label for="crypto-select" class="form-label"
+                          >Select Crypto:</label
+                        >
+                        <select id="crypto-select" class="form-select"></select>
+                      </div>
+                      <div class="mb-3">
+                        <label for="date-input" class="form-label"
+                          >Choisir la date:</label
+                        >
+                        <input
+                          type="date"
+                          id="date-input"
+                          class="form-control"
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <label for="time-filter" class="form-label"
+                          >Filtrer par :</label
+                        >
+                        <select id="time-filter" class="form-select">
+                          <option value="10seconds">
+                            Toutes les 10 secondes
+                          </option>
+                          <option value="minute">Par minute</option>
+                          <option value="hour">Par heure</option>
+                          <option value="day">Par journée</option>
+                          <option value="week">Par semaine</option>
+                          <option value="month">Par mois</option>
+                        </select>
+                      </div>
+                      <!-- Container responsive pour le graphique -->
+                      <div
+                        id="crypto-chart"
+                        style="height: 80vh; width: 100%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div th:replace="~{front_office/layout/footer}"></div>
+          <div class="content-backdrop fade"></div>
+        </div>
+      </div>
+    </div>
+    <div class="layout-overlay layout-menu-toggle"></div>
+    <div th:replace="~{front_office/layout/script}"></div>
+    <script>
+      const cryptoSelect = document.getElementById("crypto-select");
+      const dateInput = document.getElementById("date-input");
+      const timeFilterSelect = document.getElementById("time-filter");
+
+      function buildUrl(cryptoId) {
+        const selectedDate = dateInput.value;
+        const selectedGranularity = timeFilterSelect.value;
+        let url = `/api/cours/crypto-values?cryptoId=${cryptoId}`;
+        if (selectedDate) {
+          url += `&date=${selectedDate}`;
+        }
+        url += `&granularity=${selectedGranularity}`;
+        return url;
+      }
+
+      function fetchCryptoValues(cryptoId, update = false) {
+        const url = buildUrl(cryptoId);
+        fetch(url)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Vérification des données
+            if (!data || !Array.isArray(data)) {
+              throw new Error("Données invalides reçues");
+            }
+
+            // Conversion et tri des données
+            const chartData = data
+              .map((item) => ({
+                x: new Date(item.dateCours),
+                y: item.value,
+              }))
+              .sort((a, b) => a.x - b.x);
+
+            // Création ou mise à jour du graphique avec Plotly
+            const trace = {
+              x: chartData.map((item) => item.x),
+              y: chartData.map((item) => item.y),
+              mode: "lines+markers",
+              type: "scatter",
+              marker: { size: 4 },
+            };
+
+            const layout = {
+              title: "Crypto Value Over Time",
+              xaxis: {
+                title: "Date",
+                type: "date",
+              },
+              yaxis: {
+                title: "Value",
+              },
+              margin: { t: 50, r: 30, l: 50, b: 50 },
+              height: 600,
+              responsive: true,
+            };
+
+            if (update) {
+              Plotly.react("crypto-chart", [trace], layout);
+            } else {
+              Plotly.newPlot("crypto-chart", [trace], layout);
+            }
+          })
+          .catch((error) => {
+            console.error("Erreur lors du chargement des données:", error);
+            // Affichage d'un message d'erreur à l'utilisateur
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "alert alert-danger";
+            errorDiv.textContent =
+              "Erreur de chargement des données. Veuillez réessayer.";
+            document.querySelector(".card-body").appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+          });
+      }
+
+      function fetchCryptos() {
+        fetch("/api/cours/cryptos")
+          .then((response) => response.json())
+          .then((data) => {
+            cryptoSelect.innerHTML = "";
+            data.forEach((crypto) => {
+              const option = document.createElement("option");
+              option.value = crypto.id;
+              option.textContent = crypto.name;
+              cryptoSelect.appendChild(option);
+            });
+            if (data.length > 0) {
+              fetchCryptoValues(data[0].id);
+            }
+          })
+          .catch((error) =>
+            console.error("Erreur lors du chargement des cryptos:", error)
+          );
+      }
+
+      // Gestionnaires d'événements
+      cryptoSelect.addEventListener("change", (event) =>
+        fetchCryptoValues(event.target.value)
+      );
+      dateInput.addEventListener("change", () =>
+        fetchCryptoValues(cryptoSelect.value)
+      );
+      timeFilterSelect.addEventListener("change", () =>
+        fetchCryptoValues(cryptoSelect.value)
+      );
+
+      // Initialisation
+      fetchCryptos();
+
+      // Mise à jour automatique plus efficace
+      setInterval(() => {
+        const currentCrypto = cryptoSelect.value;
+        fetchCryptoValues(currentCrypto, true);
+      }, 10000);
+    </script>
+  </body>
+</html>

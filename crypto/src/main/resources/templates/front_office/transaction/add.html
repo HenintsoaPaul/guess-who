@@ -1,0 +1,64 @@
+<div th:replace="~{fragments/_layout}"></div>
+
+<main id="main" class="main">
+    <h2>Faire un nouveau depot/retrait</h2>
+
+    <p th:if="${msg != null and !msg.isEmpty()}">
+    <span th:text="${msg}"></span>
+    </p>
+
+    <form th:action="@{/transactions/fund/pending/save}" th:object="${pendingMvFund}"
+          method="POST" id="productPriceForm">
+        <div>
+            <label class="col-md-3 control-label">Date</label>
+            <input th:field="*{datePending}"
+                   type="datetime-local" required
+                   class="form-control mb-4 col-4">
+        </div>
+
+        <div>
+            <label class="col-md-3 control-label">Montant</label>
+            <input th:field="*{amount}"
+                   type="number" required
+                   class="form-control mb-4 col-4">
+        </div>
+
+        <div class="form-group">
+            <label for="accounts" class="col-md-3 control-label">Compte</label>
+            <div th:if="${accounts != null and not #lists.isEmpty(accounts)}" class="col-md-5">
+                <select th:field="*{account}"
+                        required
+                        id="accounts"
+                        class="form-control mb-4 col-4">
+                    <option th:each="acc:${accounts}"
+                            th:value="${acc.getId()}"
+                            th:text="${acc.getPseudo()} + ' (' + ${acc.getEmail()} + ')'">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="typeMvFunds" class="col-md-3 control-label">Type</label>
+            <div th:if="${typeMvFunds != null and not #lists.isEmpty(typeMvFunds)}" class="col-md-5">
+                <select th:field="*{typeMvFund}"
+                        required
+                        id="typeMvFunds"
+                        class="form-control mb-4 col-4">
+                    <option th:each="tmf:${typeMvFunds}"
+                            th:value="${tmf.getId()}"
+                            th:text="${tmf.getName()}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success col-2">Valider</button>
+    </form>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+
+</html>
