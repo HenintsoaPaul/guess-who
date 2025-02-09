@@ -96,6 +96,16 @@ CREATE TABLE pending_state
     UNIQUE (name)
 );
 
+CREATE TABLE admin
+(
+    id_admin   SERIAL,
+    level      SMALLINT NOT NULL,
+    id_account INTEGER  NOT NULL,
+    PRIMARY KEY (id_admin),
+    UNIQUE (id_account),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
 CREATE TABLE wallet
 (
     id_wallet  SERIAL,
