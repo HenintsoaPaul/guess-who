@@ -152,7 +152,7 @@
                         ></td>
                         <td>
                           <a
-                            th:href="@{/back-office/operations/account/{id}(id=${mvt.getId()})}"
+                            th:href="@{/back-office/operations/account/{id}(id=${mvt.getAccount().getId()})}"
                             th:text="${mvt.getWallet().getAccount().getPseudo()}"
                           >
                           </a>

@@ -10022,3 +10022,4 @@ crypto-mobile-app/node_modules/xmlbuilder/lib/XMLDTDNotation.js
 /crypto-mobile-app/node_modules
 crypto/src/main/resources/application.properties
 crypto/src/main/resources/application.properties
+crypto/src/main/resources/private-key.json
