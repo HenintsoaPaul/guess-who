@@ -4,6 +4,7 @@ import itu.crypto.api.ApiResponse;
 import itu.crypto.dto.login.LoginRequest;
 import itu.crypto.dto.login.LoginResponse;
 import itu.crypto.entity.account.Account;
+import itu.crypto.entity.account.Admin;
 import itu.crypto.service.account.LoginService;
 import itu.crypto.service.SessionService;
 import jakarta.servlet.http.HttpSession;
@@ -58,6 +59,9 @@ public class LoginController {
             // Get user by email, then save in Session
             Account myAccount = loginService.getAccount(loginRequest);
 
+            // Get user admin status
+            Admin admin = loginService.getAdminStatus(myAccount);
+
             // save it in the Session
             LoginResponse loginResponse = new LoginResponse(apiResponse);
             String token = loginResponse.getToken();
@@ -65,7 +69,7 @@ public class LoginController {
 
             // Init new Session
             sessionService.viderSession(session);
-            sessionService.initSession(session, myAccount.getId(), token, tokenExpiration);
+            sessionService.initSession(session, myAccount.getId(), token, tokenExpiration, admin);
 
             // goto home page
             return "index";

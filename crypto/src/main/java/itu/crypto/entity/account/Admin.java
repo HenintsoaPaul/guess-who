@@ -2,9 +2,6 @@ package itu.crypto.entity.account;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @Entity
@@ -20,6 +17,6 @@ public class Admin {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_account", nullable = false)
-    private Account idAccount;
+    private Account account;
 
 }
