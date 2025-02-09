@@ -23,4 +23,8 @@ public class WalletService implements BaseService<Wallet> {
     public Optional<Wallet> findById(int id) {
         return walletRepository.findById(id);
     }
+
+    public Optional<Wallet> findByCryptoAndAccount(Integer idCrypto, Integer idAccount) {
+        return walletRepository.findByCryptoAndAccount(idCrypto, idAccount);
+    }
 }

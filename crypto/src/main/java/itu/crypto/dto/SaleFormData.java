@@ -14,8 +14,8 @@ public class SaleFormData {
     private List<SaleDetail> saleDetails = new ArrayList<>();
 
     public SaleFormData(Account account) {
-	sale = new Sale();
-	sale.setAccount(account);
-	saleDetails.add( new SaleDetail() );
+        sale = new Sale();
+        sale.setAccount(account);
+        saleDetails.add(new SaleDetail());
     }
 }

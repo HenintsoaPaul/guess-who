@@ -46,6 +46,9 @@ public class SaleService {
         return true;
     }
 
+    /**
+     * Verifier si nous pouvons validee le sale_detail, en verifiant les restes dans les portefeuilles.
+     */
     private void validateWalletCryptoQuantity(List<Wallet> wallets, SaleDetail saleDetail) throws SaleException {
         for (Wallet wallet : wallets) {
             if (wallet.getCrypto().equals(saleDetail.getCrypto()) && wallet.getQuantity() < saleDetail.getQuantity()) {
@@ -62,8 +65,6 @@ public class SaleService {
         // Verifier que les Crypto dans mon wallet suffisent pour faire la vente
         List<Wallet> wallets = this.findAllWallets(sale.getAccount());
         areWalletsCapable(wallets, saleDetails);
-
-        System.out.println(saleFormData);
 
         saleRepository.save(sale);
 
