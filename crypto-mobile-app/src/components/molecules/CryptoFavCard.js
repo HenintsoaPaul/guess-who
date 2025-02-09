@@ -6,6 +6,7 @@ import { Image } from 'react-native-elements';
 import { collection, limit, orderBy, query, where , onSnapshot, getDocs} from 'firebase/firestore';
 import { FIRESTORE_DB } from '../../services/firebaseService';
 import { ActivityIndicator } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 const fetchCoursData = async (setCours,crypto) => {
   try {
@@ -27,7 +28,7 @@ const fetchCoursData = async (setCours,crypto) => {
   }
 };
 
-export default function CryptoCard({crypto}) {
+export default function CryptoFavCard({crypto}) {
   const [cours,setCours] = useState([]);
   const [loading,setLoading] = useState(true);  
   useEffect(()=>{
@@ -53,7 +54,7 @@ export default function CryptoCard({crypto}) {
         <StyleText fw={700} color={colorsChart.primary} >{crypto.name}</StyleText>
         <StyleText fs={12} color={colorsChart.dark}>{crypto.symbol}</StyleText>
       </View>
-      <View >
+      <View style={{flexDirection:'row'}}>
         {
           cours.length == 0 ? 
           (
@@ -62,12 +63,15 @@ export default function CryptoCard({crypto}) {
             </>
           ) : 
           (
-            <>
+            <View style={{flexDirection:'column',justifyContent:'center',}}>
               <StyleText>{cours[0].pu} $</StyleText>
               <StyleText>+0.05</StyleText>
-            </>
+            </View>
           )
         }
+        <View style={{justifyContent:'center',alignItems:'center',backgroundColor:colorsChart.white,justifyContent:'center',padding:10,marginLeft:10,borderLeftWidth:2}}>
+            <FontAwesome color={colorsChart.red} name='heart'size={20}></FontAwesome>
+        </View>
       </View>
     </View>
   )

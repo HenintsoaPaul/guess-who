@@ -1,10 +1,13 @@
-import React, { useState,useEffect,} from 'react';
+import React, { useState,useEffect, useContext,} from 'react';
 import { View, Text, StyleSheet, TextInput,FlatList, ActivityIndicator } from 'react-native';
 import {onSnapshot , collection, getDocs} from 'firebase/firestore';
 import {FIRESTORE_DB } from '../services/firebaseService';
 import CryptoCard from '../components/molecules/CryptoCard';
 import { colorsChart } from '../constants/ColorsChart';
 import { LinearGradient } from "expo-linear-gradient";
+import { FontAwesome } from '@expo/vector-icons';
+import { AppContext } from '../../AppContext';
+import CryptoFavCard from '../components/molecules/CryptoFavCard';
 
 
 const fetchCryptoData = async (setCryptos) => {
@@ -35,6 +38,8 @@ const CoursScreen = () => {
   const [cryptos, setCryptos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
+  const {user} = useContext(AppContext);
+  
 
   useEffect(() => {
     setLoading(true);
@@ -70,7 +75,7 @@ const CoursScreen = () => {
     <View style={styles.container}>
       <View style={styles.fundContainer}>
             <Text style={styles.fundLabel}>Solde total :</Text>
-            {/* <Text style={styles.fundAmount}>{user.fund || 0} €</Text> */}
+            <Text style={styles.fundAmount}>{user.fund || 0} €</Text>
         </View>
 
       {/* Barre de recherche */}
@@ -99,10 +104,9 @@ const CoursScreen = () => {
                     flexDirection:'column',
                     flex:1,
                 }}
+                contentContainerStyle={{gap:8}}
                 renderItem={({ item, index }) => (
-                  <>
-                    <CryptoCard key={index} crypto={item}></CryptoCard>
-                  </>
+                  <CryptoFavCard key={index} crypto={item}></CryptoFavCard>
                 )}
             />
         </LinearGradient>

@@ -5,6 +5,11 @@ import { AppContext } from '../../AppContext';
 import { fetchDataFromFirebase, firebaseCollection } from '../services/firebaseService';
 import NoFavoris from '../components/molecules/NoFavoris';
 import CryptoCard from '../components/molecules/CryptoCard';
+import { useNavigation } from '@react-navigation/native';
+import UserButton from '../components/atoms/UserButton';
+import { Button } from 'react-native-elements';
+import { FontAwesome } from '@expo/vector-icons';
+import { colorsChart } from '../constants/ColorsChart';
 
 const unsubscribeFavorites = (setFavorites,user) => {
   
@@ -27,11 +32,11 @@ const FavoritesScreen = () => {
   const [error, setError] = useState(null);
   const [filterText, setFilterText] = useState('');
   const {user} = useContext(AppContext);
+  const navigation = useNavigation(); 
 
   useEffect(() => {
     const fetchFavoris = async (user) => {
       console.log("USER: ",user);
-      
       setLoading(true);
       try {
         const data = await fetchDataFromFirebase(
@@ -91,7 +96,18 @@ const FavoritesScreen = () => {
     );
   }
   return (
-    <View style={styles.container}>     
+    <View style={styles.container}>
+        {/* <View style={{flexDirection:'row',justifyContent:'space-around',width:'100%',height: 40}}> */}
+          {/* <Button
+            buttonStyle={{height: 40,width:'100%'}}
+            
+            onPress={()=> navigation.navigate('Crypto cours')}
+            title={(<>
+              <Text style={{color:colorsChart.white,fontSize:18,paddingHorizontal:10}}>Voir Cours</Text>
+              <FontAwesome style={{color:colorsChart.white}} name='line-chart' size={18}/>
+            </>)}
+          /> */}
+        {/* </View> */}
           {filteredFavoris.map((favorite, index) => (
             <CryptoCard key={index} crypto={favorite.crypto}></CryptoCard>
             ))
@@ -104,7 +120,6 @@ const FavoritesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 16,
   },
