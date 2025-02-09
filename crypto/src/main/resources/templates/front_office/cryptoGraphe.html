@@ -15,18 +15,18 @@
     />
     <title>Cours Crypto</title>
     <meta name="description" content="" />
-    <div th:replace="~{back_office/layout/link_header}"></div>
+    <div th:replace="~{front_office/layout/link_header}"></div>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   </head>
   <body>
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
-        <div th:replace="~{back_office/layout/menu}"></div>
+        <div th:replace="~{front_office/layout/menu}"></div>
         <div class="layout-page">
           <div class="content-wrapper">
             <div class="container-xxl flex-grow-1 container-p-y">
               <h4 class="fw-bold py-3 mb-4">
-                <span class="text-muted fw-light">Crypto Graph/</span>
+                <span class="text-muted fw-light"></span> Crypto Graph/
               </h4>
 
               <div class="row">
@@ -76,13 +76,13 @@
               </div>
             </div>
           </div>
-          <div th:replace="~{back_office/layout/footer}"></div>
+          <div th:replace="~{front_office/layout/footer}"></div>
           <div class="content-backdrop fade"></div>
         </div>
       </div>
     </div>
     <div class="layout-overlay layout-menu-toggle"></div>
-    <div th:replace="~{back_office/layout/script}"></div>
+    <div th:replace="~{front_office/layout/script}"></div>
     <script>
       const cryptoSelect = document.getElementById("crypto-select");
       const dateInput = document.getElementById("date-input");

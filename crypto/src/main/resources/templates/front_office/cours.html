@@ -27,7 +27,7 @@
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
-        <div th:replace="~{back_office/layout/menu}"></div>
+        <div th:replace="~{front_office/layout/menu}"></div>
         <!-- / Menu -->
 
         <!-- Layout container -->
@@ -37,7 +37,7 @@
           <div class="content-wrapper">
             <!-- Content -->
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Analyse Cours Crypto/</span> </h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"></span> Analyse Cours Crypto/ </h4>
 
               <div class="row">
                 <!--  Analyses des cours du site  -->
@@ -50,7 +50,7 @@
                     </div>
                     <div class="card-body">
                       <form
-                        th:action="@{/cours}"
+                        th:action="@{/front-office/cours}"
                         method="GET"
                         class="form-inline mb-3"
                       >
