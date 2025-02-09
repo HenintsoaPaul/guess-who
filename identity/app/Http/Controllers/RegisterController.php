@@ -29,10 +29,9 @@ class RegisterController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register",
-     *     summary="Enregistrement utilisateur",
-     *     description="Insère un enregistrement et envoie un code PIN par email",
-     *     tags={"Enregistrement"},
-     *     @OA\RequestBody(
+     *     summary="Insère un enregistrement et envoie un code PIN par email",
+     *     tags={"Register"},   
+     *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      *             @OA\Property(property="email", type="string", example="example@example.com"),
@@ -127,10 +126,8 @@ class RegisterController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register/validate",
-     *     summary="Validation du PIN",
-     *     description="Valide un enregistrement en utilisant un code PIN obtenu par email",
-     *     operationId="validateRegisterPin",
-     *     tags={"Enregistrement"},
+     *     summary="Valide un enregistrement en utilisant un code PIN obtenu par email",
+     *     tags={"Register"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\ApiController;
 use App\Mail\SendEmail;
 use App\Models\Account;
 use App\Models\PendingPwdChange;
@@ -23,9 +24,40 @@ class AccountController extends Controller
         $this->jsonResponse = $jsonResponse;
     }
 
-    /**
-     * Wish to unlock an account.
-     *
+     /**
+     * @OA\Post(
+     *     path="/api/account/unlock",
+     *     summary="Débloque un compte utilisateur",
+     *     description="Permet de débloquer un compte utilisateur en utilisant l'email.",
+     *     tags={"Account"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="user@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Compte débloqué avec succès.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id_account", type="integer", example=123)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Email invalide.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Invalid email.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="An error occurred.")
+     *         )
+     *     )
+     * )
      * @throws \Exception
      */
     public function unlock(Request $request)
@@ -54,7 +86,43 @@ class AccountController extends Controller
         }
     }
 
-    /**
+     /**
+     * @OA\Post(
+     *     path="/api/account/password",
+     *     summary="Demande de changement de mot de passe",
+     *     description="Permet de lancer la procédure de changement de mot de passe en envoyant un code PIN à l'email.",
+     *     tags={"Account"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id_account", type="integer", example=123),
+     *             @OA\Property(property="new_password", type="string", example="newPassword123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email de validation envoyé pour le changement de mot de passe.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="id_account", type="integer", example=123),
+     *             @OA\Property(property="pin", type="string", example="123456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Données invalides.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Invalid payload.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="An error occurred.")
+     *         )
+     *     )
+     * )
      * @throws \Exception
      */
     public function changePassword(Request $request): \Illuminate\Http\JsonResponse
@@ -102,6 +170,40 @@ class AccountController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/account/password/validate",
+     *     summary="Valide un changement de mot de passe en utilisant un code PIN",
+     *     description="Valide la demande de changement de mot de passe avec un PIN envoyé par email.",
+     *     tags={"Account"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="pin", type="string", example="123456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Changement de mot de passe validé avec succès.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id_account", type="integer", example=123)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="PIN invalide ou erreur lors de la validation.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Invalid pin.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="An error occurred.")
+     *         )
+     *     )
+     * )
      * @throws \Exception
      */
     public function validateChangePassword(Request $request): \Illuminate\Http\JsonResponse

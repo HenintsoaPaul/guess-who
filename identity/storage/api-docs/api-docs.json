@@ -9,6 +9,250 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/account/unlock": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Débloque un compte utilisateur",
+                "description": "Permet de débloquer un compte utilisateur en utilisant l'email.",
+                "operationId": "eae2a765d577c599618408e8b5509174",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Compte débloqué avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id_account": {
+                                            "type": "integer",
+                                            "example": 123
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Email invalide.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid email."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "An error occurred."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/account/password": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Demande de changement de mot de passe",
+                "description": "Permet de lancer la procédure de changement de mot de passe en envoyant un code PIN à l'email.",
+                "operationId": "ad0a9bd74ae40223eb022de446307ee4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id_account": {
+                                        "type": "integer",
+                                        "example": 123
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "newPassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email de validation envoyé pour le changement de mot de passe.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "id_account": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "pin": {
+                                            "type": "string",
+                                            "example": "123456"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Données invalides.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid payload."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "An error occurred."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/account/password/validate": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Valide un changement de mot de passe en utilisant un code PIN",
+                "description": "Valide la demande de changement de mot de passe avec un PIN envoyé par email.",
+                "operationId": "3022366b3abb99a276c48038ce6a3656",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "pin": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Changement de mot de passe validé avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id_account": {
+                                            "type": "integer",
+                                            "example": 123
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "PIN invalide ou erreur lors de la validation.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid pin."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "An error occurred."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
@@ -59,7 +303,7 @@
                 ],
                 "summary": "Validation du PIN",
                 "description": "Valide le PIN envoyé par email et génère un token d'accès.",
-                "operationId": "validatePin",
+                "operationId": "validateLoginPin",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -148,6 +392,9 @@
         },
         "/api/register": {
             "post": {
+                "tags": [
+                    "Register"
+                ],
                 "summary": "Insère un enregistrement et envoie un code PIN par email",
                 "operationId": "fccd8cec6f38cbddc086194391ad37db",
                 "requestBody": {
@@ -233,6 +480,9 @@
         },
         "/api/register/validate": {
             "post": {
+                "tags": [
+                    "Register"
+                ],
                 "summary": "Valide un enregistrement en utilisant un code PIN obtenu par email",
                 "operationId": "fb90002ffc3c8825733b7d2099246084",
                 "requestBody": {
@@ -315,12 +565,180 @@
                     }
                 }
             }
+        },
+        "/api/token": {
+            "get": {
+                "tags": [
+                    "token"
+                ],
+                "summary": "Génère un nouveau token",
+                "description": "Génère un nouveau token pour l'application.",
+                "operationId": "5ac16309893cb565f49fd1b30848d06a",
+                "responses": {
+                    "200": {
+                        "description": "Token généré avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erreur interne."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/token/generate/{id_account}": {
+            "get": {
+                "tags": [
+                    "token"
+                ],
+                "summary": "Génère un modèle de token pour un utilisateur",
+                "description": "Génère un modèle de token pour un utilisateur spécifique en fonction de l'ID de compte.",
+                "operationId": "78cc5e1bebc825f13bd2abdae48bcef8",
+                "parameters": [
+                    {
+                        "name": "id_account",
+                        "in": "path",
+                        "description": "ID de l'utilisateur pour générer le modèle de token.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 123
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Modèle de token généré avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token_model": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "399": {
+                        "description": "Erreur lors de la génération du token.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "ID de compte invalide."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/token/regenerate/{id_account}": {
+            "get": {
+                "tags": [
+                    "token"
+                ],
+                "summary": "Regénère un token pour un utilisateur",
+                "description": "Regénère un token pour un utilisateur spécifique en fonction de l'ID de compte.",
+                "operationId": "b7a54a6d3d44cafea979219e47a28de2",
+                "parameters": [
+                    {
+                        "name": "id_account",
+                        "in": "path",
+                        "description": "ID de l'utilisateur pour régénérer le token.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 123
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token régénéré avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "399": {
+                        "description": "Erreur lors de la régénération du token.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "ID de compte invalide."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
+            "name": "Account",
+            "description": "Account"
+        },
+        {
             "name": "Authentification",
             "description": "Authentification"
+        },
+        {
+            "name": "Register",
+            "description": "Register"
+        },
+        {
+            "name": "token",
+            "description": "token"
         }
     ]
 }
