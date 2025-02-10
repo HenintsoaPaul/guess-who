@@ -1,19 +1,24 @@
 package itu.crypto.service.transaction;
 
+import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.entity.purchase.PurchaseException;
 import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.purchase.Purchase;
+import itu.crypto.entity.wallet.MvWallet;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
+import itu.crypto.repository.TypeMvWalletRepository;
 import itu.crypto.repository.transaction.PurchaseRepository;
 import itu.crypto.repository.transaction.SaleDetailRepository;
+import itu.crypto.repository.transaction.wallet.MvWalletRepository;
 import itu.crypto.service.account.AccountService;
 import itu.crypto.service.transaction.wallet.WalletService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PurchaseService implements BaseService<Purchase> {
@@ -33,6 +39,8 @@ public class PurchaseService implements BaseService<Purchase> {
     private final AccountService accountService;
     private final SaleDetailRepository saleDetailRepository;
     private final WalletService walletService;
+    private final TypeMvWalletRepository typeMvWalletRepository;
+    private final MvWalletRepository mvWalletRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -103,9 +111,39 @@ public class PurchaseService implements BaseService<Purchase> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public Purchase save(Purchase purchase) throws PurchaseException {
+        log.info("Controlle purchase {} before insert", purchase);
         controllerAvantInsert(purchase);
 
-        return purchaseRepository.save(purchase);
+        Purchase saved = purchaseRepository.save(purchase);
+        Crypto crypto = saved.getSaleDetail().getCrypto();
+
+        // change wallet
+        // vendeur
+        Wallet walletSeller = walletService.findByCryptoAndAccount(crypto.getId(), purchase.getAccountSeller().getId()).orElseThrow();
+        walletSeller.setQuantity(walletSeller.getQuantity() - purchase.getQuantityCrypto());
+        walletService.save(walletSeller);
+
+        // acheteur
+        Wallet walletPurchaser = walletService.findByCryptoAndAccount(crypto.getId(), purchase.getAccountPurchaser().getId()).orElseThrow();
+        walletPurchaser.setQuantity(walletPurchaser.getQuantity() + purchase.getQuantityCrypto());
+        walletService.save(walletPurchaser);
+
+        // mv_wallet
+        MvWallet mvWalletPurchaser = new MvWallet();
+        mvWalletPurchaser.setQuantity(purchase.getQuantityCrypto());
+        mvWalletPurchaser.setDateMv(purchase.getDatePurchase());
+        mvWalletPurchaser.setWallet(walletPurchaser);
+        mvWalletPurchaser.setTypeMvWallet(typeMvWalletRepository.findById(1).orElseThrow());
+        mvWalletRepository.save(mvWalletPurchaser);
+
+        MvWallet mvWalletSeller = new MvWallet();
+        mvWalletSeller.setQuantity(purchase.getQuantityCrypto());
+        mvWalletSeller.setDateMv(purchase.getDatePurchase());
+        mvWalletSeller.setWallet(walletSeller);
+        mvWalletSeller.setTypeMvWallet(typeMvWalletRepository.findById(2).orElseThrow());
+        mvWalletRepository.save(mvWalletSeller);
+
+        return saved;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
