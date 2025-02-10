@@ -13,8 +13,8 @@ public class FetchService {
     private final ApiService apiService;
     private final CryptoConfigProperties cryptoConfigProperties;
 
-    public ApiResponse fetchUrl(String url, Object payload, boolean log) {
-        if (log) System.out.println("Payload: " + payload);
+    public ApiResponse fetchUrl(String url, Object payload, boolean toLog) {
+        if (toLog) log.debug("Payload: {}", payload);
 
         String apiUrl = buildApiUrl(url);
 

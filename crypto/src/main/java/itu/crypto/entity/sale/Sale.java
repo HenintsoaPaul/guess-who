@@ -1,4 +1,4 @@
-package itu.crypto.entity;
+package itu.crypto.entity.sale;
 
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;

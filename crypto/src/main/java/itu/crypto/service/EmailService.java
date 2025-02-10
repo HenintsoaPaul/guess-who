@@ -1,6 +1,7 @@
 package itu.crypto.service;
 
 import itu.crypto.entity.fund.PendingMvFund;
+import itu.crypto.entity.fund.PendingState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -69,5 +70,18 @@ public class EmailService {
         text += "\nNotre equipe vous souhaite une bonne journee 😊.";
 
         return sendEmail(to, subject, text);
+    }
+
+    /**
+     * Ecrire et envoyer un email pour informer les utilisateurs apres une operation sur les demandes depot/retrait
+     * en envoi ou en reponse(validation/refus).
+     */
+    public String writeEmailPendingMvFund(PendingMvFund pmf) {
+        PendingState etat = pmf.getPendingState();
+        if (pmf.getDateValidation() == null && etat.getId() == 1) {
+            return this.writeEmailAttente(pmf);
+        } else {
+            return this.writeEmailReponse(pmf);
+        }
     }
 }

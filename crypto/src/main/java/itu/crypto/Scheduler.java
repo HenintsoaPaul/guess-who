@@ -14,6 +14,6 @@ public class Scheduler {
     @Scheduled(fixedRate = 10000)
     public void regenerateCours() {
         // coursService.generateCours();
-        System.out.println("Cours updated after 10 sec...\n");
+        System.out.println("Cours updated after 10 sec (commented) ...\n");
     }
 }

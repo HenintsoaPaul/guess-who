@@ -1,7 +1,7 @@
 package itu.crypto.repository.transaction;
 
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

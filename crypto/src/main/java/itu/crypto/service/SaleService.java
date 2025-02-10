@@ -2,15 +2,17 @@ package itu.crypto.service;
 
 import itu.crypto.dto.SaleFormData;
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
+import itu.crypto.entity.sale.SaleException;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.repository.transaction.SaleDetailRepository;
 import itu.crypto.repository.transaction.SaleRepository;
 import itu.crypto.repository.transaction.wallet.WalletRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class SaleService {
     private final WalletRepository walletRepository;
 
     public Sale findById(int id) {
-        return saleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Sale not found"));
+        return saleRepository.findById(id).orElseThrow();
     }
 
     public List<Sale> findAllByIdAccount(Integer idAccount) {
@@ -49,34 +51,32 @@ public class SaleService {
         return walletRepository.findAllByAccount(account);
     }
 
-    private static final String NOT_ENOUGH_CRYPTO_ERROR = "Not enough cryptos in wallet. Crypto: %s, available: %d, required: %d";
-
-    private boolean areWalletsCapable(List<Wallet> wallets, List<SaleDetail> saleDetails) throws Exception {
+    private boolean areWalletsCapable(List<Wallet> wallets, List<SaleDetail> saleDetails) throws SaleException {
         for (SaleDetail saleDetail : saleDetails) {
             validateWalletCryptoQuantity(wallets, saleDetail);
         }
         return true;
     }
 
-    private void validateWalletCryptoQuantity(List<Wallet> wallets, SaleDetail saleDetail) throws Exception {
+    /**
+     * Verifier si nous pouvons validee le sale_detail, en verifiant les restes dans les portefeuilles.
+     */
+    private void validateWalletCryptoQuantity(List<Wallet> wallets, SaleDetail saleDetail) throws SaleException {
         for (Wallet wallet : wallets) {
             if (wallet.getCrypto().equals(saleDetail.getCrypto()) && wallet.getQuantity() < saleDetail.getQuantity()) {
-                throw new Exception(String.format(NOT_ENOUGH_CRYPTO_ERROR, saleDetail.getCrypto(), wallet.getQuantity(),
-                        saleDetail.getQuantity()));
+                throw new SaleException(saleDetail, wallet);
             }
         }
     }
 
-    @Transactional
-    public void save(SaleFormData saleFormData) throws Exception {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void save(SaleFormData saleFormData) throws SaleException {
         Sale sale = saleFormData.getSale();
         List<SaleDetail> saleDetails = saleFormData.getSaleDetails();
 
         // Verifier que les Crypto dans mon wallet suffisent pour faire la vente
         List<Wallet> wallets = this.findAllWallets(sale.getAccount());
         areWalletsCapable(wallets, saleDetails);
-
-        System.out.println(saleFormData);
 
         saleRepository.save(sale);
 
