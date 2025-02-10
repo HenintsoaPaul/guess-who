@@ -66,6 +66,10 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return pendingMvFundRepository.findAllAttente();
     }
 
+    public List<PendingMvFund> findByIdAccount(int idAccount){
+        return pendingMvFundRepository.findAllByUser(idAccount);
+    }
+
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(PendingMvFund pendingMvFund) {
         int retries = 3;

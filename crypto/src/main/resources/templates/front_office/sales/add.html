@@ -11,9 +11,9 @@
     <div th:replace="~{layout/link_header}"></div>
 </head>
 
-<body>
-<div class="layout-wrapper layout-content-navbar">
-    <div class="layout-container">
+  <body th:with="activePage='Mise en vente'">
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
         <!-- Menu -->
         <div th:replace="~{front_office/layout/menu}"></div>
 
