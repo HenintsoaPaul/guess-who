@@ -1,8 +1,6 @@
 package itu.crypto.entity.purchase;
 
-import itu.crypto.ApplicationEventPublisherHolder;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
-import itu.crypto.firebase.notification.FcmService;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostUpdate;
 import lombok.extern.slf4j.Slf4j;
@@ -15,26 +13,17 @@ import org.springframework.stereotype.Component;
 public class PurchaseListener {
 
     private final PurchaseSyncService purchaseSyncService;
-    private final FcmService fcmService;
 
     @Autowired
     public PurchaseListener(
-            @Lazy PurchaseSyncService purchaseSyncService,
-            @Lazy FcmService fcmService
+            @Lazy PurchaseSyncService purchaseSyncService
     ) {
         this.purchaseSyncService = purchaseSyncService;
-        this.fcmService = fcmService;
     }
 
     @PostPersist
     public void apresSauvegarde(Purchase purchase) {
         purchaseSyncService.saveAsDocument(purchase);
-
-//        log.info("Achat effectue id: {}, publication d'un achat", purchase.getId());
-//        ApplicationEventPublisherHolder
-//                .getPublisher()
-//                .publishEvent(new PurchaseCreatedEvent(purchase));
-//        log.info("Publication d'un event");
     }
 
     @PostUpdate

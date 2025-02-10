@@ -11,6 +11,7 @@ import itu.crypto.firebase.firestore.account.AccountSyncService;
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import itu.crypto.firebase.firestore.crypto.CryptoFavSyncService;
 import itu.crypto.firebase.firestore.fund.MvFundSyncService;
+import itu.crypto.firebase.firestore.fund.pending.PendingMvFundSyncService;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
 import itu.crypto.firebase.firestore.wallet.WalletSyncService;
 import itu.crypto.repository.CoursRepository;
@@ -86,6 +87,7 @@ public class FirebaseInitializer {
         ));
 
         Cours w = coursRepository.findById(vao.getId()).orElse(null);
+        assert w != null;
         w.setPu(55555);
         coursRepository.save(w);
     }
@@ -104,6 +106,7 @@ public class FirebaseInitializer {
         ));
 
         CryptoFav w = cryptoFavRepository.findById(1).orElse(null);
+        assert w != null;
         w.setDateCryptoFav(zao);
         cryptoFavRepository.save(w);
     }
@@ -119,6 +122,7 @@ public class FirebaseInitializer {
         ));
 
         Wallet w = walletRepository.findById(vao.getId()).orElse(null);
+        assert w != null;
         w.setQuantity(55555);
         walletRepository.save(w);
     }
