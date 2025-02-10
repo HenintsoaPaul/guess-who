@@ -14,4 +14,10 @@ public interface PendingMvFundRepository extends JpaRepository<PendingMvFund, In
                                     and pmf.pendingState.id = 1
             """)
     List<PendingMvFund> findAllAttente();
+
+    @Query(value = """
+            select pmf from PendingMvFund pmf
+                        where pmf.account.id = :idAccount
+            """)
+    List<PendingMvFund> findAllByUser(int idAccount);
 }

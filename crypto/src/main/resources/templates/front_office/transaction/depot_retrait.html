@@ -11,7 +11,7 @@
     <div th:replace="~{layout/link_header}"></div>
   </head>
 
-  <body>
+  <body th:with="activePage='depotRetrait'">
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
@@ -32,16 +32,49 @@
                       <h5 class="mb-0">Faire un dépôt</h5>
                     </div>
                     <div class="card-body">
-                      <form th:action="@{/front-office/depot}" method="POST">
+                      <form th:action="@{/front-office/transaction/save}" th:object="${pendingMvFund}" method="POST">
                         <div class="mb-3">
-                          <label>Somme à déposer</label>
+                          <label>Date </label>
                           <input
-                            type="number"
-                            name="montant"
+                            th:field="*{datePending}"
+                            type="datetime-local"
                             class="form-control"
-                            placeholder="veuillez saisir le montant"
                             required
                           />
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Montant </label>
+                          <input
+                            th:field="*{amount}"
+                            type="number"
+                            class="form-control"
+                            required
+                          />
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <label
+                            for="typeMvFunds"
+                            class="col-md-3 control-label"
+                            >Type</label
+                          >
+                          <div
+                            th:if="${typeMvFunds != null and not #lists.isEmpty(typeMvFunds)}"
+                          >
+                            <select
+                              th:field="*{typeMvFund}"
+                              required
+                              id="typeMvFunds"
+                              class="form-control mb-3"
+                            >
+                              <option
+                                th:each="tmf:${typeMvFunds}"
+                                th:value="${tmf.getId()}"
+                                th:text="${tmf.getName()}"
+                              ></option>
+                            </select>
+                          </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">

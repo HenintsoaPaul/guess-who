@@ -18,7 +18,7 @@
     <div th:replace="~{front_office/layout/link_header}"></div>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   </head>
-  <body>
+  <body th:with="activePage='cryptoGraphe'">
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <div th:replace="~{front_office/layout/menu}"></div>

@@ -2,7 +2,6 @@ package itu.crypto.controller;
 
 import lombok.RequiredArgsConstructor;
 
-
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -20,11 +19,13 @@ import itu.crypto.entity.Sale;
 import itu.crypto.entity.SaleDetail;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
+import itu.crypto.entity.fund.PendingMvFund;
 import itu.crypto.enums.CoursAnalysisType;
 import itu.crypto.repository.CryptoRepository;
 import itu.crypto.service.CoursService;
 import itu.crypto.service.SaleService;
 import itu.crypto.service.account.AccountService;
+import itu.crypto.service.transaction.fund.PendingMvFundService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -32,11 +33,11 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/front-office")
 public class FrontOfficeController {
 
-
     private final CoursService coursService;
     private final SaleService saleService;
     private final AccountService accountService;
     private final CryptoRepository cryptoRepository;
+    private final PendingMvFundService pendingMvFundService;
 
     // Home page
     @GetMapping
@@ -95,7 +96,6 @@ public class FrontOfficeController {
     public String goToDetail(Model model, @PathVariable Integer id) {
         Sale sale = saleService.findById(id);
         List<SaleDetail> saleDetails = saleService.findAllSaleDetails(sale);
-        
 
         model.addAttribute("sale", sale);
         model.addAttribute("saleDetails", saleDetails);
@@ -126,41 +126,48 @@ public class FrontOfficeController {
         return "redirect:/front-office/sales/id";
     }
 
-    // Dépôt 
-    @GetMapping("/depotRetrait")
+    // Dépôt
+    @GetMapping("/transaction/depotRetrait")
     public String goToDepot(Model model) {
+        model.addAttribute("pendingMvFund", new PendingMvFund());
+        model.addAttribute("accounts", pendingMvFundService.findAllAccounts());
+        model.addAttribute("typeMvFunds", pendingMvFundService.findAllTypeMvFundsDepotRetrait());
         return "front_office/transaction/depot_retrait";
     }
 
-    
-    @GetMapping("/depot/add")
-    public String saveDepot(Model model, HttpSession session) {
+    @PostMapping("/transaction/save")
+    public String saveDepot(Model model, @ModelAttribute PendingMvFund pendingMvFund) {
+        
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
         Account myAccount = accountService.findById(1).orElseThrow();
+        pendingMvFund.setPendingState(pendingMvFundService.getEtatAttente());
+        pendingMvFund.setAccount(myAccount);
+        pendingMvFundService.save(pendingMvFund);
 
-        model.addAttribute("saleFormData", new SaleFormData(myAccount));
-        model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
-        return "front_office/sales/add";
+        model.addAttribute("msg", pendingMvFundService.sendEmail(pendingMvFund));
+        return goToHistorique(model);
     }
 
-    //Retrait
-    @GetMapping("/retrait")
-    public String goToRetrait(Model model) {
-        return "front_office/transaction/retrait";
-    }
-
-    
-    @GetMapping("/retrait/add")
-    public String saveRetrait(Model model, HttpSession session) {
+    @GetMapping("/transaction/historique")
+    public String goToHistorique(Model model) {
+        
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
-        Account myAccount = accountService.findById(1).orElseThrow();
+        model.addAttribute("pendingMvFunds", pendingMvFundService.findByIdAccount(1));
+        return "front_office/transaction/historique";
+    }
 
-        model.addAttribute("saleFormData", new SaleFormData(myAccount));
-        model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
-        return "front_office/sales/add";
+    // Account
+    @GetMapping("/account/profil")
+    public String goToAccountProfil(Model model) {
+        
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+        Account myAccount = accountService.findById(1).orElseThrow();
+        model.addAttribute("account",myAccount);
+        return "front_office/profil";
     }
 }
