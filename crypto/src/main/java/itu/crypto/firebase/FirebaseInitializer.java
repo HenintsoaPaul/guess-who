@@ -4,7 +4,6 @@ import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
 import itu.crypto.entity.crypto.CryptoFav;
-import itu.crypto.entity.purchase.PurchaseException;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.firebase.firestore.FirestoreChangeListenerManager;
 import itu.crypto.firebase.firestore.FirestoreSyncManager;
@@ -12,7 +11,6 @@ import itu.crypto.firebase.firestore.account.AccountSyncService;
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import itu.crypto.firebase.firestore.crypto.CryptoFavSyncService;
 import itu.crypto.firebase.firestore.fund.MvFundSyncService;
-import itu.crypto.firebase.firestore.fund.pending.PendingMvFundSyncService;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
 import itu.crypto.firebase.firestore.wallet.WalletSyncService;
 import itu.crypto.repository.CoursRepository;
@@ -56,7 +54,6 @@ public class FirebaseInitializer {
     private final MvFundService mvFundService;
     private final PendingMvFundService pendingMvFundService;
 
-//    private final PurchaseRepository purchaseRepository;
     private final PurchaseService purchaseService;
 
     private final WalletRepository walletRepository;
@@ -64,8 +61,8 @@ public class FirebaseInitializer {
 
     @PostConstruct
     public void init() {
-//        firestoreSyncManager.init();
-//        firestoreChangeListenerManager.init();
+         firestoreSyncManager.init();
+         firestoreChangeListenerManager.init();
     }
 
     private void testAccount() {
@@ -124,26 +121,6 @@ public class FirebaseInitializer {
         Wallet w = walletRepository.findById(vao.getId()).orElse(null);
         w.setQuantity(55555);
         walletRepository.save(w);
-    }
-
-    private void testPurchase() {
-        purchaseSyncService.syncWithFirebase();
-
-        Purchase p = new Purchase(
-                null,
-                LocalDateTime.now(),
-                1500.00,
-                500.00,
-                3,
-                accountRepository.findAll().get(0),
-                accountRepository.findAll().get(1),
-                saleDetailRepository.findAll().get(0)
-        );
-        Purchase vao = purchaseRepository.save(p);
-
-        Purchase w = purchaseRepository.findById(vao.getId()).orElse(null);
-        w.setQuantityCrypto(55555);
-        purchaseRepository.save(w);
     }
 
     private void testPendingMvFund() {

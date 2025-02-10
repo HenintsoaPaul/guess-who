@@ -1,5 +1,6 @@
 package itu.crypto.controller;
 
+import com.google.api.Http;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.service.transaction.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
@@ -184,4 +185,47 @@ public class FrontOfficeController {
         model.addAttribute("user", myAccount.getPseudo() + "(" + myAccount.getEmail() + ")");
         return "front_office/wallet/index";
     }
+
+    // market
+    @GetMapping("/market")
+    public String goToMarket(Model model) {
+        List<SaleDetail> saleDetails = saleService.findAllDispo();
+
+        model.addAttribute("saleDetails", saleDetails);
+        return "front_office/market/index";
+    }
+
+    @GetMapping("/market/{id}")
+    public String goToMarketInfo(Model model, @PathVariable Integer id) {
+        SaleDetail saleDetail = saleService.findByIdSaleDetail(id);
+        Sale sale = saleService.findByIdSale(saleDetail.getSale().getId());
+        Account accountSeller = accountService.findById(sale.getAccount().getId()).orElseThrow();
+
+        model.addAttribute("saleDetail", saleDetail);
+        model.addAttribute("accountSeller", accountSeller);
+        return "front_office/market/buy";
+    }
+
+    @PostMapping("/market/buy")
+    public String buyCrypto(@RequestParam("idSaleDetail") Integer idSaleDetail, @RequestParam("qtt") Integer quantity, RedirectAttributes redirectAttributes, HttpSession session) {
+        try {
+            // Integer idAccount = (Integer) session.getAttribute("id_account");
+            // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+            // todo: comment on production
+            Account myAccount = accountService.findById(1).orElseThrow();
+
+            SaleDetail saleDetail = saleService.findByIdSaleDetail(idSaleDetail);
+            if (quantity > saleDetail.getQuantityLeft()) {
+                throw new IllegalArgumentException("Quantité demandée supérieure à la quantité disponible.");
+            }
+
+            saleService.buyCrypto(myAccount, saleDetail, quantity);
+            return "redirect:/front-office/market";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/front-office/market/" + idSaleDetail;
+        }
+    }
+
 }

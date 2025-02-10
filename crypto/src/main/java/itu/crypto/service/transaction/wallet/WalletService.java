@@ -27,12 +27,12 @@ public class WalletService implements BaseService<Wallet> {
         return walletRepository.findById(id);
     }
 
-    public Optional<Wallet> findByCryptoAndAccount(Integer idCrypto, Integer idAccount) {
-        return walletRepository.findByCryptoAndAccount(idCrypto, idAccount);
-    }
-
     public List<Wallet> findAllByAccount(Account myAccount) {
         return walletRepository.findAllByAccount(myAccount);
+    }
+
+    public Optional<Wallet> findByCryptoAndAccount(Integer idCrypto, Integer idAccount) {
+        return walletRepository.findByCryptoAndAccount(idCrypto, idAccount);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

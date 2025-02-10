@@ -30,4 +30,5 @@ public class SaleDetail {
     @JoinColumn(name = "id_sale", nullable = false)
     private Sale sale;
 
+    
 }

@@ -118,15 +118,15 @@
       </ul>
     </li>
 
-    <li class="menu-item">
-      <a href="tables-basic.html" class="menu-link">
+    <li class="menu-item" th:classappend="${activePage == 'wallet'} ? 'active'">
+      <a href="/front-office/wallet" class="menu-link">
         <i class="menu-icon tf-icons bx bx-wallet"></i>
         <div data-i18n="Tables">Portefeuille</div>
       </a>
     </li>
 
-    <li class="menu-item">
-      <a href="tables-basic.html" class="menu-link">
+    <li class="menu-item" th:classappend="${activePage == 'market'} ? 'active'">
+      <a href="/front-office/market" class="menu-link">
         <i class="menu-icon tf-icons bx bx-basket"></i>
         <div data-i18n="Tables">Vente sur le marchée</div>
       </a>

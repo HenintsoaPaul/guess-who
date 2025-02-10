@@ -35,6 +35,18 @@ public class SaleService {
         return saleDetailRepository.findAllBySale(sale);
     }
 
+    public List<SaleDetail> findAllDispo() {
+        return saleDetailRepository.findAllDispo();
+    }
+
+    public SaleDetail findByIdSaleDetail(int id){
+        return saleDetailRepository.findAllById(id);
+    }
+
+    public Sale findByIdSale(int id){
+        return saleRepository.findAllById(id);
+    }
+
     public List<Wallet> findAllWallets(Account account) {
         return walletRepository.findAllByAccount(account);
     }
@@ -74,5 +86,19 @@ public class SaleService {
 
             saleDetailRepository.save(saleDetail);
         }
+    }
+
+    @Transactional
+    public void buyCrypto(Account buyer, SaleDetail saleDetail, int quantity) {
+        if (quantity > saleDetail.getQuantityLeft()) {
+            throw new IllegalArgumentException("Quantité demandée supérieure à la quantité disponible.");
+        }
+
+        // Update the quantity left in the sale detail
+        saleDetail.setQuantityLeft(saleDetail.getQuantityLeft() - quantity);
+        saleDetailRepository.save(saleDetail);
+
+        // Add the purchased quantity to the buyer's wallet
+        walletRepository.addCryptoToWallet(buyer.getId(), saleDetail.getCrypto().getId(), quantity);
     }
 }
