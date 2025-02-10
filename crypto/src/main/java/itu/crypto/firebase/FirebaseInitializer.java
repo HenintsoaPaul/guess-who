@@ -4,6 +4,7 @@ import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
 import itu.crypto.entity.crypto.CryptoFav;
+import itu.crypto.entity.purchase.PurchaseException;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.firebase.firestore.FirestoreChangeListenerManager;
 import itu.crypto.firebase.firestore.FirestoreSyncManager;
@@ -18,9 +19,9 @@ import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.CryptoFavRepository;
 import itu.crypto.repository.CryptoRepository;
 import itu.crypto.repository.account.AccountRepository;
-import itu.crypto.repository.transaction.PurchaseRepository;
 import itu.crypto.repository.transaction.SaleDetailRepository;
 import itu.crypto.repository.transaction.wallet.WalletRepository;
+import itu.crypto.service.transaction.PurchaseService;
 import itu.crypto.service.transaction.fund.MvFundService;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,10 @@ public class FirebaseInitializer {
     private final CryptoFavRepository cryptoFavRepository;
     private final MvFundService mvFundService;
     private final PendingMvFundService pendingMvFundService;
-    private final PurchaseRepository purchaseRepository;
+
+//    private final PurchaseRepository purchaseRepository;
+    private final PurchaseService purchaseService;
+
     private final WalletRepository walletRepository;
     private final SaleDetailRepository saleDetailRepository;
 

@@ -189,7 +189,7 @@ CREATE TABLE mv_fund
     date_mv            TIMESTAMP      NOT NULL,
     amount             NUMERIC(15, 2) NOT NULL,
     id_source          INTEGER,
-    id_pending_mv_fund INTEGER        NOT NULL,
+    id_pending_mv_fund INTEGER,
     id_type_mv_fund    INTEGER        NOT NULL,
     id_account         INTEGER        NOT NULL,
     PRIMARY KEY (id_mv_fund),

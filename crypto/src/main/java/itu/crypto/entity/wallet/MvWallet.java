@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -24,7 +24,7 @@ public class MvWallet {
     private Integer quantity;
 
     @Column(name = "date_mv")
-    private LocalDate dateMv;
+    private LocalDateTime dateMv;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_wallet", nullable = false)
