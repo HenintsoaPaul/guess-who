@@ -60,8 +60,8 @@ public class FirebaseInitializer {
 
     @PostConstruct
     public void init() {
-        // firestoreSyncManager.init();
-        // firestoreChangeListenerManager.init();
+         firestoreSyncManager.init();
+         firestoreChangeListenerManager.init();
     }
 
     private void testAccount() {
