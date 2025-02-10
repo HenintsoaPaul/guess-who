@@ -35,7 +35,7 @@ class PendingRegister extends Model
     {
         $account = new Account();
         $account->email = $this->email;
-        $account->password = $this->password; // Assurez-vous de hasher le mot de passe avant stockage
+        $account->password = $this->password; // Deja hashed
         $account->id_pending_register = $this->id_pending_register;
         $account->id_type_account_state = 1;
         $account->save();

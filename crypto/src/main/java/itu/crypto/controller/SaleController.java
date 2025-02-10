@@ -1,11 +1,11 @@
 package itu.crypto.controller;
 
 import itu.crypto.dto.SaleFormData;
-import itu.crypto.entity.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.account.Account;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.repository.CryptoRepository;
-import itu.crypto.service.AccountService;
+import itu.crypto.service.account.AccountService;
 import itu.crypto.service.SaleService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -25,45 +25,36 @@ public class SaleController {
 
     @GetMapping
     public String goToList(Model model, HttpSession session) {
-	Integer idAccount = (Integer) session.getAttribute("id_account");
-	List<Sale> mySales = saleService.findAllByIdAccount(idAccount);
+        Integer idAccount = (Integer) session.getAttribute("id_account");
+        List<Sale> mySales = saleService.findAllByIdAccount(idAccount);
 
-	model.addAttribute("sales", mySales);
-	return "sales/index";
+        model.addAttribute("sales", mySales);
+        return "sales/index";
     }
-
-//    @GetMapping("/dispo")
-//    public String goToListAchatDispo(Model model, HttpSession session) {
-//	Integer idAccount = (Integer) session.getAttribute("id_account");
-//	List<Sale> mySales = saleService.findAllSaleDetails(idAccount);
-//
-//	model.addAttribute("sales", mySales);
-//	return "sales/index";
-//    }
 
     @GetMapping("/{id}")
     public String goToDetail(Model model, @PathVariable Integer id) {
-	Sale sale = saleService.findById(id);
-	List<SaleDetail> saleDetails = saleService.findAllSaleDetails(sale);
+        Sale sale = saleService.findById(id);
+        List<SaleDetail> saleDetails = saleService.findAllSaleDetails(sale);
 
-	model.addAttribute("sale", sale);
-	model.addAttribute("saleDetails", saleDetails);
-	return "sales/detail";
+        model.addAttribute("sale", sale);
+        model.addAttribute("saleDetails", saleDetails);
+        return "sales/detail";
     }
 
     @GetMapping("/add")
     public String goToForm(Model model, HttpSession session) {
-	Integer idAccount = (Integer) session.getAttribute("id_account");
-	Account myAccount = accountService.findById(idAccount);
+        Integer idAccount = (Integer) session.getAttribute("id_account");
+        Account myAccount = accountService.findById(idAccount).orElseThrow();
 
-	model.addAttribute("saleFormData", new SaleFormData(myAccount));
-	model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
-	return "sales/add";
+        model.addAttribute("saleFormData", new SaleFormData(myAccount));
+        model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
+        return "sales/add";
     }
 
     @PostMapping("/save")
     public String save(@ModelAttribute("saleFormData") SaleFormData saleFormData) throws Exception {
-	saleService.save(saleFormData);
-	return "redirect:/sales";
+        saleService.save(saleFormData);
+        return "redirect:/sales";
     }
 }

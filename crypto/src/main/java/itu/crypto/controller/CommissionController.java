@@ -1,14 +1,11 @@
 package itu.crypto.controller;
 
-import itu.crypto.dto.SaleFormData;
-import itu.crypto.entity.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
-import itu.crypto.repository.CommissionRepository;
-import itu.crypto.repository.CryptoRepository;
-import itu.crypto.service.AccountService;
-import itu.crypto.service.SaleService;
-import jakarta.servlet.http.HttpSession;
+import itu.crypto.dto.commission.CommissionTypeAnalysis;
+import itu.crypto.entity.commission.CommissionPurchase;
+import itu.crypto.entity.commission.CommissionRate;
+import itu.crypto.enums.CommissionAnalysisType;
+import itu.crypto.service.transaction.CommissionPurchaseService;
+import itu.crypto.service.transaction.CommissionRateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,40 +17,54 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/commissions")
 public class CommissionController {
-    private final CommissionRepository commissionRepository;
+
+    private final CommissionRateService commissionRateService;
+    private final CommissionPurchaseService commissionPurchaseService;
 
     @GetMapping
-    public String goToList(Model model) {
-	model.addAttribute("commissions", commissionRepository.findAll());
-	return "commissions/index";
+    public String goToList(Model model,
+                           @RequestParam(required = false, name = "typeAnalyse") CommissionAnalysisType analysisType,
+                           @RequestParam(required = false) Integer idCrypto,
+                           @RequestParam(required = false) String dateMin,
+                           @RequestParam(required = false) String dateMax) {
+
+        List<CommissionPurchase> commissionPurchases = commissionPurchaseService.findAllByDatePurchaseInRange(dateMin, dateMax);
+
+        if (idCrypto != null && idCrypto != -1) {
+            commissionPurchases = commissionPurchases.stream()
+                    .filter(cp -> cp.getPurchase().getSaleDetail().getCrypto().getId().equals(idCrypto))
+                    .toList();
+        }
+
+        if (analysisType == null) analysisType = CommissionAnalysisType.SUM_COMMISSION;
+        List<CommissionTypeAnalysis> analyses = commissionPurchaseService.getAnalysis(analysisType, commissionPurchases);
+        model.addAttribute("analyses", analyses);
+
+        model.addAttribute("cryptos", commissionRateService.findAllCrypto());
+
+        model.addAttribute("analyseTypes", CommissionAnalysisType.values());
+        model.addAttribute("analyseType", analysisType);
+        return "commissions/index";
     }
 
-//    @GetMapping("/{id}")
-//    public String goToUpdate(Model model, @PathVariable Integer id) {
-////	Sale sale = saleService.findById(id);
-////	List<SaleDetail> saleDetails = saleService.findAllSaleDetails(sale);
-//
-//
-////	model.addAttribute("", sale);
-////	model.addAttribute("saleDetails", saleDetails);
-//
-//	return "commissions/detail";
-//    }
+    @GetMapping("/rates")
+    public String goToList(Model model) {
+        model.addAttribute("commissionsRates", commissionRateService.findAll());
+        model.addAttribute("currentCommissionRates", commissionRateService.findCurrentCommissions());
 
-//
-//    @GetMapping("/add")
-//    public String goToForm(Model model, HttpSession session) {
-//	Integer idAccount = (Integer) session.getAttribute("id_account");
-//	Account myAccount = accountService.findById(idAccount);
-//
-//	model.addAttribute("saleFormData", new SaleFormData(myAccount));
-//	model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
-//	return "sales/add";
-//    }
+        return "commissions/rates/index";
+    }
 
-//    @PostMapping("/save")
-//    public String save(@ModelAttribute("saleFormData") SaleFormData saleFormData) throws Exception {
-//	saleService.save(saleFormData);
-//	return "redirect:/sales";
-//    }
+    @GetMapping("/edit")
+    public String goToForm(Model model) {
+        model.addAttribute("commissionRate", new CommissionRate());
+        model.addAttribute("commissionTypes", commissionRateService.findAllTypes());
+        return "commissions/edit";
+    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute("commission") CommissionRate commissionRate) {
+        commissionRateService.save(commissionRate);
+        return "redirect:/commissions/edit";
+    }
 }

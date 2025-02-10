@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>Historique des opérations</title>
+
+    <meta name="description" content="" />
+
+    <div th:replace="~{layout/link_header}"></div>
+  </head>
+
+  <body th:with="activePage='histo'">
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+        <div th:replace="~{back_office/layout/menu}"></div>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4">
+                <span class="text-muted fw-light"
+                  >Historique des opérations/</span
+                >
+              </h4>
+
+              <div class="row">
+                <!--  Analyses des cours du site  -->
+                <div class="col-xl">
+                  <div class="card mb-4" id="analyse-site">
+                    <div
+                      class="card-header d-flex justify-content-between align-items-center"
+                    >
+                      <h5 class="mb-0">Filtrer</h5>
+                    </div>
+                    <div class="card-body">
+                      <form
+                        th:action="@{/back-office/operations}"
+                        method="GET"
+                        class="form-inline mb-3"
+                      >
+                        <!-- Filter by date -->
+                        <div class="mb-3">
+                          <div class="row">
+                            <div class="col-6">
+                              <label class="form-label">Date Min :</label>
+                              <input
+                                class="form-control"
+                                type="date"
+                                name="dateMin"
+                                th:value="${dateMin}"
+                              />
+                            </div>
+                            <div class="col-6">
+                              <label class="form-label">Date Max :</label>
+                              <input
+                                class="form-control"
+                                type="date"
+                                name="dateMax"
+                                th:value="${dateMax}"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Crypto  -->
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-phone"
+                            >Crypto
+                          </label>
+                          <select
+                            name="idCrypto"
+                            id="cryptos"
+                            class="form-select mb-4 col-4"
+                          >
+                            <option value="-1">Tous les cryptos</option>
+                            <option
+                              th:each="cry:${cryptos}"
+                              th:value="${cry.getId()}"
+                              th:text="${cry.getName()}"
+                            ></option>
+                          </select>
+                        </div>
+
+                        <!-- Filter by account  -->
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-phone"
+                            >Utilisateur
+                          </label>
+                          <select
+                            name="idAccount"
+                            id="accounts"
+                            class="form-control mb-4 col-4"
+                          >
+                            <option value="">Choisir utilisateur</option>
+                            <option
+                              th:each="acc:${accounts}"
+                              th:value="${acc.getId()}"
+                              th:text="${acc.getPseudo()}"
+                            ></option>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                          Analyser
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Data -->
+                <div class="card mt-4">
+                  <div
+                    class="card-header d-flex justify-content-between align-items-center"
+                  >
+                    <h5 class="mb-0">Historique des opérations</h5>
+                  </div>
+                  <table class="table table-bordered table-striped mt-3">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>ID</th>
+                        <th>Crypto</th>
+                        <th>Utilisateur</th>
+                        <th>Date</th>
+                        <th>Quantite</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="mvt : ${mvWallets}">
+                        <td th:text="${mvt.getId()}"></td>
+                        <td
+                          th:text="${mvt.getWallet().getCrypto().sout()}"
+                        ></td>
+                        <td>
+                          <a
+
+                            th:href="@{/back-office/operations/account/{id}(id=${mvt.getAccount().getId()})}"
+                            th:text="${mvt.getWallet().getAccount().getPseudo()}"
+                          >
+                          </a>
+                        </td>
+                        <td th:text="${mvt.getDateMv()}"></td>
+                        <td th:text="${mvt.getQuantity()}"></td>
+                        <td th:text="${mvt.getTypeMvWallet().getName()}"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- / Content -->
+
+          <!-- Footer -->
+          <div th:replace="~{back_office/layout/footer}"></div>
+          <!-- / Footer -->
+
+          <div class="content-backdrop fade"></div>
+        </div>
+        <!-- Content wrapper -->
+      </div>
+      <!-- / Layout page -->
+    </div>
+
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+    <!-- / Layout wrapper -->
+
+    <!-- script -->
+    <div th:replace="~{layout/script}"></div>
+  </body>
+</html>

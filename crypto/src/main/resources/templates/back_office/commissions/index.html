@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>Commission</title>
+
+    <meta name="description" content="" />
+
+    <div th:replace="~{layout/link_header}"></div>
+  </head>
+
+  <body th:with="activePage='commissionsListe'">
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+        <div th:replace="~{back_office/layout/menu}"></div>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4">
+                <span class="text-muted fw-light">Commissions/</span> Liste des
+                commissions obtenue
+              </h4>
+
+              <div class="row">
+                <!--  Analyses des cours du site  -->
+                <div class="col-xl">
+                  <div class="card mb-4" id="analyse-site">
+                    <div
+                      class="card-header d-flex justify-content-between align-items-center"
+                    >
+                      <h5 class="mb-0">Faire une Analyse</h5>
+                    </div>
+                    <div class="card-body">
+                      <form
+                        th:action="@{/back-office/commissions}"
+                        method="GET"
+                        class="form-inline mb-3"
+                      >
+                        <!-- Filter by Type Analyse -->
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-phone"
+                            >Type d'analyse
+                          </label>
+                          <select class="form-select" name="typeAnalyse">
+                            <option
+                              th:each="ap : ${analyseTypes}"
+                              th:value="${ap}"
+                              th:text="${ap.getLabel()}"
+                            ></option>
+                          </select>
+                        </div>
+
+                        <!-- Filter by date -->
+                        <div class="mb-3">
+                          <div class="row">
+                            <div class="col-6">
+                              <label class="form-label">Date Min :</label>
+                              <input
+                                class="form-control"
+                                type="datetime-local"
+                                name="dateMin"
+                                th:value="${dateMin}"
+                              />
+                            </div>
+                            <div class="col-6">
+                              <label class="form-label">Date Max :</label>
+                              <input
+                                class="form-control"
+                                type="datetime-local"
+                                name="dateMax"
+                                th:value="${dateMax}"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Crypto  -->
+                        <div class="mb-3">
+                          <label class="form-label" for="basic-default-phone"
+                            >Crypto
+                          </label>
+                          <select
+                            name="idCrypto"
+                            id="cryptos"
+                            class="form-select mb-4 col-4"
+                          >
+                            <option value="-1">Tous les cryptos</option>
+                            <option
+                              th:each="cry:${cryptos}"
+                              th:value="${cry.getId()}"
+                              th:text="${cry.getName()}"
+                            ></option>
+                          </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                          Analyser
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Data -->
+
+                <div class="container mt-4">
+                  <section
+                    th:if="${analyses != null && analyses.size() > 0}"
+                    id="section-analyse-ok"
+                  >
+                    <div class="card mt-4">
+                      <h5 class="card-header">
+                        Analayse par "<span
+                          th:text="${analyseType.getLabel()}"
+                        ></span
+                        >"
+                      </h5>
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Type</th>
+                            <th>Valeur</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="anal : ${analyses}">
+                            <td
+                              th:text="${anal.getCommissionType().getLabel()}"
+                            ></td>
+                            <td th:text="${anal.getValue()}"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <br />
+                    <!-- Details -->
+
+                    <div th:each=" analyse : ${analyses} ">
+                      <div class="card mt-4">
+                        <h5 class="card-header">
+                          Details
+                          <span
+                            th:text="${analyse.getCommissionType().getLabel()}"
+                          ></span>
+                        </h5>
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Crypto</th>
+                              <th>Montant commissionnee</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr
+                              th:each="anal : ${analyse.getCommissionPurchases()}"
+                            >
+                              <td
+                                th:text="${anal.getPurchase().getSaleDetail().getCrypto().getName()}"
+                              ></td>
+                              <td th:text="${anal.getAmount()}"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </section>
+                  <section th:else id="section-analyse-not-ok">
+                    <p>Aucune analyse disponible</p>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- / Content -->
+
+          <!-- Footer -->
+          <div th:replace="~{back_office/layout/footer}"></div>
+          <!-- / Footer -->
+
+          <div class="content-backdrop fade"></div>
+        </div>
+        <!-- Content wrapper -->
+      </div>
+      <!-- / Layout page -->
+    </div>
+
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+    <!-- / Layout wrapper -->
+
+    <!-- script -->
+    <div th:replace="~{layout/script}"></div>
+  </body>
+</html>

@@ -1,17 +1,14 @@
 package itu.crypto.controller;
 
-import itu.crypto.service.LoginService;
-import lombok.RequiredArgsConstructor;
-
+import itu.crypto.entity.cours.Cours;
+import itu.crypto.entity.crypto.Crypto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import itu.crypto.entity.*;
 import itu.crypto.repository.*;
 
 import java.util.List;
@@ -39,7 +36,7 @@ public class ChartController {
     // Endpoint pour récupérer les cours d'une crypto donnée
     @GetMapping("/cours/{idCrypto}")
     public List<Cours> getCoursByCrypto(@PathVariable int idCrypto) {
-        return coursRepository.findById(idCrypto);
+        return coursRepository.findByIdCrypto(idCrypto);
     }
 }
 

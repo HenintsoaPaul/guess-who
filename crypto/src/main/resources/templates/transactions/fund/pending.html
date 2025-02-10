@@ -1,0 +1,46 @@
+<div th:replace="~{fragments/_layout}"></div>
+
+<main id="main" class="main">
+    <!-- Data -->
+    <div class="container mt-4">
+        <h3 class="text-center">Demande depot/retrait</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Date demande</th>
+                <th>Montant</th>
+                <th>Utilisateur</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pmf : ${pendingMvFunds}">
+                <td th:text="${pmf.getId()}"></td>
+                <td th:text="${pmf.getDatePending()}"></td>
+                <td th:text="${pmf.getAmount()}"></td>
+                <td th:text="${pmf.getAccount().getPseudo()}"></td>
+                <td th:text="${pmf.getTypeMvFund().getName()}"></td>
+                <td>
+                    <a th:href="@{/transactions/fund/pending/ok/{id}(id=${pmf.getId()})}"
+                       class="btn btn-success">
+                        Valider
+                    </a>
+                    <a th:href="@{/transactions/fund/pending/no/{id}(id=${pmf.getId()})}"
+                       class="btn btn-danger">
+                        Refuser
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div>
+            <p th:if="${msg != null}">
+                <span th:text="${msg}"></span>
+            </p>
+        </div>
+    </div>
+</main>
+</html>

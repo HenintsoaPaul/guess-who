@@ -7,6 +7,7 @@ identity/vendor
 identity/.env
 identity/.env.backup
 identity/.env.production
+identity/composer.lock
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -20,3 +21,9 @@ yarn-error.log
 
 # java
 **/target/**
+crypto/src/main/resources/application.properties
+crypto/pom.xml
+
+crypto-mobile-app/node_modules/*
+
+crypto/src/main/resources/private-key.json

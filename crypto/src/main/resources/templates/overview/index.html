@@ -1,0 +1,49 @@
+<div th:replace="~{fragments/_layout}"></div>
+
+<main id="main" class="main">
+    <!-- Filtres -->
+    <div class="my-2">
+        <form th:action="@{/overview}" method="GET" class="form-inline mb-3">
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+
+            <div class="row g-10">
+                <!-- Filter by date -->
+                <div class="row g-10">
+                    <div class="col-4 card px-3 py-3">
+                        <label>Date Min :</label>
+                        <input type="date" name="dateMin">
+                    </div>
+                    <div class="col-4 card px-3 py-3">
+                        <label>Date Max :</label>
+                        <input type="date" name="dateMax">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Data -->
+    <div class="container mt-4">
+        <h3 class="text-center">Historique des overview</h3>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th>Utilisateur</th>
+                <th>Total Achat</th>
+                <th>Total Vente</th>
+                <th>Portefeuille</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="overvy : ${overviews}">
+                <td th:text="${overvy.getAccount().getPseudo()}"></td>
+                <td th:text="${overvy.getSumPurchases()}"></td>
+                <td th:text="${overvy.getSumSales()}"></td>
+                <td th:text="${overvy.getAccount().getFund()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

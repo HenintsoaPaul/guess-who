@@ -1,6 +1,5 @@
 package itu.crypto.controller;
 
-import itu.crypto.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
