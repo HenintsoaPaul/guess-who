@@ -44,6 +44,7 @@ public class FirebaseInitializer {
     private final PurchaseSyncService purchaseSyncService;
     private final CryptoFavSyncService cryptoFavSyncService;
     private final MvFundSyncService mvFundSyncService;
+    private final PendingMvFundSyncService pendingMvFundSyncService;
     private final WalletSyncService walletSyncService;
 
     private final AccountRepository accountRepository;
@@ -60,8 +61,8 @@ public class FirebaseInitializer {
 
     @PostConstruct
     public void init() {
-        firestoreSyncManager.init();
-        firestoreChangeListenerManager.init();
+         firestoreSyncManager.init();
+         firestoreChangeListenerManager.init();
     }
 
     private void testAccount() {
