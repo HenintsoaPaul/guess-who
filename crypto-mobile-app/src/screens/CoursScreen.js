@@ -1,7 +1,7 @@
 import React, { useState,useEffect, useContext,} from 'react';
 import { View, Text, StyleSheet, TextInput,FlatList, ActivityIndicator } from 'react-native';
 import {onSnapshot , collection, getDocs} from 'firebase/firestore';
-import {FIRESTORE_DB } from '../services/firebaseService';
+import {fetchDataFromFirebase, firebaseCollection, FIRESTORE_DB } from '../services/firebaseService';
 import CryptoCard from '../components/molecules/CryptoCard';
 import { colorsChart } from '../constants/ColorsChart';
 import { LinearGradient } from "expo-linear-gradient";
@@ -10,17 +10,9 @@ import { AppContext } from '../../AppContext';
 import CryptoFavCard from '../components/molecules/CryptoFavCard';
 
 
-const fetchCryptoData = async (setCryptos) => {
+const fetchCryptoData = (setCryptos) => {
   try {
-    const cryptoRef = collection(FIRESTORE_DB, "crypto");
-    const querySnapshot = await getDocs(cryptoRef);
-    const cryptos = [];    
-    querySnapshot.forEach((doc) => {
-      cryptos.push(doc.data());
-    });
-    
-    setCryptos(cryptos);
-    const unsubscribe = onSnapshot(cryptoRef,(snapshot) => {
+    const unsubscribe = onSnapshot(firebaseCollection('crypto'),(snapshot) => {
       const updatedCryptos = [];
       snapshot.forEach((doc) => {
         updatedCryptos.push(doc.data());
@@ -39,12 +31,11 @@ const CoursScreen = () => {
   const [filterText, setFilterText] = useState('');
   const {user} = useContext(AppContext);
   
-
   useEffect(() => {
     setLoading(true);
     const fetchCryptos = async () => {
       try {
-        const unsubscribe = await fetchCryptoData(setCryptos);
+        const unsubscribe = fetchCryptoData(setCryptos);
         return () => {
           if (unsubscribe) unsubscribe();
         };
@@ -58,6 +49,9 @@ const CoursScreen = () => {
     fetchCryptos();
   }, []);
 
+  if(user === null) {
+    return <></>
+  }
   
   if (loading) {
     return (
@@ -87,8 +81,7 @@ const CoursScreen = () => {
                 />
         </View>
 
-        <LinearGradient
-                colors={["rgba(58,65,110,255)", "rgba(25,28,48,255)"]}
+        <View
                 style={[styles.headerOverlay]}
                 >
             
@@ -105,10 +98,10 @@ const CoursScreen = () => {
                 }}
                 contentContainerStyle={{gap:8}}
                 renderItem={({ item, index }) => (
-                  <CryptoFavCard key={index} crypto={item}></CryptoFavCard>
+                  <CryptoFavCard key={index} crypto={item} style={{borderWidth:3,borderColor:colorsChart.gray}}></CryptoFavCard>
                 )}
             />
-        </LinearGradient>
+        </View>
 
     </View>
   );
@@ -118,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    backgroundColor:colorsChart.light,
+    backgroundColor:colorsChart.white,
   },
   header: {
     width: '100%',

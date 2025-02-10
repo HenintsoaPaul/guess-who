@@ -1,20 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-import FormData from 'form-data';
-import CryptoJS from 'crypto-js';
-import { AppContext } from '../../../AppContext';
-import { FontAwesome } from '@expo/vector-icons';
-import { collection, doc ,getDoc,query,updateDoc, where} from 'firebase/firestore';
-import { cloneMobData, fetchDataFromFirebase, FIRESTORE_DB } from '../../services/firebaseService';
 import StyleText from '../atoms/StyleText';
-
-const CLOUDINARY_CONFIG = {
-  cloudName: 'dulx9capq',
-  apiKey: '174986489287854',
-  apiSecret: 'k7dnDcMEbe24SF1jNB3YSPM1krA'
-};
 
 const EditableProfilePicture = ({image,setImage,uploading=false}) => {
   useEffect(() => {

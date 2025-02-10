@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'; // Import D
 import { colorsChart } from '../constants/ColorsChart';
 import PurchaseCard from '../components/molecules/PurchaseCard';
 import { onSnapshot } from 'firebase/firestore';
+import { AppContext } from '../../AppContext';
 
 
 const unsubscribePurchase = (setPurchases,setFilteredPurchases) => {
@@ -41,6 +42,11 @@ const AchatVenteScreen = () => {
   const [showSearch, setShowSearch] = useState(false); // State to toggle search area
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const {user} = useContext(AppContext);
+
+  if(user === null) {
+    return <></>
+  }
 
   useEffect(() => {
     const fetchPurchases = async () => {

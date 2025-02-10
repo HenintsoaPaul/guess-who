@@ -12,6 +12,11 @@ const EditUserScreen = () => {
     const [pseudo , setPseudo] = useState(user.pseudo)
     const [password , setPassword] = useState(user.password)
     const [loading,setLoading] = useState(false)
+
+    if(user === null) {
+      return <></>
+    }
+    
     const updateUser = async () => {
       setLoading(true)
       try {

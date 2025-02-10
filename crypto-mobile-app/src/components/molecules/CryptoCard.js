@@ -6,6 +6,7 @@ import { Image } from 'react-native-elements';
 import { collection, limit, orderBy, query, where , onSnapshot, getDocs} from 'firebase/firestore';
 import { FIRESTORE_DB } from '../../services/firebaseService';
 import { ActivityIndicator } from 'react-native';
+import CryptoLogo from '../atoms/CryptoLogo';
 
 const fetchCoursData = async (setCours,crypto) => {
   try {
@@ -48,7 +49,7 @@ export default function CryptoCard({crypto}) {
 
   return (
     <View style={styles.container}>
-      <Image />
+      <CryptoLogo crypto={crypto}></CryptoLogo>
       <View style={styles.detail}>
         <StyleText fw={700} color={colorsChart.primary} >{crypto.name}</StyleText>
         <StyleText fs={12} color={colorsChart.dark}>{crypto.symbol}</StyleText>

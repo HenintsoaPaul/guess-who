@@ -29,6 +29,10 @@ function TransactionFundScreen() {
   const [transactionType, setTransactionType] = useState(1);
   const {user} = useContext(AppContext);
 
+  if(user === null) {
+    return <></>
+  }
+  
 
   const handleTransaction = () => {
     if (!amount || isNaN(amount)) {
@@ -60,7 +64,7 @@ function TransactionFundScreen() {
 
         <View style={styles.selectorContainer}>
             <Picker
-            itemStyle={{color:colorsChart.primary,height:100}}
+            itemStyle={{color:colorsChart.primary}}
             selectedValue={transactionType}
             style={styles.transactionSelector}
             onValueChange={(itemValue) => setTransactionType(itemValue)}
@@ -122,10 +126,10 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     overflow: 'hidden',
+    height:150,
   },
   transactionSelector: {
     width: '100%',
-    flex:1,
   },
   buttonContainer: {
     marginTop: 20,

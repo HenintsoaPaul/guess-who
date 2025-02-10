@@ -1,5 +1,5 @@
 import { StyleSheet, ScrollView,View } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Button } from 'react-native-elements';
 import StyleText from '../components/atoms/StyleText';
 import { colorsChart } from '../constants/ColorsChart';
@@ -9,18 +9,46 @@ import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../AppContext';
 import UserButton from '../components/atoms/UserButton';
 import { LinearGradient } from "expo-linear-gradient";
+import { firebaseCollection} from '../services/firebaseService';
+import { onSnapshot, query, where } from 'firebase/firestore';
 
+
+const unsubscribeAccount = async(setUser,setImage,user) => {
+  const unsubscribe = onSnapshot(query(firebaseCollection('account'),where('id',"==",user.id)),(snapshot) => {
+    const uptAcc = [];
+    snapshot.forEach((doc) => {
+      if(doc.data()){
+        uptAcc.push(doc.data());
+      }
+    });
+    if (uptAcc.length > 0) {
+      setUser(uptAcc[0]);
+      setImage(uptAcc[0].accountImg)
+    }
+    console.log('Account a joutr :', uptAcc);
+  });
+  return unsubscribe;
+}
 
 export default function UserScreen() {
-  const {user,logOut} = useContext(AppContext);
+  const {user,logOut,setUser,setImage} = useContext(AppContext);
   const navigation  = useNavigation();
   const deconnecter = () => {
     logOut();
-    navigation.navigate('Login');
   }
   if (user === null) {
       return <></>
   }
+  useEffect(() => {
+    
+    const fetchUser = async () => {
+      const unsubscribe = await unsubscribeAccount(setUser,setImage,user);
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    }
+    fetchUser();
+   }, [])
   return (
     <View style={styles.container}>
       <View>

@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import {  onSnapshot, query, where } from 'firebase/firestore';
 import { AppContext } from '../../AppContext';
 import { fetchDataFromFirebase, firebaseCollection } from '../services/firebaseService';
 import NoFavoris from '../components/molecules/NoFavoris';
 import CryptoCard from '../components/molecules/CryptoCard';
 import { useNavigation } from '@react-navigation/native';
-import UserButton from '../components/atoms/UserButton';
-import { Button } from 'react-native-elements';
-import { FontAwesome } from '@expo/vector-icons';
+import CryptoFavCard from '../components/molecules/CryptoFavCard';
 import { colorsChart } from '../constants/ColorsChart';
 
 const unsubscribeFavorites = (setFavorites,user) => {
@@ -20,9 +18,7 @@ const unsubscribeFavorites = (setFavorites,user) => {
         uptFav.push(doc.data());
       }
     });
-    setFavorites(uptFav);
-    console.log('Favoris a jour:', uptFav);
-  });
+    setFavorites(uptFav);  });
   return unsubscribe;
 }
 
@@ -34,9 +30,12 @@ const FavoritesScreen = () => {
   const {user} = useContext(AppContext);
   const navigation = useNavigation(); 
 
+  if(user === null) {
+    return <></>
+  }
+
   useEffect(() => {
     const fetchFavoris = async (user) => {
-      console.log("USER: ",user);
       setLoading(true);
       try {
         const data = await fetchDataFromFirebase(
@@ -86,8 +85,6 @@ const FavoritesScreen = () => {
     );
   }
 
-  console.log(favorites);
-
   if( favorites === null||favorites.length === 0){
     return (
       <View style={styles.container}>
@@ -97,22 +94,10 @@ const FavoritesScreen = () => {
   }
   return (
     <View style={styles.container}>
-        {/* <View style={{flexDirection:'row',justifyContent:'space-around',width:'100%',height: 40}}> */}
-          {/* <Button
-            buttonStyle={{height: 40,width:'100%'}}
-            
-            onPress={()=> navigation.navigate('Crypto cours')}
-            title={(<>
-              <Text style={{color:colorsChart.white,fontSize:18,paddingHorizontal:10}}>Voir Cours</Text>
-              <FontAwesome style={{color:colorsChart.white}} name='line-chart' size={18}/>
-            </>)}
-          /> */}
-        {/* </View> */}
-          {filteredFavoris.map((favorite, index) => (
-            <CryptoCard key={index} crypto={favorite.crypto}></CryptoCard>
-            ))
-          }
-
+      {filteredFavoris.map((favorite, index) => (
+        <CryptoFavCard key={index} crypto={favorite.crypto} style={{borderWidth:3,borderColor:colorsChart.gray}}></CryptoFavCard>
+      ))
+      }
     </View>
   );
 };
