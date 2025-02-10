@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Component
 public class CryptoConfigProperties {
-    @Value("${app.laravel-url}")
+    @Value("${api.laravel-url}")
     private String laravelUrl;
 
     @Value("${app.time-zone}")

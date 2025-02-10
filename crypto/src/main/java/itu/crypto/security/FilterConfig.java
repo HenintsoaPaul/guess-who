@@ -1,5 +1,6 @@
-package itu.crypto;
+package itu.crypto.security;
 
+import itu.crypto.CryptoConfigProperties;
 import itu.crypto.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

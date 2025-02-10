@@ -1,5 +1,6 @@
-package itu.crypto;
+package itu.crypto.security;
 
+import itu.crypto.CryptoConfigProperties;
 import itu.crypto.service.SessionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
