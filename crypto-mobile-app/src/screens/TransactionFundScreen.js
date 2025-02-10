@@ -5,22 +5,23 @@ import { AppContext } from '../../AppContext';
 import {Picker} from '@react-native-picker/picker';
 import { collection, doc, setDoc, Timestamp } from 'firebase/firestore';
 import { colorsChart } from '../constants/ColorsChart';
+import { getTimestampNow } from '../services/timeService';
 
 const sendTransactionData = async (amount, transactionType, user) => {
   try {
     const transactionData = {
       amount:parseFloat(amount),
       id:null,
-      datePending: new Date().toISOString(),
+      datePending: getTimestampNow(),
       dateValidation:null,
       account:{id:user.id},
       typeMvFund:{id:Number.parseInt(transactionType)},
       pendingState:{id:1}
     }
     await updateOrCreateMobDoc("pending_mv_fund",transactionData,null)
-    console.log('Transaction envoyée:', transactionData);
+    alert('Transaction envoyer , en attente de validation')
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de la transaction:', error);
+    alert('Erreur lors de l\'envoi de la transaction:', error);
   }
 };
 

@@ -58,7 +58,7 @@ const EditableProfilePicture = ({image,setImage,uploading=false}) => {
 
   return (
     <View style={styles.container}>
-      <StyleText fs={20} style={{marginBottom: 10}}> Profil Preview </StyleText>
+      <StyleText fs={20} > Profil Preview </StyleText>
       <TouchableOpacity style={styles.imageContainer} onPress={pickImage} >
         <Image
           source={image ? { uri: image } : require('../../../assets/profile.jpg')}
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 180,
     height: 180,
-    gap:15
+    gap:10
   },
   imageContainer: {
     width: 160,

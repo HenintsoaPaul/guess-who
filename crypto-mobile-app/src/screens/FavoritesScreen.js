@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList} from 'react-native';
 import {  onSnapshot, query, where } from 'firebase/firestore';
 import { AppContext } from '../../AppContext';
 import { fetchDataFromFirebase, firebaseCollection } from '../services/firebaseService';
 import NoFavoris from '../components/molecules/NoFavoris';
-import CryptoCard from '../components/molecules/CryptoCard';
 import { useNavigation } from '@react-navigation/native';
 import CryptoFavCard from '../components/molecules/CryptoFavCard';
 import { colorsChart } from '../constants/ColorsChart';
+import StyleText from '../components/atoms/StyleText';
 
 const unsubscribeFavorites = (setFavorites,user) => {
   
@@ -18,7 +18,8 @@ const unsubscribeFavorites = (setFavorites,user) => {
         uptFav.push(doc.data());
       }
     });
-    setFavorites(uptFav);  });
+    setFavorites(uptFav);  
+  });
   return unsubscribe;
 }
 
@@ -94,18 +95,27 @@ const FavoritesScreen = () => {
   }
   return (
     <View style={styles.container}>
-      {filteredFavoris.map((favorite, index) => (
-        <CryptoFavCard key={index} crypto={favorite.crypto} style={{borderWidth:3,borderColor:colorsChart.gray}}></CryptoFavCard>
-      ))
-      }
+      <StyleText fs={32} fw={600}>Mes Favoris</StyleText>
+      <FlatList
+        data={favorites}
+        scrollEnabled={true}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{gap:8}}
+        renderItem={({ item, index}) => (
+          <CryptoFavCard key={index} crypto={item.crypto} style={{borderWidth:3,borderColor:colorsChart.gray}}></CryptoFavCard>
+        )}
+    />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  btnContainer:{
+
+  },
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     padding: 16,
   },
   title: {

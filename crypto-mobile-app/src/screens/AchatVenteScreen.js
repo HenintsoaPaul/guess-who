@@ -229,7 +229,7 @@ const AchatVenteScreen = () => {
 
 const styles = StyleSheet.create({
   brandPrimary: {
-    color: '#ffffff',
+    color: colorsChart.white,
   },
   brandAccent: {
     color: '#00b894',
@@ -249,12 +249,12 @@ const styles = StyleSheet.create({
     backgroundColor: colorsChart.white, // Change background color to dark
   },
   loadingText: {
-    color: '#ffffff', // Change text color to white for better contrast
+    color: colorsChart.white, // Change text color to white for better contrast
     marginTop: 8,
     fontSize: 16,
   },
   errorText: {
-    color: '#ff5555',
+    color: colorsChart.red,
     fontSize: 16,
   },
   searchContainer: {
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   searchTitle: {
-    color: '#ffffff', // Change text color to white for better contrast
+    color: colorsChart.white, // Change text color to white for better contrast
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 12,
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     backgroundColor: '#2a2a2a', // Change background color to dark grey
-    color: '#ffffff', // Change text color to white for better contrast
+    color: colorsChart.white, // Change text color to white for better contrast
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dateText: {
-    color: '#ffffff', // Change text color to white for better contrast
+    color: colorsChart.white, // Change text color to white for better contrast
     fontSize: 14,
   },
   buttonRow: {
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0984e3',
   },
   buttonText: {
-    color: '#ffffff',
+    color: colorsChart.white,
     fontSize: 14,
     fontWeight: '700',
   },
@@ -343,11 +343,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   value: {
-    color: '#ffffff', // Change text color to white for better contrast
+    color: colorsChart.white, // Change text color to white for better contrast
     fontSize: 14,
   },
   emptyText: {
-    color: '#ffffff', // Change text color to white for better contrast
+    color: colorsChart.white, // Change text color to white for better contrast
     textAlign: 'center',
     marginTop: 20,
     fontSize: 16,
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   },
   topSearchInput: {
     flex: 1,
-    color: '#ffffff', // Change text color to white for better contrast
+    color: colorsChart.white, // Change text color to white for better contrast
     fontSize: 14,
   },
   topSearchButton: {

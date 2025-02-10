@@ -52,8 +52,12 @@ const PictureEditScreen = () => {
     };
 
     const edit = async ()=> {
+      try {
         const secureUrl = await uploadImage(editImage);
         await updateUser(secureUrl);
+      } catch (error) {
+        Alert.alert(error.message)
+      }
     }
 
     const uploadImage = async (imageUri) => {
@@ -77,8 +81,7 @@ const PictureEditScreen = () => {
           return response.data.secure_url;
       } catch (error) {
         console.error('Erreur d\'upload:', error);
-        Alert.alert('Erreur', 'Impossible d\'uploader l\'image');
-        return null;
+        throw new Error('Erreur', 'Impossible d\'uploader l\'image');
       } finally {
         setUploading(false);
       }
@@ -117,12 +120,12 @@ export default PictureEditScreen
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        padding:10,
         justifyContent:'center',
         alignItems:'center'
     },
     buttonContainer:{
-        marginTop:20,
+        marginTop:40,
+        flexDirection:'row',
         gap:10
     }
 })
