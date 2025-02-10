@@ -34,7 +34,6 @@ public class SessionFilter extends OncePerRequestFilter {
 
         // Check if the path is permitted for All
         String requestPath = request.getServletPath();
-//        log.info("Request path: {}", requestPath);
 
         List<String> excludedPaths = cryptoConfigProperties.getExcludedPaths();
         boolean isExcluded = excludedPaths.stream()
@@ -53,36 +52,28 @@ public class SessionFilter extends OncePerRequestFilter {
             return; // Ne pas passer au filtre suivant
         }
 
-
-        boolean isExpired = verifierDureeDeVie(request, response);
+        boolean isExpired = verifyTokenLifeTime(request, response);
         if (isExpired) {
             String errorMsg = "Token expired";
             redirectToLogin(request, response, errorMsg);
             return; // Ne pas passer au filtre suivant
         }
 
-        System.out.println("----");
-        log.warn("current token: " + token);
-
         // Ajouter le token dans le header de la requete
         request.setAttribute("Authorization", "Bearer " + token);
         filterChain.doFilter(request, response);
     }
 
-    private boolean verifierDureeDeVie(HttpServletRequest request, HttpServletResponse response) {
+    private boolean verifyTokenLifeTime(HttpServletRequest request, HttpServletResponse response) {
         String tokenExpiration = (String) request.getSession().getAttribute("token_expiration");
 
-        // Parse the string to Instant
         Instant instant = Instant.parse(tokenExpiration);
-        // Convert Instant to LocalDateTime in a specific time zone
-        LocalDateTime d = LocalDateTime.ofInstant(instant, ZoneId.of("Indian/Antananarivo"));
+        LocalDateTime d = LocalDateTime.ofInstant(instant, ZoneId.of(cryptoConfigProperties.getTimeZone()));
 
         boolean isExpired = d.isBefore(LocalDateTime.now());
         if (isExpired) {
-            // Supprimer la session
             sessionService.viderSession(request.getSession());
-
-            System.out.println("Token is expired. Expiration date: " + d + " | current date: " + LocalDateTime.now());
+            log.warn("Token is expired. Expiration date: {} | current date: {}", d, LocalDateTime.now());
         }
         return isExpired;
     }

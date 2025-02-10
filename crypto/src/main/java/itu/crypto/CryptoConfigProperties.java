@@ -14,4 +14,7 @@ public class CryptoConfigProperties {
 
     @Value("${app.excluded-paths}")
     private final List<String> excludedPaths;
+
+    @Value("${app.time-zone}")
+    private final String timeZone;
 }
