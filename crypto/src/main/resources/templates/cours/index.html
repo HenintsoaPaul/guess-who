@@ -1,0 +1,81 @@
+<div th:replace="~{fragments/_layout}"></div>
+
+<main id="main" class="main">
+    <!--  Analyses des cours du site  -->
+    <div id="analyse-site">
+        <!-- Filtres -->
+        <div class="my-2">
+            <form th:action="@{/cours}" method="GET" class="form-inline mb-3">
+                <button type="submit" class="btn btn-primary">Analyser</button>
+                <div class="row g-10">
+                    <!-- Filter by Type Analyse -->
+                    <div class="row g-10">
+                        <div class="col-4 card px-3 py-3">
+                            <label>Type Analyse :</label>
+                            <select name="typeAnalyse">
+                                <option th:each="ap : ${analyseTypes}"
+                                        th:value="${ap}"
+                                        th:text="${ap.getLabel()}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Filter by date -->
+                    <div class="row g-10">
+                        <div class="col-4 card px-3 py-3">
+                            <label>Date Min :</label>
+                            <input type="datetime-local" name="dateMin">
+                        </div>
+                        <div class="col-4 card px-3 py-3">
+                            <label>Date Max :</label>
+                            <input type="datetime-local" name="dateMax">
+                        </div>
+                    </div>
+
+                    <!-- Filter by crypto -->
+                    <div class="row g-10">
+                        <div class="col-4 card px-3 py-3">
+                            <label>Crypto :</label>
+                            <select name="idCrypto" id="cryptos" class="form-control mb-4 col-4">
+                                <option value="-1">Tous les cryptos</option>
+                                <option th:each="cry:${cryptos}"
+                                        th:value="${cry.getId()}"
+                                        th:text="${cry.getName()}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Data -->
+        <div class="container mt-4">
+            <section th:if="${analyses != null && analyses.size() > 0}" id="section-analyse-ok">
+                <h3 class="text-center">
+                    Analayse par "<span th:text="${analyseType.getLabel()}"></span>"
+                </h3>
+                <table class="table table-bordered table-striped mt-3">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Crypto</th>
+                        <th>Valeur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="anal : ${analyses}">
+                        <td th:text="${anal.getDateCours()}"></td>
+                        <td th:text="${anal.getCrypto().getName()}"></td>
+                        <td th:text="${anal.getPu()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section th:else id="section-analyse-not-ok">
+                <p>Aucune analyse disponible</p>
+            </section>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

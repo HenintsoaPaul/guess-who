@@ -1,59 +1,204 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="ISO-8859-1">
-    <title>Crypto</title>
-    <link rel="stylesheet"
-          th:href="@{/css/bootstrap.css}">
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
-<div class="container mt-5">
-    <div class="jumbotron text-center bg-primary text-white p-5 rounded">
-        <h1 class="display-4">Welcome Back!</h1>
-        <p class="lead">Please log in to continue.</p>
-    </div>
-</div>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/img/bitcoin-cash.png"
+    />
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card border-primary">
-                <div class="card-body">
-                    <h2 class="text-center mb-4">Confirmation PIN d'inscription</h2>
+    <title>Crypto Register</title>
+    <!--     Fonts and icons     -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+      rel="stylesheet"
+    />
+    <!-- Nucleo Icons -->
 
-                    <div>
-                        <p th:if="${msg}" class="text-danger">
-                            <span th:text="${msg}"></span>
-                        </p>
-                    </div>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+      rel="stylesheet"
+    />
+    <!-- Nucleo Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/login/css/nucleo-icons.css"
+    />
 
-                    <form th:action="@{/register/pin/auth}" th:object="${registerRequest}" method="POST">
-                        <input type="hidden" class="form-control" th:field="*{pseudo}">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/login/css/nucleo-svg.css"
+    />
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter your email"
-                                   th:field="*{email}">
-                        </div>
+    <!-- Font Awesome Icons -->
+    <script
+      src="https://kit.fontawesome.com/42d5adcbca.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- CSS Files -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/login/css/soft-ui-dashboard.css"
+      id="pagestyle"
+    />
+  </head>
 
-                        <div class="mb-3">
-                            <label for="pin" class="form-label">PIN</label>
-                            <input type="password" class="form-control" id="pin" placeholder="Enter your pin code"
-                                   th:field="*{pin}">
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Validate Register</button>
-                        </div>
-                    </form>
-                </div>
+  <body class="g-sidenav-show bg-gray-100">
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3 navbar-transparent mt-4"
+    >
+      <div class="container">
+        <a
+          class="navbar-brand font-weight-bolder ms-lg-0 ms-3 text-white"
+          href="../pages/dashboards/default.html"
+        >
+          C R Y P T O
+        </a>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <section>
+      <div
+        class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"
+        style="
+          background-image: url('../assets/img/curved-images/curved14.jpg');
+        "
+      >
+        <span
+          class="mask bg-gradient-dark opacity-10"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="bi bi-coin"
+            viewBox="0 0 16 16"
+            style="width: 256px; height: 256px"
+          >
+            <path
+              d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"
+            />
+            <path
+              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+            />
+            <path
+              d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"
+            />
+          </svg>
+        </span>
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-5 text-center mx-auto">
+              <h1 class="text-white mb-2 mt-5">Bienvenue !</h1>
+              <p class="text-lead text-white">
+                Veuillez confirmer le code PIN pour continuer .
+              </p>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<footer class="bg-primary text-white text-center p-4 mt-5">
-    <p>© 2025 Crypto. All Rights Reserved.</p>
-</footer>
-</body>
+      <div class="container">
+        <div class="row mt-lg-n10 mt-md-n11 mt-n10">
+          <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+            <div class="card z-index-0">
+              <div class="card-body">
+                <form
+                  th:action="@{/register/pin/auth}"
+                  th:object="${registerRequest}"
+                  method="POST"
+                >
+                  <input
+                    type="hidden"
+                    class="form-control"
+                    th:field="*{pseudo}"
+                  />
+
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      required
+                      class="form-control"
+                      id="email"
+                      placeholder="Entrer votre email"
+                      th:field="*{email}"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Code PIN</label>
+                    <input
+                      type="password"
+                      required
+                      class="form-control"
+                      id="pin"
+                      placeholder="Entrer le code PIN"
+                      th:field="*{pin}"
+                    />
+                  </div>
+
+                  <div class="text-center">
+                    <button
+                      type="submit"
+                      class="btn bg-gradient-dark w-100 my-4 mb-2"
+                    >
+                      Confirmer
+                    </button>
+                  </div>
+                </form>
+
+                <div>
+                  <p th:if="${msg}" class="text-danger">
+                    <span th:text="${msg}"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- -------- START FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+    <footer class="footer py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-8 mx-auto text-center mt-1">
+            <p class="mb-0 text-secondary">
+              ITUniversity : "
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              "
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- -------- END FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+    <!--   Core JS Files   -->
+
+    <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/core/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/core/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/RdjcMada/GessWhoStatic@main/js/plugins/smooth-scrollbar.min.js"></script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
+  </body>
 </html>

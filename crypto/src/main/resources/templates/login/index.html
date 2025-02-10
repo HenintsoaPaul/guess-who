@@ -115,33 +115,28 @@
                   th:object="${loginRequest}"
                   method="POST"
                 >
-                  <div>
-                    <p th:if="${msg}" class="text-danger">
-                      <span th:text="${msg}"></span>
-                    </p>
-                  </div>
 
                   <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
+                    <label for="email" class="form-label">Email </label>
                     <input
                       type="email"
                       required
                       class="form-control"
                       id="email"
-                      placeholder="Enter your email"
+                      placeholder="Entrer votre adresse email "
                       th:field="*{email}"
                     />
                   </div>
 
                   <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">Mot de passe</label>
                     <input
                       type="password"
                       required
                       class="form-control"
                       id="password"
-                      placeholder="Enter your password"
-                      th:field="*{password}"
+                      name="password"
+                      th:value="*{password}"
                     />
                   </div>
 
@@ -155,11 +150,17 @@
                   </div>
                   <p class="text-sm mt-3 mb-0">
                     Vous n'avez pas encore de compte ?
-                    <a href="javascript:;" class="text-dark font-weight-bolder"
+                    <a href="/register" class="text-dark font-weight-bolder"
                       >Créer un compte
                     </a>
                   </p>
                 </form>
+                
+                <div>
+                  <p th:if="${msg}" class="text-danger">
+                    <span th:text="${msg}"></span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>

@@ -1,31 +1,52 @@
 package itu.crypto.service;
 
-import itu.crypto.entity.Cours;
-import itu.crypto.entity.Crypto;
+import itu.crypto.entity.cours.Cours;
+import itu.crypto.entity.crypto.Crypto;
+import itu.crypto.enums.CoursAnalysisType;
+import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.CryptoRepository;
+import itu.crypto.service.crypto.CryptoPriceGeneratorService;
+import itu.crypto.service.crypto.CryptoService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class CoursService {
+public class CoursService implements BaseService<Cours> {
+
     private final CoursRepository coursRepository;
     private final CryptoRepository cryptoRepository;
+    private final CryptoService cryptoService;
+    private final CryptoPriceGeneratorService cryptoPriceGeneratorService;
+
+    public List<Cours> findAll() {
+        return coursRepository.findAll();
+    }
+
+    public Optional<Cours> findById(int id) {
+        return coursRepository.findById(id);
+    }
 
     /**
      * Retrieves the latest course for each crypto.
      *
      * @return a list of the latest courses for each crypto.
      */
-    @Deprecated
-    public List<Cours> findCurrentCours() throws Exception {
-//        return coursRepository.findLatestCoursForEachCrypto();
-        throw new Exception("Not Impleemented");
+    public List<Cours> findCurrentCours() {
+        return coursRepository.findLatestCoursForEachCrypto();
     }
 
     /**
@@ -33,22 +54,202 @@ public class CoursService {
      * For each Crypto, a new Cours object is created with the current date and a random price.
      * The generated Cours objects are then saved to the repository.
      *
-     * @return a list of all Cours objects saved in the repository.
+     * @return a list the current cours after all insertion are done.
      */
     public List<Cours> generateCours() {
-        List<Crypto> cryptos = cryptoRepository.findAll();
-        for (Crypto crypto : cryptos) {
-            Cours cours = new Cours();
-            cours.setCrypto(crypto);
-            cours.setDateCours(LocalDate.now());
-            cours.setPu(generateRandomPrice());
-            coursRepository.save(cours);
-        }
-        return coursRepository.findAll();
+        LocalDateTime genTime = LocalDateTime.now();
+
+        List<Cours> currentCours = this.findCurrentCours();
+        return currentCours.stream()
+                .map(cours -> {
+                    Cours c = cryptoPriceGeneratorService.regenerateCours(cours, genTime);
+                    coursRepository.save(c);
+                    return c;
+                }).toList();
     }
 
-    private double generateRandomPrice() {
-        Random random = new Random();
-        return 50 + (1000 - 50) * random.nextDouble();
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    /**
+     * Recuperer les cours compris dans l'intervalle de date.
+     * {@code dateMin} et {@code dateMax} sont des bornes nullables.
+     */
+    public List<Cours> findAllByDateInInterval(LocalDateTime minDate, LocalDateTime maxDate) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM cours c WHERE 1=1");
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (minDate != null) {
+            queryBuilder.append(" AND c.date_cours >= :minDate");
+            parameters.put("minDate", minDate);
+        }
+        if (maxDate != null) {
+            queryBuilder.append(" AND c.date_cours <= :maxDate");
+            parameters.put("maxDate", maxDate);
+        }
+
+        Query query = entityManager.createNativeQuery(queryBuilder.toString(), Cours.class);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        return query.getResultList();
+    }
+
+    /**
+     * Recuperer les ventes comprises dans l'intervalle de date.
+     * {@code dateMin} et {@code dateMax} sont des bornes nullables.
+     */
+    public List<Cours> findAllByDateInInterval(String dateMin, String dateMax) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        LocalDateTime dmin = (dateMin == null || dateMin.isEmpty()) ? null : LocalDateTime.parse(dateMin, formatter),
+                dmax = (dateMax == null || dateMax.isEmpty()) ? null : LocalDateTime.parse(dateMax, formatter);
+
+        return findAllByDateInInterval(dmin, dmax);
+    }
+
+    public List<Crypto> findAllCrypto() {
+        return cryptoRepository.findAll();
+    }
+
+    public List<Cours> getAnalysis(CoursAnalysisType analysisType, List<Cours> cours) {
+        if (analysisType == CoursAnalysisType.MAX_COURS) {
+            return findMaxCoursForeachCrypto(cours);
+        } else if (analysisType == CoursAnalysisType.MIN_COURS) {
+            return findMinCoursForeachCrypto(cours);
+        } else if (analysisType == CoursAnalysisType.AVG_COURS) {
+            return findAvgCoursForeachCrypto(cours);
+        } else if (analysisType == CoursAnalysisType.ECART_TYPE_COURS) {
+            return findEcartTypeCoursForeachCrypto(cours);
+        } else if (analysisType == CoursAnalysisType.FIRST_QUARTILE_COURS) {
+            return findFirstQuartileCoursForeachCrypto(cours);
+        }
+        return cours;
+    }
+
+    private Cours findFirstQuartileCoursCrypto(List<Cours> cours, Crypto crypto) {
+        List<Cours> temp = cours.stream()
+                .filter(c -> c.getCrypto().equals(crypto))
+                .toList();
+
+        // Trier les prix
+        List<Double> sortedPrices = temp.stream()
+                .mapToDouble(Cours::getPu)
+                .sorted()
+                .boxed()
+                .toList();
+
+        int index = sortedPrices.size() / 4;
+        double prix = sortedPrices.get(index);
+        // Si l'index est exactement au milieu de deux valeurs
+        if (sortedPrices.size() % 4 == 0) {
+            prix = (sortedPrices.get(index - 1) + sortedPrices.get(index)) / 2;
+        }
+        return new Cours(prix, null, crypto);
+    }
+
+    private List<Cours> findFirstQuartileCoursForeachCrypto(List<Cours> cours) {
+        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
+        return cryptos.stream()
+                .map(c -> {
+                    try {
+                        return findFirstQuartileCoursCrypto(cours, c);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+    }
+
+    private List<Cours> findEcartTypeCoursForeachCrypto(List<Cours> cours) {
+        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
+        return cryptos.stream()
+                .map(c -> {
+                    try {
+                        return findStdDevCoursCrypto(cours, c);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+    }
+
+    /**
+     * Retourne l'ecart-type pour les cours d'un crypto specifique.
+     */
+    private Cours findStdDevCoursCrypto(List<Cours> cours, Crypto crypto) {
+        List<Cours> temp = cours.stream()
+                .filter(c -> c.getCrypto().equals(crypto))
+                .toList();
+
+        double mean = cryptoService.avg(temp);
+
+        // Calcul de l'écart-type
+        double stdDev = Math.sqrt(temp.stream()
+                .mapToDouble(Cours::getPu)
+                .map(pu -> Math.pow(pu - mean, 2))
+                .average()
+                .orElse(0.0));
+
+        return new Cours(stdDev, null, crypto);
+    }
+
+    private List<Cours> findAvgCoursForeachCrypto(List<Cours> cours) {
+        List<Crypto> cryptos = cours.stream().map(Cours::getCrypto).distinct().toList();
+        return cryptos.stream()
+                .map(c -> {
+                    try {
+                        return findAvgCoursCrypto(cours, c);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+    }
+
+    private Cours findAvgCoursCrypto(List<Cours> cours, Crypto crypto) {
+        List<Cours> temp = cours.stream().filter(c -> c.getCrypto().equals(crypto)).toList();
+        return new Cours(cryptoService.avg(temp), null, crypto);
+    }
+
+    private List<Cours> findMaxCoursForeachCrypto(List<Cours> cours) {
+        List<Cours> cbdd = coursRepository.findMaxCoursForeachCrypto(cours);
+        cours.retainAll(cbdd);
+        return cours;
+    }
+
+    private List<Cours> findMinCoursForeachCrypto(List<Cours> cours) {
+        List<Cours> cbdd = coursRepository.findMinCoursForeachCrypto(cours);
+        cours.retainAll(cbdd);
+        return cours;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateOrCreate(Cours cours) {
+        int retries = 3;
+        while (retries > 0) {
+            try {
+                coursRepository.save(cours);
+                return;
+            } catch (ObjectOptimisticLockingFailureException e) {
+                log.warn("Conflit de mise à jour sur cours ID {}. Tentative restante: {}", cours.getId(), retries - 1);
+                retries--;
+            }
+        }
+        throw new RuntimeException("Maj cours après plusieurs tentatives (mety fa misy exception)");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteById(int id) {
+        coursRepository.deleteById(id);
+    }
+
+    public List<Cours> findAllCurrentCours() {
+        return coursRepository.findAllCurrentCours();
+    }
+
+    public List<Cours> findAllByCryptoId(Integer cryptoId) {
+        return coursRepository.findByIdCrypto(cryptoId);
     }
 }

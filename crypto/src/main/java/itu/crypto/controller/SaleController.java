@@ -1,9 +1,9 @@
 package itu.crypto.controller;
 
 import itu.crypto.dto.SaleFormData;
-import itu.crypto.entity.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.account.Account;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.repository.CryptoRepository;
 import itu.crypto.service.account.AccountService;
 import itu.crypto.service.SaleService;
@@ -32,15 +32,6 @@ public class SaleController {
         return "sales/index";
     }
 
-//    @GetMapping("/dispo")
-//    public String goToListAchatDispo(Model model, HttpSession session) {
-//	Integer idAccount = (Integer) session.getAttribute("id_account");
-//	List<Sale> mySales = saleService.findAllSaleDetails(idAccount);
-//
-//	model.addAttribute("sales", mySales);
-//	return "sales/index";
-//    }
-
     @GetMapping("/{id}")
     public String goToDetail(Model model, @PathVariable Integer id) {
         Sale sale = saleService.findById(id);
@@ -54,7 +45,7 @@ public class SaleController {
     @GetMapping("/add")
     public String goToForm(Model model, HttpSession session) {
         Integer idAccount = (Integer) session.getAttribute("id_account");
-        Account myAccount = accountService.findById(idAccount);
+        Account myAccount = accountService.findById(idAccount).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
         model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());

@@ -1,3 +1,5 @@
+docker network create cloud-network --driver bridge
+
 cd identity
 
 docker compose up --build -d

@@ -27,16 +27,22 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link " data-bs-target="#commission-nav" data-bs-toggle="collapse" href="#">
+            <a class="nav-link " data-bs-target="#commissionRate-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-cart"></i>
                 <span>Commissions</span>
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="commission-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul id="commissionRate-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a th:href="@{/commissions }">
+                    <a th:href="@{/commissions}">
                         <i class="bi bi-circle"></i>
                         <span>Liste</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/commissions/edit}">
+                        <i class="bi bi-circle"></i>
+                        <span>Modification</span>
                     </a>
                 </li>
             </ul>

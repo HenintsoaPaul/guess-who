@@ -9,10 +9,472 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/account/unlock": {
+            "post": {
+                "tags": [
+                    "compte",
+                    "gestion"
+                ],
+                "summary": "Déverrouiller un compte utilisateur",
+                "description": "Point d'accès permettant de déverrouiller un compte utilisateur existant en utilisant son adresse email.",
+                "operationId": "eae2a765d577c599618408e8b5509174",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Adresse email du compte à déverrouiller",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "utilisateur@exemple.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Compte déverrouillé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succes": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "donnees": {
+                                            "properties": {
+                                                "id_compte": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le compte a été déverrouillé avec succès."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Paramètres invalides",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succes": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "L'email est obligatoire et doit être valide."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Compte introuvable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succes": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le compte avec cet email n'a pas été trouvé."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succes": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Format d'email invalide."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur interne",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succes": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Une erreur technique est survenue."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/account/change-password": {
+            "post": {
+                "tags": [
+                    "compte",
+                    "authentification",
+                    "gestion",
+                    "password"
+                ],
+                "summary": "Changer le mot de passe d'un compte",
+                "description": "Initie le processus de changement de mot de passe en envoyant un code PIN par email.",
+                "operationId": "bf98093a2e694e76781393f711271ccd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_account",
+                                    "new_password"
+                                ],
+                                "properties": {
+                                    "id_account": {
+                                        "description": "Identifiant du compte",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "new_password": {
+                                        "description": "Nouveau mot de passe",
+                                        "type": "string",
+                                        "example": "nouveau_mot_de_passe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email de validation envoyé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "données": {
+                                            "properties": {
+                                                "id_pending_pwd_change": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "id_account": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "pin": {
+                                                    "type": "string",
+                                                    "example": "1234"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email de validation envoyé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token invalide ou manquant",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token invalide ou manquant"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Données de validation invalides",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Données de validation invalides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur interne du serveur"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/password/change/validation": {
+            "post": {
+                "tags": [
+                    "compte",
+                    "Authentitfiaction",
+                    "gestion",
+                    "password"
+                ],
+                "summary": "Valider changement de mot de passe",
+                "description": "Point d'accès permettant de valider une demande de changement de mot de passe en utilisant un PIN temporaire.",
+                "operationId": "5962b7dc4ca6a93f8d221bd7985702fa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_pending_pwd_change",
+                                    "pin"
+                                ],
+                                "properties": {
+                                    "id_pending_pwd_change": {
+                                        "description": "Identifiant de la demande de changement de mot de passe",
+                                        "type": "integer",
+                                        "example": 123
+                                    },
+                                    "pin": {
+                                        "description": "Code PIN temporaire envoyé par email",
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Validation réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "données": {
+                                            "properties": {
+                                                "id_account": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation du changement de mot de passe envoyée avec succès."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Paramètres invalides",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "L'identifiant et le PIN sont requis."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Jetons non valides ou manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Jeton d'authentification invalide ou manquant."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accès refusé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Impossible de valider le jeton pour ce compte."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "PIN invalide",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le PIN fourni ne correspond pas à celui attendu."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors du traitement de la demande.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "succès": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Une erreur technique est survenue."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
-                    "Authentification"
+                    "authentification"
                 ],
                 "summary": "Login user",
                 "description": "Login utilisateur",
@@ -48,6 +510,9 @@
                     },
                     "403": {
                         "description": "Compte inactif"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
                     }
                 }
             }
@@ -55,11 +520,11 @@
         "/api/login/validate": {
             "post": {
                 "tags": [
-                    "Authentification"
+                    "authentification"
                 ],
                 "summary": "Validation du PIN",
                 "description": "Valide le PIN envoyé par email et génère un token d'accès.",
-                "operationId": "validatePin",
+                "operationId": "validateLoginPin",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -148,7 +613,11 @@
         },
         "/api/register": {
             "post": {
-                "summary": "Insère un enregistrement et envoie un code PIN par email",
+                "tags": [
+                    "Enregistrement"
+                ],
+                "summary": "Enregistrement utilisateur",
+                "description": "Insère un enregistrement et envoie un code PIN par email",
                 "operationId": "fccd8cec6f38cbddc086194391ad37db",
                 "requestBody": {
                     "required": true,
@@ -233,8 +702,12 @@
         },
         "/api/register/validate": {
             "post": {
-                "summary": "Valide un enregistrement en utilisant un code PIN obtenu par email",
-                "operationId": "fb90002ffc3c8825733b7d2099246084",
+                "tags": [
+                    "Enregistrement"
+                ],
+                "summary": "Validation du PIN",
+                "description": "Valide un enregistrement en utilisant un code PIN obtenu par email",
+                "operationId": "validateRegisterPin",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -319,8 +792,28 @@
     },
     "tags": [
         {
-            "name": "Authentification",
-            "description": "Authentification"
+            "name": "compte",
+            "description": "compte"
+        },
+        {
+            "name": "gestion",
+            "description": "gestion"
+        },
+        {
+            "name": "authentification",
+            "description": "authentification"
+        },
+        {
+            "name": "password",
+            "description": "password"
+        },
+        {
+            "name": "Authentitfiaction",
+            "description": "Authentitfiaction"
+        },
+        {
+            "name": "Enregistrement",
+            "description": "Enregistrement"
         }
     ]
 }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html
+  lang="fr"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Accueil</title>
+    <meta name="description" content="Tableau de bord Crypto" />
+    <div th:replace="~{layout/link_header}"></div>
+  </head>
+  <body th:with="activePage='dashboard'">
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+        <div th:replace="~{front_office/layout/menu}"></div>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4">
+                <span class="text-muted fw-light"></span> Accueil/
+              </h4>
+
+              <div class="row">
+                <div class="col-lg-12 mb-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title text-primary">
+                        Bienvenue sur le Tableau de bord Crypto
+                      </h5>
+                      <p class="mb-4">
+                        Votre solution tout-en-un pour gérer et analyser les
+                        données de cryptomonnaie. Restez à jour avec les
+                        dernières tendances et prenez des décisions éclairées.
+                      </p>
+                      <a href="/front-office/cours" class="btn btn-primary"
+                        >Analyser les Cours Crypto</a
+                      >
+                      <a
+                        href="/front-office/crypto-graphe"
+                        class="btn btn-secondary"
+                        >Graphique Crypto</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6 mb-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Transactions Récentes</h5>
+                      <p class="mb-4">
+                        Consultez et gérez vos transactions récentes.
+                      </p>
+                      <a
+                        href="/front-office/transaction/historique"
+                        class="btn btn-outline-primary"
+                        >Voir les Transactions</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Historique des Ventes</h5>
+                      <p class="mb-4">Consultez l'historique de vos ventes.</p>
+                      <a
+                        href="/front-office/sales"
+                        class="btn btn-outline-secondary"
+                        >Voir l'Historique des Ventes</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 mb-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Votre Portefeuille</h5>
+                      <p class="mb-4">
+                        Gérez votre portefeuille de cryptomonnaies.
+                      </p>
+                      <a
+                        href="/front-office/portfolio"
+                        class="btn btn-outline-success"
+                        >Voir le Portefeuille</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- / Content -->
+
+            <!-- Footer -->
+            <div th:replace="~{front_office/layout/footer}"></div>
+            <!-- / Footer -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- script -->
+    <div th:replace="~{layout/script}"></div>
+  </body>
+</html>

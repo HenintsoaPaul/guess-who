@@ -67,7 +67,7 @@
                 <td th:text="${mvt.getId()}"></td>
                 <td th:text="${mvt.getWallet().getCrypto().sout()}"></td>
                 <td>
-                    <a th:href="@{/operations/account/{id}(id=${mvt.getId()})}"
+                    <a th:href="@{/back-office/operations/account/{id}(id=${mvt.getId()})}"
                        th:text="${mvt.getWallet().getAccount().getPseudo()}">
                     </a>
                 </td>

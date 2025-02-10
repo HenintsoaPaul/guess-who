@@ -1,191 +1,382 @@
--- Schema
 CREATE TABLE crypto
 (
     id_crypto SERIAL,
-    name      VARCHAR(50) NOT NULL,
-    symbol    VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_crypto)
+    name      VARCHAR(250) NOT NULL,
+    symbol    VARCHAR(5)   NOT NULL,
+    logo      VARCHAR(250),
+    PRIMARY KEY (id_crypto),
+    UNIQUE (name),
+    UNIQUE (symbol)
 );
 
-CREATE TABLE commission
+CREATE TABLE account
 (
-    id_commission SERIAL,
-    name          VARCHAR(50)    NOT NULL,
-    val           NUMERIC(15, 2) NOT NULL,
-    PRIMARY KEY (id_commission)
+    id_account  SERIAL,
+    pseudo      VARCHAR(250) NOT NULL,
+    account_img VARCHAR(250),
+    fcm_token   VARCHAR(250),
+    email       VARCHAR(250) NOT NULL,
+    password    VARCHAR(250) NOT NULL,
+    fund        NUMERIC(15, 2),
+    PRIMARY KEY (id_account)
 );
 
 CREATE TABLE cours
 (
     id_cours   SERIAL,
-    date_cours TIMESTAMP      NOT NULL,
     pu         NUMERIC(15, 2) NOT NULL,
+    date_cours TIMESTAMP      NOT NULL,
     id_crypto  INTEGER        NOT NULL,
     PRIMARY KEY (id_cours),
     FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto)
 );
 
+CREATE TABLE commission_type
+(
+    id_commission_type SERIAL,
+    name               TEXT NOT NULL,
+    symbol             VARCHAR(5),
+    PRIMARY KEY (id_commission_type),
+    UNIQUE (name),
+    UNIQUE (symbol)
+);
+
+CREATE TABLE type_mv_fund
+(
+    id_type_mv_fund SERIAL,
+    name            VARCHAR(250) NOT NULL,
+    PRIMARY KEY (id_type_mv_fund),
+    UNIQUE (name)
+);
+
 CREATE TABLE type_mv_wallet
 (
     id_type_mv_wallet SERIAL,
-    name              VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_type_mv_wallet)
-);
-
-CREATE TABLE account
-(
-    id_account SERIAL,
-    email      VARCHAR(50)    NOT NULL,
-    pseudo     VARCHAR(50),
-    fund       NUMERIC(15, 2) NOT NULL,
-    PRIMARY KEY (id_account)
-);
-
-CREATE TABLE wallet
-(
-    id_wallet  SERIAL,
-    quantity   NUMERIC(15, 2) NOT NULL,
-    id_crypto  INTEGER        NOT NULL,
-    id_account INTEGER,
-    PRIMARY KEY (id_wallet),
-    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
-    FOREIGN KEY (id_account) REFERENCES account (id_account)
-);
-
-CREATE TABLE mv_wallet
-(
-    id_mv_wallet      SERIAL,
-    date_mv           TIMESTAMP,
-    quantity          INTEGER NOT NULL,
-    id_wallet         INTEGER NOT NULL,
-    id_type_mv_wallet INTEGER NOT NULL,
-    PRIMARY KEY (id_mv_wallet),
-    FOREIGN KEY (id_wallet) REFERENCES wallet (id_wallet),
-    FOREIGN KEY (id_type_mv_wallet) REFERENCES type_mv_wallet (id_type_mv_wallet)
+    name              VARCHAR(250) NOT NULL,
+    PRIMARY KEY (id_type_mv_wallet),
+    UNIQUE (name)
 );
 
 CREATE TABLE sale
 (
     id_sale    SERIAL,
-    date_sale  DATE    NOT NULL,
-    id_account INTEGER NOT NULL,
+    date_sale  TIMESTAMP NOT NULL,
+    id_account INTEGER   NOT NULL,
     PRIMARY KEY (id_sale),
     FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
 CREATE TABLE sale_detail
 (
-    id_sale_detail SERIAL,
-    quantity       NUMERIC(15, 2) NOT NULL,
-    quantity_left  NUMERIC(15, 2) NOT NULL,
-    id_crypto      INTEGER        NOT NULL,
-    id_sale        INTEGER        NOT NULL,
+    id_sale_detail  SERIAL,
+    quantity_crypto INTEGER NOT NULL,
+    quantity_left   INTEGER NOT NULL,
+    id_crypto       INTEGER NOT NULL,
+    id_sale         INTEGER NOT NULL,
     PRIMARY KEY (id_sale_detail),
     FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
     FOREIGN KEY (id_sale) REFERENCES sale (id_sale)
 );
 
-CREATE TABLE type_mv_fund
+CREATE TABLE crypto_fav
 (
-    id_type_mv_fund SERIAL,
-    name            VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_type_mv_fund)
+    id_crypto_fav   SERIAL,
+    date_crypto_fav TIMESTAMP,
+    on_fav          BOOLEAN NOT NULL,
+    id_crypto       INTEGER NOT NULL,
+    id_account      INTEGER NOT NULL,
+    PRIMARY KEY (id_crypto_fav),
+    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
-CREATE TABLE mv_fund
+CREATE TABLE pending_state
 (
-    id_mv_fund      SERIAL,
-    date_mv         TIMESTAMP,
-    quantity        INTEGER NOT NULL,
-    id_source       INTEGER NOT NULL,
-    id_type_mv_fund INTEGER NOT NULL,
-    id_account      INTEGER NOT NULL,
-    PRIMARY KEY (id_mv_fund),
-    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
+    id_pending_state SERIAL,
+    name             VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id_pending_state),
+    UNIQUE (name)
+);
+
+CREATE TABLE admin
+(
+    id_admin   SERIAL,
+    level      SMALLINT NOT NULL,
+    id_account INTEGER  NOT NULL,
+    PRIMARY KEY (id_admin),
+    UNIQUE (id_account),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
+CREATE TABLE wallet
+(
+    id_wallet  SERIAL,
+    quantity   INTEGER,
+    id_crypto  INTEGER NOT NULL,
+    id_account INTEGER NOT NULL,
+    PRIMARY KEY (id_wallet),
+    FOREIGN KEY (id_crypto) REFERENCES crypto (id_crypto),
     FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
 CREATE TABLE purchase
 (
-    id_purchase    SERIAL,
-    date_purchase  DATE    NOT NULL,
-    quantity       INTEGER NOT NULL,
-    id_account     INTEGER NOT NULL,
-    id_sale_detail INTEGER NOT NULL,
+    id_purchase          SERIAL,
+    date_purchase        TIMESTAMP      NOT NULL,
+    total_price          NUMERIC(15, 2) NOT NULL,
+    unit_price           NUMERIC(15, 2) NOT NULL,
+    quantity_crypto      INTEGER        NOT NULL,
+    id_sale_detail       INTEGER        NOT NULL,
+    id_account_seller    INTEGER        NOT NULL,
+    id_account_purchaser INTEGER        NOT NULL,
     PRIMARY KEY (id_purchase),
-    FOREIGN KEY (id_account) REFERENCES account (id_account),
-    FOREIGN KEY (id_sale_detail) REFERENCES sale_detail (id_sale_detail)
+    FOREIGN KEY (id_sale_detail) REFERENCES sale_detail (id_sale_detail),
+    FOREIGN KEY (id_account_seller) REFERENCES account (id_account),
+    FOREIGN KEY (id_account_purchaser) REFERENCES account (id_account)
+);
+
+CREATE TABLE commission_rate
+(
+    id_commission_rate SERIAL,
+    rate               NUMERIC(15, 2) NOT NULL,
+    add_date           TIMESTAMP      NOT NULL,
+    id_commission_type INTEGER        NOT NULL,
+    PRIMARY KEY (id_commission_rate),
+    FOREIGN KEY (id_commission_type) REFERENCES commission_type (id_commission_type)
+);
+
+CREATE TABLE mv_wallet
+(
+    id_mv_wallet      SERIAL,
+    date_mv           TIMESTAMP NOT NULL,
+    quantity_crypto   INTEGER   NOT NULL,
+    id_wallet         INTEGER   NOT NULL,
+    id_type_mv_wallet INTEGER   NOT NULL,
+    PRIMARY KEY (id_mv_wallet),
+    FOREIGN KEY (id_wallet) REFERENCES wallet (id_wallet),
+    FOREIGN KEY (id_type_mv_wallet) REFERENCES type_mv_wallet (id_type_mv_wallet)
+);
+
+CREATE TABLE commission_purchase
+(
+    id_commission_purchase SERIAL,
+    amount                 NUMERIC(15, 2) NOT NULL,
+    id_purchase            INTEGER        NOT NULL,
+    id_commission_rate     INTEGER        NOT NULL,
+    PRIMARY KEY (id_commission_purchase),
+    FOREIGN KEY (id_purchase) REFERENCES purchase (id_purchase),
+    FOREIGN KEY (id_commission_rate) REFERENCES commission_rate (id_commission_rate)
+);
+
+CREATE TABLE pending_mv_fund
+(
+    id_pending_mv_fund SERIAL,
+    date_pending       TIMESTAMP      NOT NULL,
+    date_validation    TIMESTAMP,
+    amount             NUMERIC(15, 2) NOT NULL,
+    id_pending_state   INTEGER        NOT NULL,
+    id_type_mv_fund    INTEGER        NOT NULL,
+    id_account         INTEGER        NOT NULL,
+    PRIMARY KEY (id_pending_mv_fund),
+    FOREIGN KEY (id_pending_state) REFERENCES pending_state (id_pending_state),
+    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
+CREATE TABLE mv_fund
+(
+    id_mv_fund         SERIAL,
+    date_mv            TIMESTAMP      NOT NULL,
+    amount             NUMERIC(15, 2) NOT NULL,
+    id_source          INTEGER,
+    id_pending_mv_fund INTEGER,
+    id_type_mv_fund    INTEGER        NOT NULL,
+    id_account         INTEGER        NOT NULL,
+    PRIMARY KEY (id_mv_fund),
+    UNIQUE (id_pending_mv_fund),
+    FOREIGN KEY (id_pending_mv_fund) REFERENCES pending_mv_fund (id_pending_mv_fund),
+    FOREIGN KEY (id_type_mv_fund) REFERENCES type_mv_fund (id_type_mv_fund),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
 
+-- View
+
+create or replace view v_current_commission_rate as
+select tab1.*
+from commission_rate tab1
+         join (select id_commission_type, max(add_date) as dd
+               from commission_rate cr
+               group by cr.id_commission_type) tab2
+              on tab1.id_commission_type = tab2.id_commission_type and tab1.add_date = tab2.dd;
+
+-- on insert account
+CREATE OR REPLACE FUNCTION innit_account_wallets()
+    RETURNS TRIGGER AS
+$$
+DECLARE
+    crypto_id INTEGER;
+BEGIN
+    -- Vérifiez si un wallet existe déjà pour cet account
+    IF NOT EXISTS (SELECT 1
+                   FROM wallet
+                   WHERE id_account = NEW.id_account) THEN
+        -- Si aucun wallet n'existe, insérez-en un pour chaque crypto
+        FOR crypto_id IN (SELECT id_crypto FROM crypto)
+            LOOP
+                INSERT INTO wallet (quantity, id_crypto, id_account)
+                VALUES (0, crypto_id, NEW.id_account);
+            END LOOP;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER trg_innit_account_wallets
+    AFTER INSERT
+    ON account
+    FOR EACH ROW
+EXECUTE FUNCTION innit_account_wallets();
+
+
+-- Trigger
+
+-- on insert crypto
+CREATE OR REPLACE FUNCTION add_account_wallet()
+    RETURNS TRIGGER AS
+$$
+DECLARE
+    account_id INTEGER;
+BEGIN
+    -- Boucler sur chaque account existant et créer un wallet pour le nouvel crypto
+    FOR account_id IN (SELECT id_account FROM account)
+        LOOP
+            INSERT INTO wallet (quantity, id_crypto, id_account)
+            VALUES (0, NEW.id_crypto, account_id);
+        END LOOP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER trg_add_account_wallet
+    AFTER INSERT
+    ON crypto
+    FOR EACH ROW
+EXECUTE FUNCTION add_account_wallet();
+
+
+-- on insert purchase
+CREATE OR REPLACE FUNCTION add_commission_purchase()
+    RETURNS TRIGGER AS
+$$
+DECLARE
+    current_id_commission_sale       INTEGER;
+    current_id_commission_purchase   INTEGER;
+    current_rate_commission_sale     NUMERIC(15, 2);
+    current_rate_commission_purchase NUMERIC(15, 2);
+    amount_commission_sale           NUMERIC(15, 2);
+    amount_commission_purchase       NUMERIC(15, 2);
+BEGIN
+    -- pour le vendeur
+    select rate, id_commission_rate
+    into current_rate_commission_sale, current_id_commission_sale
+    from v_current_commission_rate vccr
+    where vccr.id_commission_type = 1;
+
+    amount_commission_sale := NEW.total_price + (NEW.total_price * current_rate_commission_sale);
+
+    INSERT INTO commission_purchase (amount, id_purchase, id_commission_rate)
+    VALUES (amount_commission_sale, NEW.id_purchase, current_id_commission_sale);
+
+-- pour l'acheteur
+    select rate, id_commission_rate
+    into current_rate_commission_purchase, current_id_commission_purchase
+    from v_current_commission_rate vccr
+    where vccr.id_commission_type = 2;
+
+    amount_commission_purchase := NEW.total_price + (NEW.total_price * current_rate_commission_purchase);
+
+    INSERT INTO commission_purchase (amount, id_purchase, id_commission_rate)
+    VALUES (amount_commission_purchase, NEW.id_purchase, current_id_commission_purchase);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER trg_commission_purchase
+    AFTER INSERT
+    ON purchase
+    FOR EACH ROW
+EXECUTE FUNCTION add_commission_purchase();
+
+
 -- Data
-INSERT INTO commission (name, val)
-VALUES ('Commission Vente', 10),
-       ('Commission Achat', 5);
 
------- 10 utilisateurs
-INSERT INTO account (pseudo, email, fund)
-VALUES ('Alice', 'alice@example.com', 10000),
-       ('Bob', 'bob@example.com', 12000),
-       ('Charlie', 'charlie@example.com', 15000),
-       ('Diana', 'diana@example.com', 8000),
-       ('Eve', 'eve@example.com', 9000),
-       ('Frank', 'frank@example.com', 7000),
-       ('Grace', 'grace@example.com', 9500),
-       ('Hank', 'hank@example.com', 11000),
-       ('Ivy', 'ivy@example.com', 10500),
-       ('Jack', 'jack@example.com', 11500);
+INSERT INTO commission_type (name, symbol)
+VALUES ('Commission Vente', 'CV'),
+       ('Commission Achat', 'CA');
 
--- Insertion de données dans la table 'crypto'
-INSERT INTO crypto (name, symbol)
-VALUES ('Bitcoin', 'BTC'),
-       ('Ethereum', 'ETH'),
-       ('Tether', 'USDT'),
-       ('XRP', 'XRP'),
-       ('USD Coin', 'USDC'),
-       ('Binance Coin', 'BNB'),
-       ('Cardano', 'ADA'),
-       ('Polkadot', 'DOT'),
-       ('Solana', 'SOL'),
-       ('Chainlink', 'LINK');
+INSERT INTO commission_rate (rate, add_date, id_commission_type)
+VALUES (0.1, '2020-01-01', 1),
+       (0.05, '2020-01-01', 2);
 
 -- Insertion de données dans la table 'type_mv_wallet'
 INSERT INTO type_mv_wallet (name)
-VALUES ('Dépôt'),
-       ('Retrait'),
-       ('Achat'),
-       ('Vente'),
-       ('Transfert');
+VALUES ('Acquisition apres achat'),
+       ('Cession apres vente');
 
 -- Insertion de données dans la table 'type_mv_fund'
 INSERT INTO type_mv_fund (name)
 VALUES ('Dépôt'),
        ('Retrait'),
-       ('Référencement');
+       ('Achat'),
+       ('Vente');
 
--- Insertion de données dans la table 'account'
-INSERT INTO account (pseudo, email, fund)
-VALUES ('Alice', 'alice@example.com', 10000),
-       ('Bob', 'bob@example.com', 12000),
-       ('Charlie', 'charlie@example.com', 15000),
-       ('Diana', 'diana@example.com', 8000),
-       ('Eve', 'eve@example.com', 9000),
-       ('Frank', 'frank@example.com', 7000),
-       ('Grace', 'grace@example.com', 9500),
-       ('Hank', 'hank@example.com', 11000),
-       ('Ivy', 'ivy@example.com', 10500),
-       ('Jack', 'jack@example.com', 11500);
+--
+INSERT INTO pending_state (name)
+VALUES ('En Attente'),
+       ('Validée'),
+       ('Refusée');
 
--- Insertion de données dans la table 'wallet'
-INSERT INTO wallet (quantity, id_crypto, id_account)
-VALUES (100, 1, 1),
-       (150, 1, 2),
-       (200, 1, 3),
-       (120, 2, 1);
+-- 10 crypto
+INSERT INTO crypto (name, symbol, logo)
+VALUES ('Bitcoin', 'BTC', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/bitcoin-btc-logo_pmx0hz.png'),
+       ('Ethereum', 'ETH',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/ethereum-eth-logo_fhndjw.png'),
+       ('Tether', 'USDT', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/tether-usdt-logo_nmjn6f.png'),
+       ('XRP', 'XRP', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/xrp-xrp-logo_utpvtx.png'),
+       ('USD Coin', 'USDC',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/usd-coin-usdc-logo_rf9v9j.png'),
+       ('Binance Coin', 'BNB', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/bnb-bnb-logo_wyvwzz.png'),
+       ('Cardano', 'ADA', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/cardano-ada-logo_ijgq67.png'),
+       ('Polkadot', 'DOT',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/polkadot-new-dot-logo_y6meai.png'),
+       ('Solana', 'SOL', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106939/solana-sol-logo_izehzz.png'),
+       ('Chainlink', 'LINK',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/chainlink-link-logo_zz4ajp.png');
+
+------ 10 utilisateurs
+INSERT INTO account (pseudo, email, password, fund)
+VALUES ('Alice', 'rocruxappafra-4143@yopmail.com', 'mypassword', 10000),
+       ('Bob', 'frucodillefeu-1226@yopmail.com', 'mypassword', 12000),
+       ('Charlie', 'giyoibrappoihou-3938@yopmail.com', 'mypassword', 15000),
+       ('Diana', 'barauxinulli-4329@yopmail.com', 'mypassword', 8000),
+       ('Eve', 'meiwoussadate-5662@yopmail.com', 'mypassword', 9000),
+       ('Frank', 'boifoissecoullu-3728@yopmail.com', 'mypassword', 7000),
+       ('Grace', 'yettennevuffu-9049@yopmail.com', 'mypassword', 9500),
+       ('Hank', 'baviwagrouye-6787@yopmail.com', 'mypassword', 11000),
+       ('Ivy', 'bappoppotameu-6100@yopmail.com', 'mypassword', 10500),
+       ('Jack', 'nopeummeuxoigrau-1855@yopmail.com', 'mypassword', 11500);
+
+INSERT INTO admin (level, id_account)
+VALUES (10, 1),
+       (5, 2);
 
 -- Insertion de données dans la table 'mv_wallet' (exemple pour Alice et Bob)
 -- Alice
-INSERT INTO mv_wallet (date_mv, quantity, id_wallet, id_type_mv_wallet)
+INSERT INTO mv_wallet (date_mv, quantity_crypto, id_wallet, id_type_mv_wallet)
 VALUES ('2025-01-08 10:00:00', 100, 1, 1),
        ('2025-01-08 11:30:00', 150, 1, 2),
        ('2025-01-09 12:00:00', 200, 1, 1),
@@ -206,7 +397,7 @@ VALUES ('2025-01-08 10:00:00', 100, 1, 1),
        ('2025-01-10 19:00:00', 110, 2, 2);
 
 -- Bob
-INSERT INTO mv_wallet (date_mv, quantity, id_wallet, id_type_mv_wallet)
+INSERT INTO mv_wallet (date_mv, quantity_crypto, id_wallet, id_type_mv_wallet)
 VALUES ('2025-01-08 09:00:00', 90, 1, 1),
        ('2025-01-08 11:00:00', 110, 1, 2),
        ('2025-01-08 12:30:00', 140, 2, 1),
@@ -224,6 +415,19 @@ VALUES ('2025-01-08 09:00:00', 90, 1, 1),
        ('2025-01-10 16:00:00', 60, 1, 1),
        ('2025-01-10 17:30:00', 100, 2, 2),
        ('2025-01-10 18:00:00', 50, 3, 1);
+
+-- Init des cours pour tout les crypto
+INSERT INTO cours (date_cours, pu, id_crypto)
+VALUES ('2025-01-08 09:00:00', 30000, 1),
+       ('2025-01-08 09:30:00', 30500, 2),
+       ('2025-01-08 10:00:00', 31000, 3),
+       ('2025-01-08 10:30:00', 31500, 4),
+       ('2025-01-08 11:00:00', 32000, 5),
+       ('2025-01-08 11:30:00', 32500, 6),
+       ('2025-01-08 12:00:00', 33000, 7),
+       ('2025-01-08 12:30:00', 33500, 8),
+       ('2025-01-08 13:00:00', 34000, 9),
+       ('2025-01-08 13:30:00', 34500, 10);
 
 -- Insertion de données dans la table 'cours' pour Bitcoin (50 changements de cours)
 -- Changement de cours tous les 30 minutes
@@ -284,12 +488,13 @@ VALUES ('2025-01-08 13:00:00', 1),
        ('2025-01-10 15:30:00', 3);
 
 -- Insertion de données dans la table 'sale_detail'
-INSERT INTO sale_detail (quantity, quantity_left, id_crypto, id_sale)
+INSERT INTO sale_detail (quantity_crypto, quantity_left, id_crypto, id_sale)
 VALUES (1000, 800, 1, 1),
        (1500, 1200, 2, 2),
        (2000, 1800, 3, 3);
 
 -- Insertion de données dans la table 'purchase'
-INSERT INTO purchase (date_purchase, quantity, id_account, id_sale_detail)
-VALUES ('2025-01-09 11:30:00', 500, 1, 1),
-       ('2025-01-10 12:30:00', 600, 2, 2);
+INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller,
+                      id_sale_detail)
+VALUES ('2025-01-09 11:30:00', 500, 500, 1, 1, 2, 1),
+       ('2025-01-10 12:30:00', 600, 600, 1, 2, 1, 2);
