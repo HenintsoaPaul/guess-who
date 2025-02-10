@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     backgroundColor: colorsChart.light, // Change background color to dark grey
-    color: colorsChart.white, // Change text color to white for better contrast
+    color: colorsChart.dark, // Change text color to white for better contrast
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
