@@ -41,5 +41,19 @@ public class FilterConfig {
 
         return registrationBean;
     }
+
+    @Bean
+    public FilterRegistrationBean<AdminFilter> adminFilter() {
+        FilterRegistrationBean<AdminFilter> registrationBean = new FilterRegistrationBean<>();
+
+        AdminFilter tvf = new AdminFilter();
+        registrationBean.setFilter(tvf);
+
+        registrationBean.addUrlPatterns("/*"); // Appliquer à toutes les URLs ou spécifiez un chemin particulier.
+        registrationBean.setName("AdminFilter");
+        registrationBean.setOrder(3);
+
+        return registrationBean;
+    }
 }
 

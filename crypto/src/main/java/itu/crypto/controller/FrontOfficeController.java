@@ -44,7 +44,10 @@ public class FrontOfficeController {
 
     // Home page
     @GetMapping
-    public String goToSample(Model model) {
+    public String goToSample(Model model, HttpSession session) {
+        if (session.getAttribute("adminError") != null) {
+            model.addAttribute("error", session.getAttribute("adminError"));
+        }
         return "front_office/index";
     }
 
