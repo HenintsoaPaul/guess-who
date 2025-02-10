@@ -25,7 +25,6 @@ const unsubscribeAccount = async(setUser,setImage,user) => {
       setUser(uptAcc[0]);
       setImage(uptAcc[0].accountImg)
     }
-    console.log('Account a joutr :', uptAcc);
   });
   return unsubscribe;
 }

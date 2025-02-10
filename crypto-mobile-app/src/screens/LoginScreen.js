@@ -19,7 +19,7 @@ import { Button } from "react-native-elements";
 import { ActivityIndicator } from "react-native";
 
 const LoginScreen = () => {
-  const [email,setEmail] = useState("frucodillefeu-1226@yopmail.com");
+  const [email,setEmail] = useState("meiwoussadate-5662@yopmail.com");
   const [password, setPassword] = useState('mypassword');
   const [loading, setLoading] = useState(false);
 

@@ -89,12 +89,10 @@ export const updateOrCreateMobDoc = async (baseCollection, mobObj, updateData) =
         Object.assign(mobClone, updateData);
     }
     if (accountDoc.exists()) {
-        console.log("Existing");
         await updateDoc(mobRef, {
             ...mobClone
         });
     } else {
-        console.log("Doesn't Exist");
         await setDoc(mobRef, {
             ...mobClone,
         });

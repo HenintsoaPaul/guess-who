@@ -2,6 +2,7 @@ import {React,useContext,useEffect,useState} from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import WalletScreen from '../screens/WalletScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import TransactionFundScreen from '../screens/TransactionFundScreen';
@@ -34,7 +35,7 @@ const DrawerNavigation = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        screenOptions={{
+        screenOptions={({ navigation }) => ({
           drawerType: 'back',
           drawerStyle: {
             backgroundColor: '#fff',
@@ -44,9 +45,14 @@ const DrawerNavigation = () => {
             marginLeft: -15,
             fontSize: 16,
           },
-        }}
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+              <Ionicons name="menu" size={24} color={colorsChart.primary} style={{ marginLeft: 15 }} />
+            </TouchableOpacity>
+          ),
+        })}
         drawerContent={(props) => <CustomDrawerContent {...props} />}
-        initialRouteName='Login'
+        // initialRouteName='Login'
       >
         {user ? (
           <>
@@ -125,6 +131,7 @@ const DrawerNavigation = () => {
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>🛒</Text>
               ),
+              title:'Achats et Ventes',
             }}
             />
             </>

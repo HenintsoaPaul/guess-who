@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { findAccountByMail } from './src/services/loginService';
-import { useNavigation } from '@react-navigation/native';
 import * as Notification from "expo-notifications";
+import { getNotificationToken } from './src/services/notificationService';
+import { updateOrCreateMobDoc } from './src/services/firebaseService';
 
 Notification.setNotificationHandler({
   handleNotification: async () => ({
@@ -13,7 +13,11 @@ Notification.setNotificationHandler({
 export const AppContext = createContext();
 
 const updateUserToken = async(user,token) => {
-    updateOrCreateMobDoc('account',user,{fcmToken:token});
+  try {
+    await updateOrCreateMobDoc('account',user,{fcmToken:token});
+  } catch (error) {
+    alert(error.message)
+  }
 }
 
 export const AppProvider = ({ children }) => {
@@ -23,16 +27,15 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
   }, []);
 
-  const logIn = (userData) => {
+  const logIn = async (userData) => {
     setUser(userData);
     const requestPermission = async () => {
       const token = await getNotificationToken();
-      console.log(token);
       if(token !== null) {
-        await updateUserToken(user,token.data);
+        await updateUserToken(userData,token.data);
       }
     }
-    requestPermission();
+    await requestPermission();
     // await saveSession(userData);
   };
 

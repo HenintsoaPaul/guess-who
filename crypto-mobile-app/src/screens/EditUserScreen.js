@@ -26,7 +26,7 @@ const EditUserScreen = () => {
         });
         await refreshUser();
       } catch (error) {
-        console.error('Erreur lors de la mise à jour de la liste des favoris dans Firestore:', error);
+        alert('Erreur de la modification : ', error.message);
       }
       finally {
         setLoading(false)
@@ -61,7 +61,7 @@ const EditUserScreen = () => {
         <Button
             buttonStyle={styles.button}
             titleStyle={{color:colorsChart.primary}}
-            title={'Editer'}
+            title={'Modifer'}
             type='outline'
             loading={loading}
             onPress={updateUser}

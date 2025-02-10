@@ -12,9 +12,7 @@ export async function askNotificationPermission(){
 }
 
 export async function getNotificationToken() {
-    const notifPermission = await askNotificationPermission();
-    console.log("PERMISSION : ",notifPermission);
-    
+    const notifPermission = await askNotificationPermission();    
     if (notifPermission.status === 'granted') {
         const token = await Notifications.getDevicePushTokenAsync();
         return token;

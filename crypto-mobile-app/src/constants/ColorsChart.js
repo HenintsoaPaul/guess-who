@@ -5,7 +5,7 @@ export const colorsChart = {
     gray:'#e9ecef',
     light:'#f8f9fa',
     white:'#ffffff',
-    dark:'#000000',
-    red:'#d62828',
+    dark:'#2a2a2a',
+    red:'#f28482',
     pink:'#f28482'
 };

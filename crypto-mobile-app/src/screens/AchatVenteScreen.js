@@ -27,7 +27,6 @@ const unsubscribePurchase = (setPurchases,setFilteredPurchases) => {
     });
     setPurchases(uptPurchases);
     setFilteredPurchases(uptPurchases);
-    console.log('Données mises à jour:', uptPurchases);
   });
   return unsubscribe;
 }
@@ -114,7 +113,7 @@ const AchatVenteScreen = () => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color={styles.brandAccent.color} />
+        <ActivityIndicator size="large" color={colorsChart.dark} />
         <Text style={styles.loadingText}>Chargement...</Text>
       </View>
     );
@@ -188,20 +187,20 @@ const AchatVenteScreen = () => {
           </View>
           <View style={styles.buttonRow}>
             <TouchableOpacity
-              style={[styles.button, styles.outlineButton]}
+              style={[styles.button, styles.resetButton]}
               onPress={handleSearch}
               accessible={true}
               accessibilityLabel="Rechercher"
             >
-              <Text style={[styles.buttonText, styles.outlineButtonText]}>Rechercher</Text>
+              <Text style={[styles.buttonText, styles.buttonText]}>Rechercher</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.button, styles.resetButton]}
+              style={[styles.button, styles.outlineButton]}
               onPress={handleReset}
               accessible={true}
               accessibilityLabel="Réinitialiser"
             >
-              <Text style={styles.buttonText}>Réinitialiser</Text>
+              <Text style={styles.outlineButtonText}>Réinitialiser</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -232,7 +231,7 @@ const styles = StyleSheet.create({
     color: colorsChart.white,
   },
   brandAccent: {
-    color: '#00b894',
+    color: colorsChart.red,
   },
   placeholder: {
     color: '#aaa',
@@ -240,7 +239,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colorsChart.white, // Change background color to dark
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
   },
   centered: {
     flex: 1,
@@ -258,18 +257,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   searchContainer: {
-    backgroundColor: '#1e1e1e', // Change background color to dark grey
+    backgroundColor: colorsChart.primary, // Change background color to dark grey
     padding: 16,
-    borderRadius: 10,
+    // borderRadius: 10,
     marginBottom: 16,
-    marginTop: 10,
-  },
-  searchTitle: {
-    color: colorsChart.white, // Change text color to white for better contrast
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 12,
-    textAlign: 'center',
+    // borderWidth:2
+    // marginTop: 10,
   },
   inputGroup: {
     flexDirection: 'row',
@@ -278,7 +271,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#2a2a2a', // Change background color to dark grey
+    backgroundColor: colorsChart.light, // Change background color to dark grey
     color: colorsChart.white, // Change text color to white for better contrast
     borderRadius: 8,
     paddingHorizontal: 12,
@@ -288,7 +281,7 @@ const styles = StyleSheet.create({
   },
   dateInput: {
     flex: 1,
-    backgroundColor: '#2a2a2a', // Change background color to dark grey
+    backgroundColor: colorsChart.light, // Change background color to dark grey
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -296,54 +289,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dateText: {
-    color: colorsChart.white, // Change text color to white for better contrast
-    fontSize: 14,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  button: {
-    backgroundColor: '#00b894',
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginHorizontal: 4,
-  },
-  resetButton: {
-    backgroundColor: '#0984e3',
-  },
-  buttonText: {
-    color: colorsChart.white,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  listContent: {
-    paddingBottom: 20,
-  },
-  card: {
-    backgroundColor: '#1e1e1e', // Change background color to dark grey
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 12,
-  },
-  row: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  col: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  label: {
-    color: '#aaa',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  value: {
-    color: colorsChart.white, // Change text color to white for better contrast
+     // Change text color to white for better contrast
+      fontSize: 14,
+      },
+      buttonRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 12,
+      },
+      button: {
+      backgroundColor: colorsChart.red,
+      flex: 1,
+      paddingVertical: 12,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginHorizontal: 4,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5, // For Android shadow
+      },
+      resetButton: {
+      backgroundColor: colorsChart.primary,
+      borderWidth: 2,
+      borderColor:colorsChart.light
+      },
+      buttonText: {
+      color: colorsChart.white,
+      fontSize: 14,
+      fontWeight: '700',
+      },
+      listContent: {
+      paddingBottom: 20,
+      },
+     
+      value: {
+      color: colorsChart.white, // Change text color to white for better contrast
     fontSize: 14,
   },
   emptyText: {
@@ -356,7 +338,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    borderBottomColor: '#00b894',
+    borderBottomColor: colorsChart.primary,
     borderBottomWidth: 1,
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -364,40 +346,26 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   searchToggleButtonText: {
-    color: '#00b894',
+    color: colorsChart.primary,
     fontSize: 16,
     fontWeight: '700',
   },
-  topSearchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2a2a2a', // Change background color to dark grey
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 16,
-  },
-  topSearchInput: {
-    flex: 1,
-    color: colorsChart.white, // Change text color to white for better contrast
-    fontSize: 14,
-  },
-  topSearchButton: {
-    marginLeft: 8,
-  },
+
   outlineButton: {
     backgroundColor: 'transparent',
-    borderColor: '#00b894',
+    borderColor: colorsChart.red,
     borderWidth: 1,
   },
   outlineButtonText: {
-    color: '#00b894',
+    color: colorsChart.red,
+    fontSize: 16,
+    fontWeight: '700',
   },
   upArrowButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    borderColor: '#00b894',
+    borderColor: colorsChart.white,
     borderWidth: 1,
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -406,7 +374,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   upArrowButtonText: {
-    color: '#00b894',
+    color: colorsChart.white,
     fontSize: 16,
     fontWeight: '700',
   },
