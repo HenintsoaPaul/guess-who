@@ -21,7 +21,7 @@
     <div th:replace="~{layout/link_header}"></div>
 </head>
 
-<body>
+<body th:with="activePage='wallet'">
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -31,9 +31,6 @@
 
         <!-- Layout container -->
         <div class="layout-page">
-            <!-- Navbar -->
-            <div th:replace="~{layout/navbar}"></div>
-            <!-- / Navbar -->
 
             <!-- Content wrapper -->
             <div class="content-wrapper">
@@ -90,7 +87,7 @@
                 <!-- / Content -->
 
                 <!-- Footer -->
-                <div th:replace="~{layout/footer}"></div>
+                <div th:replace="~{front-office/layout/footer}"></div>
                 <!-- / Footer -->
 
                 <div class="content-backdrop fade"></div>
