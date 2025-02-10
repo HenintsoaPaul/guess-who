@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -33,6 +35,9 @@ public class Account {
     @Column(name = "fund", nullable = false)
     private double fund;
 
+    @Column(name = "fcm_token", length = 250)
+    private String fcmToken;
+
     public Account(Integer id, String pseudo, String mail, String mypassword, Double fund) {
         this.id = id;
         this.pseudo = pseudo;
@@ -47,6 +52,11 @@ public class Account {
         if (o == null || getClass() != o.getClass()) return false;
 
         Account autreAccount = (Account) o;
-        return Double.compare(autreAccount.fund, fund) == 0;
+        return Double.compare(autreAccount.fund, fund) == 0 &&
+                Objects.equals(id, autreAccount.id) &&
+                Objects.equals(pseudo, autreAccount.pseudo) &&
+                Objects.equals(accountImg, autreAccount.accountImg) &&
+                Objects.equals(email, autreAccount.email) &&
+                Objects.equals(fcmToken, autreAccount.fcmToken);
     }
 }

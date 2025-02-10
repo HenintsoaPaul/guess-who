@@ -50,12 +50,9 @@ VALUES ('Alice', 'rocruxappafra-4143@yopmail.com', 'mypassword', 10000),
        ('Ivy', 'bappoppotameu-6100@yopmail.com', 'mypassword', 10500),
        ('Jack', 'nopeummeuxoigrau-1855@yopmail.com', 'mypassword', 11500);
 
--- -- Insertion de données dans la table 'wallet'
--- INSERT INTO wallet (quantity, id_crypto, id_account)
--- VALUES (100, 1, 1),
---        (150, 1, 2),
---        (200, 1, 3),
---        (120, 2, 1);
+INSERT INTO admin (level, id_account)
+VALUES (10, 1),
+       (5, 2);
 
 -- Insertion de données dans la table 'mv_wallet' (exemple pour Alice et Bob)
 -- Alice

@@ -1,6 +1,6 @@
 package itu.crypto.firebase.firestore.purchase;
 
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.crypto.Crypto;
 import itu.crypto.firebase.firestore.generalisation.TimestampedDocument;
 import lombok.Data;

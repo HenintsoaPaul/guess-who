@@ -3,29 +3,36 @@ package itu.crypto.firebase.firestore.fund;
 import com.google.cloud.firestore.Firestore;
 import itu.crypto.entity.fund.MvFund;
 import itu.crypto.firebase.firestore.generalisation.FirestoreChangeListener;
+import itu.crypto.service.DateService;
 import itu.crypto.service.transaction.fund.MvFundService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class MvFundChangeListener extends FirestoreChangeListener<MvFund, MvFundDocument> {
+public class MvFundChangeListener extends FirestoreChangeListener<MvFund, MvFundMobDocument> {
 
     private final MvFundService mvFundService;
+    private final DateService dateService;
 
     public MvFundChangeListener(Firestore firestore, MvFundService mvFundService) {
         super(firestore, mvFundService, "mv_fund");
         this.mvFundService = mvFundService;
+        this.dateService = new DateService();
     }
 
     @Override
-    protected MvFund toEntity(MvFundDocument document) {
-        return document.toEntity();
+    protected MvFund toEntity(MvFundMobDocument document) {
+        MvFund mvFund = document.toEntity();
+
+        mvFund.setDateMv(dateService.strToLocalDateTime(document.getDateMv()));
+
+        return mvFund;
     }
 
     @Override
-    protected Class<MvFundDocument> getDocumentClass() {
-        return MvFundDocument.class;
+    protected Class<MvFundMobDocument> getDocumentClass() {
+        return MvFundMobDocument.class;
     }
 
     @Override
