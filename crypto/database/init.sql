@@ -189,7 +189,7 @@ CREATE TABLE mv_fund
     date_mv            TIMESTAMP      NOT NULL,
     amount             NUMERIC(15, 2) NOT NULL,
     id_source          INTEGER,
-    id_pending_mv_fund INTEGER        NOT NULL,
+    id_pending_mv_fund INTEGER,
     id_type_mv_fund    INTEGER        NOT NULL,
     id_account         INTEGER        NOT NULL,
     PRIMARY KEY (id_mv_fund),
@@ -320,7 +320,7 @@ VALUES ('Commission Vente', 'CV'),
 
 INSERT INTO commission_rate (rate, add_date, id_commission_type)
 VALUES (0.1, '2020-01-01', 1),
-       (0.05,'2020-01-01', 2);
+       (0.05, '2020-01-01', 2);
 
 -- Insertion de données dans la table 'type_mv_wallet'
 INSERT INTO type_mv_wallet (name)
@@ -343,15 +343,19 @@ VALUES ('En Attente'),
 -- 10 crypto
 INSERT INTO crypto (name, symbol, logo)
 VALUES ('Bitcoin', 'BTC', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/bitcoin-btc-logo_pmx0hz.png'),
-       ('Ethereum', 'ETH', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/ethereum-eth-logo_fhndjw.png'),
+       ('Ethereum', 'ETH',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/ethereum-eth-logo_fhndjw.png'),
        ('Tether', 'USDT', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/tether-usdt-logo_nmjn6f.png'),
        ('XRP', 'XRP', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/xrp-xrp-logo_utpvtx.png'),
-       ('USD Coin', 'USDC', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/usd-coin-usdc-logo_rf9v9j.png'),
+       ('USD Coin', 'USDC',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/usd-coin-usdc-logo_rf9v9j.png'),
        ('Binance Coin', 'BNB', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/bnb-bnb-logo_wyvwzz.png'),
        ('Cardano', 'ADA', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/cardano-ada-logo_ijgq67.png'),
-       ('Polkadot', 'DOT', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/polkadot-new-dot-logo_y6meai.png'),
+       ('Polkadot', 'DOT',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/polkadot-new-dot-logo_y6meai.png'),
        ('Solana', 'SOL', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106939/solana-sol-logo_izehzz.png'),
-       ('Chainlink', 'LINK', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/chainlink-link-logo_zz4ajp.png');
+       ('Chainlink', 'LINK',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/chainlink-link-logo_zz4ajp.png');
 
 ------ 10 utilisateurs
 INSERT INTO account (pseudo, email, password, fund)
@@ -419,7 +423,7 @@ VALUES ('2025-01-08 09:00:00', 30000, 1),
        ('2025-01-08 10:00:00', 31000, 3),
        ('2025-01-08 10:30:00', 31500, 4),
        ('2025-01-08 11:00:00', 32000, 5),
-       ('2025-01-08 11:30:00', 32500,6),
+       ('2025-01-08 11:30:00', 32500, 6),
        ('2025-01-08 12:00:00', 33000, 7),
        ('2025-01-08 12:30:00', 33500, 8),
        ('2025-01-08 13:00:00', 34000, 9),
@@ -490,6 +494,7 @@ VALUES (1000, 800, 1, 1),
        (2000, 1800, 3, 3);
 
 -- Insertion de données dans la table 'purchase'
-INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller, id_sale_detail)
+INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller,
+                      id_sale_detail)
 VALUES ('2025-01-09 11:30:00', 500, 500, 1, 1, 2, 1),
        ('2025-01-10 12:30:00', 600, 600, 1, 2, 1, 2);
