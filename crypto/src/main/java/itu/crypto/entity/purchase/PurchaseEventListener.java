@@ -20,8 +20,8 @@ public class PurchaseEventListener {
         try {
             // Placez ici votre logique métier post-insertion, par exemple l'envoi de notifications
 
-            fcmService.send(event.getPurchase());
             logger.info("Traitement de l'événement pour la purchase avec id: {}", event.getPurchase().getId());
+            fcmService.send(event.getPurchase());
         } catch (Exception e) {
             // Gérer l'exception (par exemple, journaliser l'erreur)
             logger.error("Erreur lors du traitement de l'événement PurchaseCreatedEvent: {}", e.getMessage(), e);

@@ -8,6 +8,7 @@ import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.entity.wallet.MvWallet;
 import itu.crypto.entity.wallet.Wallet;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
+import itu.crypto.firebase.notification.FcmService;
 import itu.crypto.repository.TypeMvWalletRepository;
 import itu.crypto.repository.transaction.PurchaseRepository;
 import itu.crypto.repository.transaction.SaleDetailRepository;
@@ -41,6 +42,7 @@ public class PurchaseService implements BaseService<Purchase> {
     private final WalletService walletService;
     private final TypeMvWalletRepository typeMvWalletRepository;
     private final MvWalletRepository mvWalletRepository;
+    private final FcmService fcmService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -111,7 +113,7 @@ public class PurchaseService implements BaseService<Purchase> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public Purchase save(Purchase purchase) throws PurchaseException {
-        log.info("Controlle purchase {} before insert", purchase);
+//        log.info("Controlle purchase {} before insert", purchase);
         controllerAvantInsert(purchase);
 
         Purchase saved = purchaseRepository.save(purchase);
@@ -142,6 +144,13 @@ public class PurchaseService implements BaseService<Purchase> {
         mvWalletSeller.setWallet(walletSeller);
         mvWalletSeller.setTypeMvWallet(typeMvWalletRepository.findById(2).orElseThrow());
         mvWalletRepository.save(mvWalletSeller);
+
+        // mv_fund
+
+        // notifs
+        log.info("Achat effectue id: {}, publication d'un achat", purchase.getId());
+        fcmService.send(saved);
+        log.info("Achat publiee");
 
         return saved;
     }
