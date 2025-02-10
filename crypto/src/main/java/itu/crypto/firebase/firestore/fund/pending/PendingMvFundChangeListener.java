@@ -29,9 +29,9 @@ public class PendingMvFundChangeListener extends FirestoreChangeListener<Pending
         pmf.setDatePending(dateService.strToLocalDateTime(document.getDatePending()));
         pmf.setDateValidation(dateService.strToLocalDateTime(document.getDateValidation()));
 
-        pmf.setPendingState(pendingMvFundService.findPendingStateById(pmf.getPendingState().getId()));
-        pmf.setAccount(pendingMvFundService.findAccountById(pmf.getAccount().getId()));
-        pmf.setTypeMvFund(pendingMvFundService.findTypeMvFundById(pmf.getTypeMvFund().getId()));
+        pmf.setPendingState(pendingMvFundService.findPendingStateById(document.getPendingState().getId()));
+        pmf.setAccount(pendingMvFundService.findAccountById(document.getAccount().getId()));
+        pmf.setTypeMvFund(pendingMvFundService.findTypeMvFundById(document.getTypeMvFund().getId()));
 
         return pmf;
     }
