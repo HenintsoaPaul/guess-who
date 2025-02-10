@@ -1,7 +1,5 @@
 package itu.crypto.controller;
 
-import itu.crypto.entity.wallet.Wallet;
-import itu.crypto.service.transaction.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -20,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import itu.crypto.dto.SaleFormData;
-import itu.crypto.entity.sale.Sale;
-import itu.crypto.entity.sale.SaleDetail;
+import itu.crypto.entity.Sale;
+import itu.crypto.entity.SaleDetail;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
 import itu.crypto.entity.fund.PendingMvFund;
@@ -42,26 +40,22 @@ public class FrontOfficeController {
     private final SaleService saleService;
     private final AccountService accountService;
     private final CryptoRepository cryptoRepository;
-    private final WalletService walletService;
     private final PendingMvFundService pendingMvFundService;
     private final WalletService walletService;
 
     // Home page
     @GetMapping
-    public String goToSample(Model model, HttpSession session) {
-        if (session.getAttribute("adminError") != null) {
-            model.addAttribute("error", session.getAttribute("adminError"));
-        }
+    public String goToSample(Model model) {
         return "front_office/index";
     }
 
     // Cours Crypto
     @GetMapping("/cours")
     public String goToList(Model model,
-                           @RequestParam(required = false, name = "typeAnalyse") CoursAnalysisType analysisType,
-                           @RequestParam(required = false) Integer idCrypto,
-                           @RequestParam(required = false) String dateMin,
-                           @RequestParam(required = false) String dateMax) {
+            @RequestParam(required = false, name = "typeAnalyse") CoursAnalysisType analysisType,
+            @RequestParam(required = false) Integer idCrypto,
+            @RequestParam(required = false) String dateMin,
+            @RequestParam(required = false) String dateMax) {
 
         List<Cours> cours = coursService.findAllByDateInInterval(dateMin, dateMax);
 
@@ -94,8 +88,9 @@ public class FrontOfficeController {
     // Sales
     @GetMapping("/sales")
     public String goToList(Model model, HttpSession session) {
-        Integer idAccount = (Integer) session.getAttribute("id_account");
-        List<Sale> mySales = saleService.findAllByIdAccount(idAccount);
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // List<Sale> mySales = saleService.findAllByIdAccount(idAccount);
+        List<Sale> mySales = saleService.findAllByIdAccount(1);
 
         model.addAttribute("sales", mySales);
         return "front_office/sales/index";
@@ -113,8 +108,10 @@ public class FrontOfficeController {
 
     @GetMapping("/sales/add")
     public String goToForm(Model model, HttpSession session) {
-        Integer idAccount = (Integer) session.getAttribute("id_account");
-        Account myAccount = accountService.findById(idAccount).orElseThrow();
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+        Account myAccount = accountService.findById(1).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
         model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
@@ -123,7 +120,7 @@ public class FrontOfficeController {
 
     @PostMapping("/sales/save")
     public String save(@ModelAttribute("saleFormData") SaleFormData saleFormData,
-                       RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) {
         try {
             saleService.save(saleFormData);
         } catch (Exception e) {
@@ -143,42 +140,50 @@ public class FrontOfficeController {
     }
 
     @PostMapping("/transaction/save")
-    public String saveDepot(Model model, HttpSession session, @ModelAttribute PendingMvFund pendingMvFund) {
-        Integer idAccount = (Integer) session.getAttribute("id_account");
-        Account myAccount = accountService.findById(idAccount).orElseThrow();
+    public String saveDepot(Model model, @ModelAttribute PendingMvFund pendingMvFund) {
 
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+        Account myAccount = accountService.findById(1).orElseThrow();
         pendingMvFund.setPendingState(pendingMvFundService.getEtatAttente());
         pendingMvFund.setAccount(myAccount);
         pendingMvFundService.save(pendingMvFund);
 
-        model.addAttribute("msg", "Nisy email lasa bro.");
-        return goToHistorique(model, session);
+        model.addAttribute("msg", pendingMvFundService.sendEmail(pendingMvFund));
+        return goToHistorique(model);
     }
 
     @GetMapping("/transaction/historique")
-    public String goToHistorique(Model model, HttpSession session) {
-        Integer idAccount = (Integer) session.getAttribute("id_account");
-        Account myAccount = accountService.findById(idAccount).orElseThrow();
+    public String goToHistorique(Model model) {
 
-        model.addAttribute("pendingMvFunds", myAccount);
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+        model.addAttribute("pendingMvFunds", pendingMvFundService.findByIdAccount(1));
         return "front_office/transaction/historique";
     }
 
     // Account
     @GetMapping("/account/profil")
-    public String goToAccountProfil(Model model, HttpSession session) {
-        Integer idAccount = (Integer) session.getAttribute("id_account");
-        Account myAccount = accountService.findById(idAccount).orElseThrow();
+    public String goToAccountProfil(Model model) {
 
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+        Account myAccount = accountService.findById(1).orElseThrow();
         model.addAttribute("account", myAccount);
         return "front_office/profil";
     }
 
-    //Wallet
+    // Wallet
     @GetMapping("/wallet")
-    public String goToWallet(Model model, HttpSession session) {
-        Integer idAccount = (Integer) session.getAttribute("id_account");
-        Account myAccount = accountService.findById(idAccount).orElseThrow();
+    public String goToWallet(Model model) {
+        // todo: uncomment on production
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+        // todo: comment on production
+        Account myAccount = accountService.findById(1).orElseThrow();
 
         List<Wallet> wallets = walletService.findAllByAccount(myAccount);
         int nbTotal = wallets.stream().mapToInt(Wallet::getQuantity).sum();
@@ -188,4 +193,47 @@ public class FrontOfficeController {
         model.addAttribute("user", myAccount.getPseudo() + "(" + myAccount.getEmail() + ")");
         return "front_office/wallet/index";
     }
+
+    // market
+    @GetMapping("/market")
+    public String goToMarket(Model model) {
+        List<SaleDetail> saleDetails = saleService.findAllDispo();
+
+        model.addAttribute("saleDetails", saleDetails);
+        return "front_office/market/index";
+    }
+
+    @GetMapping("/market/{id}")
+    public String goToMarketInfo(Model model, @PathVariable Integer id) {
+        SaleDetail saleDetail = saleService.findByIdSaleDetail(id);
+        Sale sale = saleService.findByIdSale(saleDetail.getSale().getId());
+        Account accountSeller = accountService.findById(sale.getAccount().getId()).orElseThrow();
+        
+        model.addAttribute("saleDetail", saleDetail);
+        model.addAttribute("accountSeller", accountSeller);
+        return "front_office/market/buy";
+    }
+
+    @PostMapping("/market/buy")
+    public String buyCrypto(@RequestParam("idSaleDetail") Integer idSaleDetail, @RequestParam("qtt") Integer quantity, RedirectAttributes redirectAttributes, HttpSession session) {
+        try {
+            // Integer idAccount = (Integer) session.getAttribute("id_account");
+            // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+            // todo: comment on production
+            Account myAccount = accountService.findById(1).orElseThrow();
+
+            SaleDetail saleDetail = saleService.findByIdSaleDetail(idSaleDetail);
+            if (quantity > saleDetail.getQuantityLeft()) {
+                throw new IllegalArgumentException("Quantité demandée supérieure à la quantité disponible.");
+            }
+
+            saleService.buyCrypto(myAccount, saleDetail, quantity);
+            return "redirect:/front-office/market";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/front-office/market/" + idSaleDetail;
+        }
+    }
+
 }
