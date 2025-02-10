@@ -341,17 +341,17 @@ VALUES ('En Attente'),
        ('Refusée');
 
 -- 10 crypto
-INSERT INTO crypto (name, symbol)
-VALUES ('Bitcoin', 'BTC'),
-       ('Ethereum', 'ETH'),
-       ('Tether', 'USDT'),
-       ('XRP', 'XRP'),
-       ('USD Coin', 'USDC'),
-       ('Binance Coin', 'BNB'),
-       ('Cardano', 'ADA'),
-       ('Polkadot', 'DOT'),
-       ('Solana', 'SOL'),
-       ('Chainlink', 'LINK');
+INSERT INTO crypto (name, symbol, logo)
+VALUES ('Bitcoin', 'BTC', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/bitcoin-btc-logo_pmx0hz.png'),
+       ('Ethereum', 'ETH', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/ethereum-eth-logo_fhndjw.png'),
+       ('Tether', 'USDT', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/tether-usdt-logo_nmjn6f.png'),
+       ('XRP', 'XRP', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/xrp-xrp-logo_utpvtx.png'),
+       ('USD Coin', 'USDC', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/usd-coin-usdc-logo_rf9v9j.png'),
+       ('Binance Coin', 'BNB', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/bnb-bnb-logo_wyvwzz.png'),
+       ('Cardano', 'ADA', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/cardano-ada-logo_ijgq67.png'),
+       ('Polkadot', 'DOT', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/polkadot-new-dot-logo_y6meai.png'),
+       ('Solana', 'SOL', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106939/solana-sol-logo_izehzz.png'),
+       ('Chainlink', 'LINK', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/chainlink-link-logo_zz4ajp.png');
 
 ------ 10 utilisateurs
 INSERT INTO account (pseudo, email, password, fund)
