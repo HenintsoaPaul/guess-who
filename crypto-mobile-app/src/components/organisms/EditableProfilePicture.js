@@ -1,20 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-import FormData from 'form-data';
-import CryptoJS from 'crypto-js';
-import { AppContext } from '../../../AppContext';
-import { FontAwesome } from '@expo/vector-icons';
-import { collection, doc ,getDoc,query,updateDoc, where} from 'firebase/firestore';
-import { cloneMobData, fetchDataFromFirebase, FIRESTORE_DB } from '../../services/firebaseService';
 import StyleText from '../atoms/StyleText';
-
-const CLOUDINARY_CONFIG = {
-  cloudName: 'dulx9capq',
-  apiKey: '174986489287854',
-  apiSecret: 'k7dnDcMEbe24SF1jNB3YSPM1krA'
-};
 
 const EditableProfilePicture = ({image,setImage,uploading=false}) => {
   useEffect(() => {
@@ -71,7 +58,7 @@ const EditableProfilePicture = ({image,setImage,uploading=false}) => {
 
   return (
     <View style={styles.container}>
-      <StyleText fs={20} style={{marginBottom: 10}}> Profil Preview </StyleText>
+      <StyleText fs={20} > Profil Preview </StyleText>
       <TouchableOpacity style={styles.imageContainer} onPress={pickImage} >
         <Image
           source={image ? { uri: image } : require('../../../assets/profile.jpg')}
@@ -96,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 180,
     height: 180,
-    gap:15
+    gap:10
   },
   imageContainer: {
     width: 160,

@@ -19,7 +19,7 @@ import { Button } from "react-native-elements";
 import { ActivityIndicator } from "react-native";
 
 const LoginScreen = () => {
-  const [email,setEmail] = useState("rocruxappafra-4143@yopmail.com");
+  const [email,setEmail] = useState("frucodillefeu-1226@yopmail.com");
   const [password, setPassword] = useState('mypassword');
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +30,6 @@ const LoginScreen = () => {
     try {      
       const userLog = await LoginService.logInWithMailAndPassword(email,password)
       logIn(userLog)
-      navigation.navigate('Profil')
     }
     catch (error){
       console.log(error);

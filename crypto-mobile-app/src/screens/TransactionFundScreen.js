@@ -4,22 +4,24 @@ import { FIRESTORE_DB, updateOrCreateMobDoc } from '../services/firebaseService'
 import { AppContext } from '../../AppContext';
 import {Picker} from '@react-native-picker/picker';
 import { collection, doc, setDoc, Timestamp } from 'firebase/firestore';
+import { colorsChart } from '../constants/ColorsChart';
+import { getTimestampNow } from '../services/timeService';
 
 const sendTransactionData = async (amount, transactionType, user) => {
   try {
     const transactionData = {
       amount:parseFloat(amount),
       id:null,
-      datePending: new Date().toISOString(),
+      datePending: getTimestampNow(),
       dateValidation:null,
       account:{id:user.id},
       typeMvFund:{id:Number.parseInt(transactionType)},
       pendingState:{id:1}
     }
     await updateOrCreateMobDoc("pending_mv_fund",transactionData,null)
-    console.log('Transaction envoyée:', transactionData);
+    alert('Transaction envoyer , en attente de validation')
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de la transaction:', error);
+    alert('Erreur lors de l\'envoi de la transaction:', error);
   }
 };
 
@@ -28,6 +30,10 @@ function TransactionFundScreen() {
   const [transactionType, setTransactionType] = useState(1);
   const {user} = useContext(AppContext);
 
+  if(user === null) {
+    return <></>
+  }
+  
 
   const handleTransaction = () => {
     if (!amount || isNaN(amount)) {
@@ -59,6 +65,7 @@ function TransactionFundScreen() {
 
         <View style={styles.selectorContainer}>
             <Picker
+            itemStyle={{color:colorsChart.primary}}
             selectedValue={transactionType}
             style={styles.transactionSelector}
             onValueChange={(itemValue) => setTransactionType(itemValue)}
@@ -79,7 +86,7 @@ function TransactionFundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#000',
+    backgroundColor:colorsChart.white,
     alignItems: 'center',
     padding: 16,
   },
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
   },
   formContainer:{
     width:'100%',
-    backgroundColor:'#000'
+    backgroundColor:colorsChart.white
   },
   fundLabel: {
     fontSize: 16,
@@ -120,6 +127,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     overflow: 'hidden',
+    height:150,
   },
   transactionSelector: {
     width: '100%',

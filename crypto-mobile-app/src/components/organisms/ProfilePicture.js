@@ -6,7 +6,7 @@ const ProfilePicture = () => {
   const { image, setImage, user } = useContext(AppContext);
   useEffect(() => {
     try {
-      const profile = user.account_img;
+      const profile = user.accountImg;
       if(profile === null || profile === undefined){
         throw new Error("No profile seted")
       }

@@ -45,103 +45,9 @@ const PurchaseCard = ({purchase}) => {
 export default PurchaseCard
 
 const styles = StyleSheet.create({
-     brandPrimary: {
-        color: '#ffffff',
-      },
-      brandAccent: {
-        color: '#00b894',
-      },
-      placeholder: {
-        color: '#aaa',
-      },
-      container: {
-        flex: 1,
-        backgroundColor: colorsChart.white, // Change background color to dark
-        paddingHorizontal: 16,
-      },
-      centered: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colorsChart.white, // Change background color to dark
-      },
-      loadingText: {
-        color: '#ffffff', // Change text color to white for better contrast
-        marginTop: 8,
-        fontSize: 16,
-      },
-      errorText: {
-        color: '#ff5555',
-        fontSize: 16,
-      },
-      searchContainer: {
-        backgroundColor: '#1e1e1e', // Change background color to dark grey
-        padding: 16,
-        borderRadius: 10,
-        marginBottom: 16,
-        marginTop: 10,
-      },
-      searchTitle: {
-        color: '#ffffff', // Change text color to white for better contrast
-        fontSize: 18,
-        fontWeight: '700',
-        marginBottom: 12,
-        textAlign: 'center',
-      },
-      inputGroup: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 12,
-      },
-      input: {
-        flex: 1,
-        backgroundColor: '#2a2a2a', // Change background color to dark grey
-        color: '#ffffff', // Change text color to white for better contrast
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        marginHorizontal: 4,
-        fontSize: 14,
-      },
-      dateInput: {
-        flex: 1,
-        backgroundColor: '#2a2a2a', // Change background color to dark grey
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        marginHorizontal: 4,
-        justifyContent: 'center',
-      },
-      dateText: {
-        color: '#ffffff', // Change text color to white for better contrast
-        fontSize: 14,
-      },
-      buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 12,
-      },
-      button: {
-        backgroundColor: '#00b894',
-        flex: 1,
-        paddingVertical: 12,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginHorizontal: 4,
-      },
-      resetButton: {
-        backgroundColor: '#0984e3',
-      },
-      buttonText: {
-        color: '#ffffff',
-        fontSize: 14,
-        fontWeight: '700',
-      },
-      listContent: {
-        paddingBottom: 20,
-      },
+    
       card: {
-        backgroundColor: '#1e1e1e', // Change background color to dark grey
+        backgroundColor: colorsChart.light, // Change background color to dark grey
         padding: 16,
         borderRadius: 10,
         marginBottom: 12,
@@ -155,16 +61,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
       },
       label: {
-        color: '#aaa',
+        color: colorsChart.secondary,
         fontSize: 14,
         fontWeight: '600',
       },
       value: {
-        color: '#ffffff', // Change text color to white for better contrast
+        color: colorsChart.dark, // Change text color to white for better contrast
         fontSize: 14,
       },
       emptyText: {
-        color: '#ffffff', // Change text color to white for better contrast
+        color: colorsChart.dark, // Change text color to white for better contrast
         textAlign: 'center',
         marginTop: 20,
         fontSize: 16,

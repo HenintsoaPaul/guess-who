@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import WalletScreen from '../screens/WalletScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
-import CoursActuelleScreen from '../screens/CoursActuelleScreen';
 import TransactionFundScreen from '../screens/TransactionFundScreen';
 import ProfilePicture from '../components/organisms/ProfilePicture';
 import UserScreen from '../screens/UserScreen';
@@ -49,13 +48,14 @@ const DrawerNavigation = () => {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         initialRouteName='Login'
       >
-          <Drawer.Screen name='Login'component={LoginScreen} options={{headerShown:false}}/>
+        {user ? (
+          <>
           <Drawer.Screen
-            name="Profil"
-            component={UserScreen}
-            options={
+          name="Profil"
+          component={UserScreen}
+          options={
               {
-              drawerIcon: ({ focused }) => (
+                drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>👤</Text>
               ),
             }}
@@ -73,6 +73,7 @@ const DrawerNavigation = () => {
             name="PictureEdit"
             component={PictureEditScreen}
             options={{
+              drawerStyle:({backgroundColor:colorsChart.red}),
               drawerIcon: ({ focused }) => (
                 <Text style={[styles.icon, focused && styles.activeIcon]}>📝</Text>
               ),
@@ -95,7 +96,7 @@ const DrawerNavigation = () => {
                 <Text style={[styles.icon, focused && styles.activeIcon]}>🔹</Text>
               ),
             }}
-          />
+            />
           <Drawer.Screen
             name="Favoris"
             component={FavoritesScreen}
@@ -105,7 +106,7 @@ const DrawerNavigation = () => {
                 <Text style={[styles.icon, focused && styles.activeIcon]}>❤️</Text>
               ),
             }}
-          />
+            />
 
           <Drawer.Screen
             name="Transaction fund"
@@ -125,7 +126,14 @@ const DrawerNavigation = () => {
                 <Text style={[styles.icon, focused && styles.activeIcon]}>🛒</Text>
               ),
             }}
-          />
+            />
+            </>
+          ) 
+          : 
+          (
+            <Drawer.Screen name='Login'component={LoginScreen} options={{headerShown:false}}/>
+          )
+        }
       </Drawer.Navigator>
     </NavigationContainer>
   );

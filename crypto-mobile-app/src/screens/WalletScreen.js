@@ -5,6 +5,8 @@ import { FIRESTORE_DB } from '../services/firebaseService';
 import { onSnapshot, doc, getDoc } from 'firebase/firestore';
 import { AppContext } from '../../AppContext';
 import { query,getDocs ,collection ,where} from 'firebase/firestore';
+import WalletCard from '../components/molecules/WalletCard';
+import { colorsChart } from '../constants/ColorsChart';
 
 const fetchWalletData = async (setCryptos, user) => {
   try {
@@ -20,20 +22,16 @@ const fetchWalletData = async (setCryptos, user) => {
       });
 
       setCryptos(wallets);
-      console.log('Données des documents:', wallets);
-
       // Listen for real-time updates
       const unsubscribe = onSnapshot(walletQuery, (snapshot) => {
         const updatedWallets = [];
-        let updatedTotalPrice = 0;
-
         snapshot.forEach((doc) => {
           const updatedData = doc.data();
           updatedWallets.push(updatedData);
         });
 
         setCryptos(updatedWallets);
-        console.log('Données mises à jour:', updatedWallets);
+        console.log('Données mises à jour:', updatedWallets.length);
       });
 
       return unsubscribe;
@@ -59,7 +57,6 @@ export default function WalletScreen() {
     const fetchCryptos = async () => {
       try {
         setLoading(true);
-        setError(null);
         const unsubscribe = await fetchWalletData(setCryptos,user);
         return () => {
           if (unsubscribe) unsubscribe();
@@ -82,6 +79,11 @@ export default function WalletScreen() {
       ),
     [cryptos, filterText]
   );
+
+  if(user === null) {
+    return <></>
+  }
+  
 
   if (loading) {
     return (
@@ -119,42 +121,21 @@ export default function WalletScreen() {
           autoCorrect={false}
         />
       </View>
-      <View style={styles.table}>
-        <View style={styles.tableHeader}>
-        <View style={styles.headerCell}>
-            <Text style={styles.headerText}>Image</Text>
-          </View>
-          <View style={styles.headerCell}>
-            <Text style={styles.headerText}>Cryptomonnaie</Text>
-          </View>
-          <View style={styles.headerCell}>
-            <Text style={styles.headerText}>Symbole</Text>
-          </View>
-          <View style={styles.headerCell}>
-            <Text style={styles.headerText}>Quantité</Text>
-          </View>
-        </View>
-        {filteredCryptos.map((cpt, index) => (
-          
-          <TouchableOpacity
-            key={index}
-            style={styles.tableRow}
-            // onPress={() => navigation.navigate('CryptotDetail', { cpt })}
-          >
-            <View style={styles.cell}>
-              <Text style={styles.cellText}></Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{cpt.crypto.name}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{cpt.crypto.symbol}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.cellText}>{cpt.quantity}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+      <View style={{flex:1}}>
+        <FlatList
+          style={{flex:1}}
+          data={filteredCryptos}
+          keyExtractor={(item) => item.crypto.id}
+          renderItem={({ item }) => (
+            <WalletCard
+            wallet={item}
+            />
+          )}
+          key={1}
+          numColumns={2}
+          ListEmptyComponent={<Text>Aucune cryptomonnaie trouvée.</Text>}
+          contentContainerStyle={{}}
+        />
       </View>
     </View>
   );
@@ -163,8 +144,9 @@ export default function WalletScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor:colorsChart.white,
     padding: 16,
   },
   title: {
@@ -205,6 +187,7 @@ const styles = StyleSheet.create({
   table: {
     width: '100%',
     borderWidth: 1,
+    flex:1,
     borderColor: '#ddd',
     borderRadius: 4,
   },
