@@ -11,16 +11,15 @@ import itu.crypto.firebase.firestore.account.AccountSyncService;
 import itu.crypto.firebase.firestore.cours.CoursSyncService;
 import itu.crypto.firebase.firestore.crypto.CryptoFavSyncService;
 import itu.crypto.firebase.firestore.fund.MvFundSyncService;
-import itu.crypto.firebase.firestore.fund.pending.PendingMvFundSyncService;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
 import itu.crypto.firebase.firestore.wallet.WalletSyncService;
 import itu.crypto.repository.CoursRepository;
 import itu.crypto.repository.CryptoFavRepository;
 import itu.crypto.repository.CryptoRepository;
 import itu.crypto.repository.account.AccountRepository;
-import itu.crypto.repository.transaction.PurchaseRepository;
 import itu.crypto.repository.transaction.SaleDetailRepository;
 import itu.crypto.repository.transaction.wallet.WalletRepository;
+import itu.crypto.service.transaction.PurchaseService;
 import itu.crypto.service.transaction.fund.MvFundService;
 import itu.crypto.service.transaction.fund.PendingMvFundService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +44,6 @@ public class FirebaseInitializer {
     private final PurchaseSyncService purchaseSyncService;
     private final CryptoFavSyncService cryptoFavSyncService;
     private final MvFundSyncService mvFundSyncService;
-    private final PendingMvFundSyncService pendingMvFundSyncService;
     private final WalletSyncService walletSyncService;
 
     private final AccountRepository accountRepository;
@@ -54,14 +52,16 @@ public class FirebaseInitializer {
     private final CryptoFavRepository cryptoFavRepository;
     private final MvFundService mvFundService;
     private final PendingMvFundService pendingMvFundService;
-    private final PurchaseRepository purchaseRepository;
+
+    private final PurchaseService purchaseService;
+
     private final WalletRepository walletRepository;
     private final SaleDetailRepository saleDetailRepository;
 
     @PostConstruct
     public void init() {
-         firestoreSyncManager.init();
-         firestoreChangeListenerManager.init();
+        firestoreSyncManager.init();
+        firestoreChangeListenerManager.init();
     }
 
     private void testAccount() {
@@ -120,26 +120,6 @@ public class FirebaseInitializer {
         Wallet w = walletRepository.findById(vao.getId()).orElse(null);
         w.setQuantity(55555);
         walletRepository.save(w);
-    }
-
-    private void testPurchase() {
-        purchaseSyncService.syncWithFirebase();
-
-        Purchase p = new Purchase(
-                null,
-                LocalDateTime.now(),
-                1500.00,
-                500.00,
-                3,
-                accountRepository.findAll().get(0),
-                accountRepository.findAll().get(1),
-                saleDetailRepository.findAll().get(0)
-        );
-        Purchase vao = purchaseRepository.save(p);
-
-        Purchase w = purchaseRepository.findById(vao.getId()).orElse(null);
-        w.setQuantityCrypto(55555);
-        purchaseRepository.save(w);
     }
 
     private void testPendingMvFund() {

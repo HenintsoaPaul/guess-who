@@ -1,6 +1,7 @@
 package itu.crypto.service.account;
 
 import itu.crypto.entity.account.Account;
+import itu.crypto.entity.purchase.Purchase;
 import itu.crypto.firebase.firestore.generalisation.BaseService;
 import itu.crypto.repository.account.AccountRepository;
 import jakarta.transaction.Transactional;
@@ -42,12 +43,7 @@ public class AccountService implements BaseService<Account> {
         return accountRepository.save(account);
     }
 
-    /**
-     * Retourner les tokens firebase pour l'envoi des notifications
-     * vers un utilisateur
-     */
-    @Deprecated
-    public List<String> findAllFCMTokens(Account account) {
-        return null;
+    public List<Account> findAllToNotifyOnPurchase(Purchase purchase) {
+        return accountRepository.findAllToNotifyOnCryptoPurchase(purchase.getSaleDetail().getCrypto().getId());
     }
 }

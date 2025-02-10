@@ -3,6 +3,7 @@ CREATE TABLE crypto
     id_crypto SERIAL,
     name      VARCHAR(250) NOT NULL,
     symbol    VARCHAR(5)   NOT NULL,
+    logo      VARCHAR(250),
     PRIMARY KEY (id_crypto),
     UNIQUE (name),
     UNIQUE (symbol)
@@ -13,6 +14,7 @@ CREATE TABLE account
     id_account  SERIAL,
     pseudo      VARCHAR(250) NOT NULL,
     account_img VARCHAR(250),
+    fcm_token   VARCHAR(250),
     email       VARCHAR(250) NOT NULL,
     password    VARCHAR(250) NOT NULL,
     fund        NUMERIC(15, 2),
@@ -96,6 +98,16 @@ CREATE TABLE pending_state
     UNIQUE (name)
 );
 
+CREATE TABLE admin
+(
+    id_admin   SERIAL,
+    level      SMALLINT NOT NULL,
+    id_account INTEGER  NOT NULL,
+    PRIMARY KEY (id_admin),
+    UNIQUE (id_account),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
 CREATE TABLE wallet
 (
     id_wallet  SERIAL,
@@ -177,7 +189,7 @@ CREATE TABLE mv_fund
     date_mv            TIMESTAMP      NOT NULL,
     amount             NUMERIC(15, 2) NOT NULL,
     id_source          INTEGER,
-    id_pending_mv_fund INTEGER        NOT NULL,
+    id_pending_mv_fund INTEGER,
     id_type_mv_fund    INTEGER        NOT NULL,
     id_account         INTEGER        NOT NULL,
     PRIMARY KEY (id_mv_fund),

@@ -2,8 +2,8 @@ package itu.crypto.controller;
 
 import itu.crypto.dto.SaleFormData;
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.repository.CryptoRepository;
 import itu.crypto.service.account.AccountService;
 import itu.crypto.service.SaleService;

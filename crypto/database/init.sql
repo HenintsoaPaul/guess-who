@@ -3,6 +3,7 @@ CREATE TABLE crypto
     id_crypto SERIAL,
     name      VARCHAR(250) NOT NULL,
     symbol    VARCHAR(5)   NOT NULL,
+    logo      VARCHAR(250),
     PRIMARY KEY (id_crypto),
     UNIQUE (name),
     UNIQUE (symbol)
@@ -13,6 +14,7 @@ CREATE TABLE account
     id_account  SERIAL,
     pseudo      VARCHAR(250) NOT NULL,
     account_img VARCHAR(250),
+    fcm_token   VARCHAR(250),
     email       VARCHAR(250) NOT NULL,
     password    VARCHAR(250) NOT NULL,
     fund        NUMERIC(15, 2),
@@ -96,6 +98,16 @@ CREATE TABLE pending_state
     UNIQUE (name)
 );
 
+CREATE TABLE admin
+(
+    id_admin   SERIAL,
+    level      SMALLINT NOT NULL,
+    id_account INTEGER  NOT NULL,
+    PRIMARY KEY (id_admin),
+    UNIQUE (id_account),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
+);
+
 CREATE TABLE wallet
 (
     id_wallet  SERIAL,
@@ -177,7 +189,7 @@ CREATE TABLE mv_fund
     date_mv            TIMESTAMP      NOT NULL,
     amount             NUMERIC(15, 2) NOT NULL,
     id_source          INTEGER,
-    id_pending_mv_fund INTEGER        NOT NULL,
+    id_pending_mv_fund INTEGER,
     id_type_mv_fund    INTEGER        NOT NULL,
     id_account         INTEGER        NOT NULL,
     PRIMARY KEY (id_mv_fund),
@@ -329,17 +341,21 @@ VALUES ('En Attente'),
        ('Refusée');
 
 -- 10 crypto
-INSERT INTO crypto (name, symbol)
-VALUES ('Bitcoin', 'BTC'),
-       ('Ethereum', 'ETH'),
-       ('Tether', 'USDT'),
-       ('XRP', 'XRP'),
-       ('USD Coin', 'USDC'),
-       ('Binance Coin', 'BNB'),
-       ('Cardano', 'ADA'),
-       ('Polkadot', 'DOT'),
-       ('Solana', 'SOL'),
-       ('Chainlink', 'LINK');
+INSERT INTO crypto (name, symbol, logo)
+VALUES ('Bitcoin', 'BTC', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/bitcoin-btc-logo_pmx0hz.png'),
+       ('Ethereum', 'ETH',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/ethereum-eth-logo_fhndjw.png'),
+       ('Tether', 'USDT', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/tether-usdt-logo_nmjn6f.png'),
+       ('XRP', 'XRP', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/xrp-xrp-logo_utpvtx.png'),
+       ('USD Coin', 'USDC',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/usd-coin-usdc-logo_rf9v9j.png'),
+       ('Binance Coin', 'BNB', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/bnb-bnb-logo_wyvwzz.png'),
+       ('Cardano', 'ADA', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/cardano-ada-logo_ijgq67.png'),
+       ('Polkadot', 'DOT',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106938/polkadot-new-dot-logo_y6meai.png'),
+       ('Solana', 'SOL', 'https://res.cloudinary.com/dulx9capq/image/upload/v1739106939/solana-sol-logo_izehzz.png'),
+       ('Chainlink', 'LINK',
+        'https://res.cloudinary.com/dulx9capq/image/upload/v1739106937/chainlink-link-logo_zz4ajp.png');
 
 ------ 10 utilisateurs
 INSERT INTO account (pseudo, email, password, fund)
@@ -354,12 +370,9 @@ VALUES ('Alice', 'rocruxappafra-4143@yopmail.com', 'mypassword', 10000),
        ('Ivy', 'bappoppotameu-6100@yopmail.com', 'mypassword', 10500),
        ('Jack', 'nopeummeuxoigrau-1855@yopmail.com', 'mypassword', 11500);
 
--- -- Insertion de données dans la table 'wallet'
--- INSERT INTO wallet (quantity, id_crypto, id_account)
--- VALUES (100, 1, 1),
---        (150, 1, 2),
---        (200, 1, 3),
---        (120, 2, 1);
+INSERT INTO admin (level, id_account)
+VALUES (10, 1),
+       (5, 2);
 
 -- Insertion de données dans la table 'mv_wallet' (exemple pour Alice et Bob)
 -- Alice

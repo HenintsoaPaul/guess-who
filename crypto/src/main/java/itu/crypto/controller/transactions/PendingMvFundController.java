@@ -27,7 +27,6 @@ public class PendingMvFundController {
         String msg = "Validation OK";
         try {
             PendingMvFund pmf = pendingMvFundService.validate(id);
-            msg += ". " + pendingMvFundService.sendEmail(pmf);
         } catch (PendingMvFundException pmfe) {
             msg = pmfe.getMessage();
         }
@@ -41,7 +40,6 @@ public class PendingMvFundController {
         String msg = "Refus OK";
         try {
             PendingMvFund pmf = pendingMvFundService.refus(id);
-            msg += ". " + pendingMvFundService.sendEmail(pmf);
         } catch (PendingMvFundException pmfe) {
             msg = pmfe.getMessage();
         }
@@ -62,7 +60,8 @@ public class PendingMvFundController {
         pendingMvFund.setPendingState(pendingMvFundService.getEtatAttente());
         pendingMvFundService.save(pendingMvFund);
 
-        model.addAttribute("msg", pendingMvFundService.sendEmail(pendingMvFund));
+//        model.addAttribute("msg", pendingMvFundService.sendEmail(pendingMvFund));
+        model.addAttribute("msg", "Nisy email lasa");
         return gotoFormPending(model);
     }
 }
