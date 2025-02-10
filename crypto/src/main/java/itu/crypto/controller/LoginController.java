@@ -25,7 +25,12 @@ public class LoginController {
     private final SessionService sessionService;
 
     @GetMapping
-    public String goToFirstForm(Model model) {
+    public String goToFirstForm(HttpSession session, Model model) {
+        if (session.getAttribute("loginError") != null) {
+            model.addAttribute("msg", session.getAttribute("loginError"));
+            session.removeAttribute("loginError");
+        }
+
         model.addAttribute("loginRequest", new LoginRequest());
         return "login/index";
     }
