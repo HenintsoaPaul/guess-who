@@ -20,13 +20,7 @@ import java.util.List;
 public class SessionFilter extends OncePerRequestFilter {
     private final CryptoConfigProperties cryptoConfigProperties;
     private final SessionService sessionService;
-
-    private boolean pathMatchesPattern(String path, String pattern) {
-        if (pattern.endsWith("/*")) { // Wildcard match
-            return path.startsWith(pattern.substring(0, pattern.length() - 2));
-        }
-        return path.equals(pattern); // Exact match
-    }
+    private final SecurityService securityService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -35,10 +29,7 @@ public class SessionFilter extends OncePerRequestFilter {
         // Check if the path is permitted for All
         String requestPath = request.getServletPath();
 
-        List<String> excludedPaths = cryptoConfigProperties.getExcludedPaths();
-        boolean isExcluded = excludedPaths.stream()
-                .anyMatch(pattern -> pathMatchesPattern(requestPath, pattern));
-        if (isExcluded) {
+        if (securityService.isExcludedPath(cryptoConfigProperties.getExcludedPaths(), requestPath)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -79,14 +70,12 @@ public class SessionFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Ajoute un flash attribute contenant le message d'erreur et redirige l'utilisateur vers la page de login.
+     * Ajouter l'erreur  vers la page de login.
      */
     private void redirectToLogin(HttpServletRequest request, HttpServletResponse response, String errorMessage)
             throws IOException {
-        request.getSession().setAttribute("loginError", errorMessage);
+        log.error("Token validation error! Redirection to login. Detail : {}", errorMessage);
 
-        log.error("Session error! Redirection to login. Detail : {}", errorMessage);
-
-        response.sendRedirect(request.getContextPath() + "/login");
+        securityService.redirectToLogin(request, response, errorMessage);
     }
 }

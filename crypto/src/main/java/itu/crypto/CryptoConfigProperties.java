@@ -15,6 +15,9 @@ public class CryptoConfigProperties {
     @Value("${app.time-zone}")
     private String timeZone;
 
+    @Value("${api.token-validation-endpoint}")
+    private String tokenValidationEndpoint;
+
     @Value("${app.excluded-paths}")
     private final List<String> excludedPaths;
 }
