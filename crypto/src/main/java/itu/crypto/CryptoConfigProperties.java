@@ -12,9 +12,9 @@ public class CryptoConfigProperties {
     @Value("${app.laravel-url}")
     private String laravelUrl;
 
+    @Value("${app.time-zone}")
+    private String timeZone;
+
     @Value("${app.excluded-paths}")
     private final List<String> excludedPaths;
-
-    @Value("${app.time-zone}")
-    private final String timeZone;
 }

@@ -47,14 +47,14 @@ public class SessionFilter extends OncePerRequestFilter {
         String token = (String) request.getSession().getAttribute("token");
 
         if (token == null || token.isEmpty()) {
-            String errorMsg = "Token absent dans la session";
+            String errorMsg = "Token absent dans la session. Veuillez vous (re-)connecter";
             redirectToLogin(request, response, errorMsg);
             return; // Ne pas passer au filtre suivant
         }
 
         boolean isExpired = verifyTokenLifeTime(request, response);
         if (isExpired) {
-            String errorMsg = "Token expired";
+            String errorMsg = "Token expiree. Veuillez vous (re-)connecter";
             redirectToLogin(request, response, errorMsg);
             return; // Ne pas passer au filtre suivant
         }
