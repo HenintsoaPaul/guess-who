@@ -24,6 +24,15 @@ public class LoginController {
     private final LoginService loginService;
     private final SessionService sessionService;
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session, Model model) {
+        sessionService.viderSession(session);
+
+        LoginRequest loginRequest = new LoginRequest("rocruxappafra-4143@yopmail.com", "mypassword");
+        model.addAttribute("loginRequest", loginRequest);
+        return "login/index";
+    }
+
     @GetMapping
     public String goToFirstForm(HttpSession session, Model model) {
         if (session.getAttribute("loginError") != null) {
@@ -78,7 +87,11 @@ public class LoginController {
             sessionService.initSession(session, myAccount.getId(), token, tokenExpiration, admin);
 
             // goto home page
-            return "index";
+            if (admin == null) {
+                return "redirect:/front-office";
+            } else {
+                return "redirect:/back-office";
+            }
         } else {
             // back to pin form
             model.addAttribute("msg", apiResponse.getMessage());
