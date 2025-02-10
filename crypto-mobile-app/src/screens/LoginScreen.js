@@ -8,15 +8,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-
-import Animated, { 
-  useAnimatedStyle, 
-  useSharedValue, 
-  withSpring, 
-  useAnimatedGestureHandler, 
-  interpolate, 
-  Extrapolate 
-} from 'react-native-reanimated';
+import { Video } from 'expo-video';
 
 import React, { useContext, useState } from 'react';
 import  * as LoginService from '../services/loginService';
@@ -33,38 +25,9 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('mypassword');
   const [loading, setLoading] = useState(false);
 
-
-  const [isAnimating, setIsAnimating] = useState(false);
-  const coinOpacity = useSharedValue(0);
-  const coinY = useSharedValue(0);
-
-  const coinAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: coinOpacity.value,
-    transform: [
-      { translateY: coinY.value },
-      { rotate: `${coinRotation.value}deg` }
-    ]
-  }));
-
-  const startCoinAnimation = () => {
-    if (isAnimating) return;
-    
-    setIsAnimating(true);
-    coinOpacity.value = 1;
-    coinY.value = -1000;
-    
-    setTimeout(() => {
-      coinOpacity.value = 0;
-      coinY.value = 0;
-      setIsAnimating(false);
-    }, 2000);
-  };
-
-
   const navigation = useNavigation();
   const {logIn} = useContext(AppContext)
   const signIn = async() => {
-    startCoinAnimation();
     setLoading(true)
     try {      
       const userLog = await LoginService.logInWithMailAndPassword(email,password)
@@ -90,12 +53,18 @@ const LoginScreen = () => {
       showsHorizontalScrollIndicator={false}
     >
 
-        <Animated.View style={[styles.coinContainer, coinAnimatedStyle]}>
-          <Svg width={30} height={30} viewBox="0 0 16 16" fill="#ffd700">
-            <Path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-            <Path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
-          </Svg>
-        </Animated.View>
+      <View style={styles.videoContainer}>
+        <Video
+          source={{ uri: 'https://res.cloudinary.com/dl280pugt/video/upload/v1739138698/istockphoto-1338631545-640_adpp_is_yao4ph.mp4' }} 
+          rate={1.0}
+          volume={1.0}
+          isMuted={false}
+          resizeMode="cover"
+          shouldPlay
+          isLooping
+          style={{ width: 300, height: 300 }}
+        />
+      </View>
 
       {/* Header Section */}
       <ImageBackground
@@ -268,11 +237,14 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
   },
-  coinContainer: {
+  videoContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'absolute',
     top: 100,
     left: '50%',
-    transform: [{ translateX: -15 }],
+    transform: [{ translateX: -150 }], // Ajuste en fonction de la taille de ta vidéo
     zIndex: 10,
   },
   footerText: {
