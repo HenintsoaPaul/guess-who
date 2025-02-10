@@ -1,5 +1,6 @@
 package itu.crypto.entity.purchase;
 
+import itu.crypto.ApplicationEventPublisherHolder;
 import itu.crypto.firebase.firestore.purchase.PurchaseSyncService;
 import itu.crypto.firebase.notification.FcmService;
 import jakarta.persistence.PostPersist;
@@ -27,7 +28,9 @@ public class PurchaseListener {
     public void apresSauvegarde(Purchase purchase) {
         purchaseSyncService.saveAsDocument(purchase);
 
-        this.fcmService.send(purchase);
+        ApplicationEventPublisherHolder
+                .getPublisher()
+                .publishEvent(new PurchaseCreatedEvent(purchase));
     }
 
     @PostUpdate
