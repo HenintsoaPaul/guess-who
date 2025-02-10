@@ -155,7 +155,7 @@ public class FrontOfficeController {
         pendingMvFund.setAccount(myAccount);
         pendingMvFundService.save(pendingMvFund);
 
-        model.addAttribute("msg", pendingMvFundService.sendEmail(pendingMvFund));
+        model.addAttribute("msg", "Nisy email lasa bro.");
         return goToHistorique(model);
     }
 

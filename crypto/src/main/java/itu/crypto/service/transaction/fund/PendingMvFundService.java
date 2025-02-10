@@ -157,15 +157,6 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return pmf;
     }
 
-    public String sendEmail(PendingMvFund pmf) {
-        PendingState etat = pmf.getPendingState();
-        if (pmf.getDateValidation() == null && etat.getId() == 1) {
-            return emailService.writeEmailAttente(pmf);
-        } else {
-            return emailService.writeEmailReponse(pmf);
-        }
-    }
-
     public PendingMvFund cobaieAttente() {
         PendingState pendingState = pendingStateRepository.findAll().get(0);
         TypeMvFund tmf = typeMvFundRepository.findAll().get(1); // retrait
