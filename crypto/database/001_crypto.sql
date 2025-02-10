@@ -3,6 +3,7 @@ CREATE TABLE crypto
     id_crypto SERIAL,
     name      VARCHAR(250) NOT NULL,
     symbol    VARCHAR(5)   NOT NULL,
+    logo      VARCHAR(250),
     PRIMARY KEY (id_crypto),
     UNIQUE (name),
     UNIQUE (symbol)
@@ -95,6 +96,16 @@ CREATE TABLE pending_state
     name             VARCHAR(50) NOT NULL,
     PRIMARY KEY (id_pending_state),
     UNIQUE (name)
+);
+
+CREATE TABLE admin
+(
+    id_admin   SERIAL,
+    level      SMALLINT NOT NULL,
+    id_account INTEGER  NOT NULL,
+    PRIMARY KEY (id_admin),
+    UNIQUE (id_account),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
 CREATE TABLE wallet

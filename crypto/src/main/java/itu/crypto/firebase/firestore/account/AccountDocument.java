@@ -15,6 +15,7 @@ public class AccountDocument implements TimestampedDocument {
     private String fcmToken;
     private String email;
     private String password;
+    private String fcmToken;
     private double fund;
 
     private String createdAt;
@@ -26,8 +27,10 @@ public class AccountDocument implements TimestampedDocument {
         this.accountImg = account.getAccountImg();
         this.fcmToken = account.getFcmToken();
         this.email = account.getEmail();
+        this.accountImg = account.getAccountImg();
         this.password = account.getPassword();
         this.fund = account.getFund();
+        this.fcmToken = account.getFcmToken();
     }
 
     public Account toEntity() {
@@ -38,7 +41,8 @@ public class AccountDocument implements TimestampedDocument {
                 fcmToken,
                 email,
                 password,
-                fund
+                fund,
+                fcmToken
         );
     }
 }

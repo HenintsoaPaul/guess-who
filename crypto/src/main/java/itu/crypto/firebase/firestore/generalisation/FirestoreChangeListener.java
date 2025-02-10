@@ -1,5 +1,6 @@
 package itu.crypto.firebase.firestore.generalisation;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,21 +33,11 @@ public abstract class FirestoreChangeListener<T, D> {
 
     protected abstract void deleteFromDatabase(String entityId);
 
-    // Verification des changements entre doc-entity
-    protected boolean hadChanges(T entity, String entityId, BaseService<T> service) {
-        if (entityId == null) return true;
 
-        try {
-            T existingEntity = service.findById(Integer.parseInt(entityId)).orElse(null);
-            if (existingEntity == null) {
-                return true;
-            }
-            return !entity.equals(existingEntity);
-        } catch (NumberFormatException e) {
-            // if id is a string
-            return true;
-        }
-    }
+    // Ensemble des documents en cours de traitement.
+    private final Set<String> processingDocuments = ConcurrentHashMap.newKeySet();
+    // Ensemble des documents traités et supprimés définitivement.
+    private final Set<String> processedDocuments = ConcurrentHashMap.newKeySet();
 
     /**
      * Démarre l’écoute des changements sur la collection associée.
@@ -64,50 +55,58 @@ public abstract class FirestoreChangeListener<T, D> {
                 DocumentSnapshot docSnapshot = change.getDocument();
                 String entityId = docSnapshot.getId();
 
-                // Si cet ID a été supprimé par notre code, on l'ignore
-                if (deletedDocuments.contains(entityId)) {
-                    log.info("Événement REMOVED ignoré pour l'ID {} (suppression initiée par le sync)", entityId);
+                // Si le document a déjà été traité, on l'ignore
+                if (processedDocuments.contains(entityId)) {
+                    log.info("Document {} déjà traité et supprimé.", entityId);
+                    continue;
+                }
+                // Si le document est en cours de traitement, on l'ignore également.
+                if (!processingDocuments.add(entityId)) {
+                    log.info("Document {} déjà en cours de traitement.", entityId);
                     continue;
                 }
 
-                D document = docSnapshot.toObject(getDocumentClass());
-                System.out.println(document);
-                T entity = toEntity(document);
-                switch (change.getType()) {
-                    case ADDED:
-                    case MODIFIED:
-                        if (hadChanges(entity, entityId, baseService)) {
-                            updateDatabase(entity);
-                            log.info("📌 [listener][firestore -> local] Persist change from mobile: [id: {}, collection: {}]", entityId, collectionName);
-
-                            deleteFromFirestore(entityId);
-                        }
-                        break;
-
-                    case REMOVED:
-                        deleteFromDatabase(entityId);
-                        log.info("🗑️ [listener][firestore -> local] Suppression de l'entité ID: {}", entityId);
-                        break;
+                try {
+                    D document = docSnapshot.toObject(getDocumentClass());
+                    T entity = toEntity(document);
+                    updateDatabase(entity);
+                    log.info("📌 [listener][firestore -> local] Persistance de la modification depuis Firestore: [id: {}, collection: {}]", entityId, collectionName);
+                } catch (Exception e) {
+                    log.error("Erreur lors de la mise à jour de la base locale pour l'ID {}: {}", entityId, e.getMessage());
+                    processingDocuments.remove(entityId);
+                    continue;
                 }
+
+                deleteFromFirestore(entityId);
             }
         });
 
         log.info("[listener][firebase->local] Écoute des changements Firestore activée pour la collection: '{}'", collectionName);
     }
 
-    private final Set<String> deletedDocuments = ConcurrentHashMap.newKeySet();
-
     /**
      * Supprime un document de Firestore après la synchronisation locale.
-     * @param entityId L'ID de l'entité dans Firestore.
+     * Une fois supprimé, l'ID est marqué comme traité pour éviter un retraitement.
+     * En cas d'erreur, l'ID est retiré de l'ensemble de traitement pour permettre une nouvelle tentative.
+     *
+     * @param entityId L'ID du document dans Firestore.
      */
     private void deleteFromFirestore(String entityId) {
-        deletedDocuments.add(entityId);
-
         DocumentReference docRef = firestore.collection(collectionName).document(entityId);
-        docRef.delete().addListener(() -> {
-            log.info("🗑️ [firestore] Document supprimé après synchronisation: [id: {}, collection: {}]", entityId, collectionName);
-            deletedDocuments.remove(entityId);
+        ApiFuture<WriteResult> deleteFuture = docRef.delete();
+        deleteFuture.addListener(() -> {
+            try {
+                // Attente de la fin de la suppression.
+                deleteFuture.get();
+                log.info("🗑️ [firestore] Document supprimé après synchronisation: [id: {}, collection: {}]", entityId, collectionName);
+                // On marque le document comme traité.
+                processedDocuments.add(entityId);
+            } catch (Exception e) {
+                log.error("Erreur lors de la suppression du document {}: {}", entityId, e.getMessage());
+            } finally {
+                // Dans tous les cas, on retire l'ID de l'ensemble des documents en cours.
+                processingDocuments.remove(entityId);
+            }
         }, executorService);
     }
 }

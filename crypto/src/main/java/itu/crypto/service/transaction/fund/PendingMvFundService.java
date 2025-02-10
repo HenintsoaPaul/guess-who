@@ -66,6 +66,10 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         return pendingMvFundRepository.findAllAttente();
     }
 
+    public List<PendingMvFund> findByIdAccount(int idAccount){
+        return pendingMvFundRepository.findAllByUser(idAccount);
+    }
+
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrCreate(PendingMvFund pendingMvFund) {
         int retries = 3;
@@ -151,15 +155,6 @@ public class PendingMvFundService implements BaseService<PendingMvFund> {
         }
 
         return pmf;
-    }
-
-    public String sendEmail(PendingMvFund pmf) {
-        PendingState etat = pmf.getPendingState();
-        if (pmf.getDateValidation() == null && etat.getId() == 1) {
-            return emailService.writeEmailAttente(pmf);
-        } else {
-            return emailService.writeEmailReponse(pmf);
-        }
     }
 
     public PendingMvFund cobaieAttente() {

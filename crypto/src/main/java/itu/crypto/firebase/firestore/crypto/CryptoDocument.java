@@ -12,6 +12,7 @@ public class CryptoDocument implements TimestampedDocument {
     private Integer id;
     private String name;
     private String symbol;
+    private String logo;
 
     private String createdAt;
     private String updatedAt;
@@ -20,13 +21,15 @@ public class CryptoDocument implements TimestampedDocument {
         this.id = crypto.getId();
         this.name = crypto.getName();
         this.symbol = crypto.getSymbol();
+        this.logo = crypto.getLogo();
     }
 
     public Crypto toEntity() {
         return new Crypto(
                 id,
                 name,
-                symbol
+                symbol,
+                logo
         );
     }
 }

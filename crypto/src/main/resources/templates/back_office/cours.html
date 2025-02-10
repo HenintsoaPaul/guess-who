@@ -22,7 +22,7 @@
     <div th:replace="~{layout/link_header}"></div>
   </head>
 
-  <body>
+  <body th:with="activePage='cours'">
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
@@ -37,7 +37,8 @@
           <div class="content-wrapper">
             <!-- Content -->
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Cours Crypto/</span> </h4>
+
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Analyse Cours Crypto/</span> </h4>
 
               <div class="row">
                 <!--  Analyses des cours du site  -->
@@ -50,7 +51,8 @@
                     </div>
                     <div class="card-body">
                       <form
-                        th:action="@{/cours}"
+
+                        th:action="@{/back-office/cours}"
                         method="GET"
                         class="form-inline mb-3"
                       >

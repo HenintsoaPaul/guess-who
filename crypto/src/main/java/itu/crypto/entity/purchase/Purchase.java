@@ -1,6 +1,6 @@
 package itu.crypto.entity.purchase;
 
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.account.Account;
 import jakarta.persistence.*;
 import lombok.*;

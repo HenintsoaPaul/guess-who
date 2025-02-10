@@ -4,6 +4,7 @@ import itu.crypto.api.ApiResponse;
 import itu.crypto.dto.login.LoginRequest;
 import itu.crypto.dto.login.LoginResponse;
 import itu.crypto.entity.account.Account;
+import itu.crypto.entity.account.Admin;
 import itu.crypto.service.account.LoginService;
 import itu.crypto.service.SessionService;
 import jakarta.servlet.http.HttpSession;
@@ -23,9 +24,24 @@ public class LoginController {
     private final LoginService loginService;
     private final SessionService sessionService;
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session, Model model) {
+        sessionService.viderSession(session);
+
+        LoginRequest loginRequest = new LoginRequest("rocruxappafra-4143@yopmail.com", "mypassword");
+        model.addAttribute("loginRequest", loginRequest);
+        return "login/index";
+    }
+
     @GetMapping
-    public String goToFirstForm(Model model) {
-        model.addAttribute("loginRequest", new LoginRequest());
+    public String goToFirstForm(HttpSession session, Model model) {
+        if (session.getAttribute("loginError") != null) {
+            model.addAttribute("msg", session.getAttribute("loginError"));
+            session.removeAttribute("loginError");
+        }
+
+        LoginRequest loginRequest = new LoginRequest("rocruxappafra-4143@yopmail.com", "mypassword");
+        model.addAttribute("loginRequest", loginRequest);
         return "login/index";
     }
 
@@ -58,6 +74,9 @@ public class LoginController {
             // Get user by email, then save in Session
             Account myAccount = loginService.getAccount(loginRequest);
 
+            // Get user admin status
+            Admin admin = loginService.getAdminStatus(myAccount);
+
             // save it in the Session
             LoginResponse loginResponse = new LoginResponse(apiResponse);
             String token = loginResponse.getToken();
@@ -65,10 +84,14 @@ public class LoginController {
 
             // Init new Session
             sessionService.viderSession(session);
-            sessionService.initSession(session, myAccount.getId(), token, tokenExpiration);
+            sessionService.initSession(session, myAccount.getId(), token, tokenExpiration, admin);
 
             // goto home page
-            return "index";
+            if (admin == null) {
+                return "redirect:/front-office";
+            } else {
+                return "redirect:/back-office";
+            }
         } else {
             // back to pin form
             model.addAttribute("msg", apiResponse.getMessage());

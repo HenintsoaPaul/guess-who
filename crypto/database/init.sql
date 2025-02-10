@@ -3,6 +3,7 @@ CREATE TABLE crypto
     id_crypto SERIAL,
     name      VARCHAR(250) NOT NULL,
     symbol    VARCHAR(5)   NOT NULL,
+    logo      VARCHAR(250),
     PRIMARY KEY (id_crypto),
     UNIQUE (name),
     UNIQUE (symbol)
@@ -13,6 +14,7 @@ CREATE TABLE account
     id_account  SERIAL,
     pseudo      VARCHAR(250) NOT NULL,
     account_img VARCHAR(250),
+    fcm_token   VARCHAR(250),
     email       VARCHAR(250) NOT NULL,
     password    VARCHAR(250) NOT NULL,
     fund        NUMERIC(15, 2),
@@ -94,6 +96,16 @@ CREATE TABLE pending_state
     name             VARCHAR(50) NOT NULL,
     PRIMARY KEY (id_pending_state),
     UNIQUE (name)
+);
+
+CREATE TABLE admin
+(
+    id_admin   SERIAL,
+    level      SMALLINT NOT NULL,
+    id_account INTEGER  NOT NULL,
+    PRIMARY KEY (id_admin),
+    UNIQUE (id_account),
+    FOREIGN KEY (id_account) REFERENCES account (id_account)
 );
 
 CREATE TABLE wallet
@@ -308,7 +320,7 @@ VALUES ('Commission Vente', 'CV'),
 
 INSERT INTO commission_rate (rate, add_date, id_commission_type)
 VALUES (0.1, '2020-01-01', 1),
-       (0.05, '2020-01-01', 2);
+       (0.05,'2020-01-01', 2);
 
 -- Insertion de données dans la table 'type_mv_wallet'
 INSERT INTO type_mv_wallet (name)
@@ -354,12 +366,9 @@ VALUES ('Alice', 'rocruxappafra-4143@yopmail.com', 'mypassword', 10000),
        ('Ivy', 'bappoppotameu-6100@yopmail.com', 'mypassword', 10500),
        ('Jack', 'nopeummeuxoigrau-1855@yopmail.com', 'mypassword', 11500);
 
--- -- Insertion de données dans la table 'wallet'
--- INSERT INTO wallet (quantity, id_crypto, id_account)
--- VALUES (100, 1, 1),
---        (150, 1, 2),
---        (200, 1, 3),
---        (120, 2, 1);
+INSERT INTO admin (level, id_account)
+VALUES (10, 1),
+       (5, 2);
 
 -- Insertion de données dans la table 'mv_wallet' (exemple pour Alice et Bob)
 -- Alice
@@ -410,7 +419,7 @@ VALUES ('2025-01-08 09:00:00', 30000, 1),
        ('2025-01-08 10:00:00', 31000, 3),
        ('2025-01-08 10:30:00', 31500, 4),
        ('2025-01-08 11:00:00', 32000, 5),
-       ('2025-01-08 11:30:00', 32500, 6),
+       ('2025-01-08 11:30:00', 32500,6),
        ('2025-01-08 12:00:00', 33000, 7),
        ('2025-01-08 12:30:00', 33500, 8),
        ('2025-01-08 13:00:00', 34000, 9),
@@ -481,7 +490,6 @@ VALUES (1000, 800, 1, 1),
        (2000, 1800, 3, 3);
 
 -- Insertion de données dans la table 'purchase'
-INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller,
-                      id_sale_detail)
+INSERT INTO purchase (date_purchase, total_price, unit_price, quantity_crypto, id_account_purchaser, id_account_seller, id_sale_detail)
 VALUES ('2025-01-09 11:30:00', 500, 500, 1, 1, 2, 1),
        ('2025-01-10 12:30:00', 600, 600, 1, 2, 1, 2);

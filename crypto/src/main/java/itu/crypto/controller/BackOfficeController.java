@@ -20,6 +20,9 @@ import itu.crypto.dto.commission.CommissionTypeAnalysis;
 import itu.crypto.entity.commission.CommissionPurchase;
 import itu.crypto.entity.commission.CommissionRate;
 import itu.crypto.entity.cours.Cours;
+
+import itu.crypto.entity.fund.PendingMvFund;
+import itu.crypto.entity.fund.PendingMvFundException;
 import itu.crypto.entity.wallet.MvWallet;
 import itu.crypto.enums.CommissionAnalysisType;
 import itu.crypto.enums.CoursAnalysisType;
@@ -27,6 +30,8 @@ import itu.crypto.service.CoursService;
 import itu.crypto.service.account.AccountOverviewService;
 import itu.crypto.service.transaction.CommissionPurchaseService;
 import itu.crypto.service.transaction.CommissionRateService;
+
+import itu.crypto.service.transaction.fund.PendingMvFundService;
 import itu.crypto.service.transaction.wallet.MvWalletService;
 
 @Controller
@@ -43,6 +48,8 @@ public class BackOfficeController {
     private final CommissionPurchaseService commissionPurchaseService;
     private final AccountOverviewService accountOverviewService;
     private final MvWalletService mvWalletService;
+
+    private final PendingMvFundService pendingMvFundService;
 
     // Cours Crypto
     @GetMapping("/cours")
@@ -210,8 +217,61 @@ public class BackOfficeController {
         }
     }
 
+    // Graphe crypto 
     @GetMapping("/crypto-graphe")
     public String goToCryptoGraphe(Model model) {
         return "/back_office/cryptoGraphe";
+    }
+
+
+    // Validation transaction 
+     @GetMapping("/transactions")
+    public String gotoListPendings(Model model) {
+        model.addAttribute("pendingMvFunds", pendingMvFundService.findAllAttente());
+        return "back_office/transactions/index";
+    }
+
+    @GetMapping("/transactions/ok/{id}")
+    public String validate(Model model,
+                           @PathVariable int id) {
+        String msg = "Validation OK";
+        try {
+            PendingMvFund pmf = pendingMvFundService.validate(id);
+        } catch (PendingMvFundException pmfe) {
+            msg = pmfe.getMessage();
+        }
+        model.addAttribute("msg", msg);
+        return this.gotoListPendings(model);
+    }
+
+    @GetMapping("/transactions/no/{id}")
+    public String refus(Model model,
+                        @PathVariable int id) {
+        String msg = "Refus OK";
+        try {
+            PendingMvFund pmf = pendingMvFundService.refus(id);
+        } catch (PendingMvFundException pmfe) {
+            msg = pmfe.getMessage();
+        }
+        model.addAttribute("msg", msg);
+        return this.gotoListPendings(model);
+    }
+
+    @GetMapping("/transactions/add")
+    public String gotoFormPending(Model model) {
+        model.addAttribute("pendingMvFund", new PendingMvFund());
+        model.addAttribute("accounts", pendingMvFundService.findAllAccounts());
+        model.addAttribute("typeMvFunds", pendingMvFundService.findAllTypeMvFundsDepotRetrait());
+        return "back_office/transactions/add";
+    }
+
+    @PostMapping("/transactions/save")
+    public String save(Model model, @ModelAttribute PendingMvFund pendingMvFund) {
+        pendingMvFund.setPendingState(pendingMvFundService.getEtatAttente());
+        pendingMvFundService.save(pendingMvFund);
+
+//        model.addAttribute("msg", pendingMvFundService.sendEmail(pendingMvFund));
+        model.addAttribute("msg", "Nisy email lasa bro");
+        return gotoFormPending(model);
     }
 }

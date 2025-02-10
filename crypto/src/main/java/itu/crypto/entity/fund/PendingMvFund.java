@@ -41,10 +41,10 @@ public class PendingMvFund {
     @JoinColumn(name = "id_type_mv_fund", nullable = false)
     private TypeMvFund typeMvFund;
 
-    public PendingMvFund(Integer id, LocalDateTime localDateTime, LocalDateTime dd, double amount) {
+    public PendingMvFund(Integer id, LocalDateTime datePending, LocalDateTime dateValidation, double amount) {
         this.id = id;
-        this.datePending = localDateTime;
-        this.dateValidation = dd;
+        this.datePending = datePending;
+        this.dateValidation = dateValidation;
         this.amount = amount;
     }
 

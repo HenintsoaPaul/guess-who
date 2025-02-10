@@ -47,8 +47,8 @@ public class CryptoFav {
         if (o == null || getClass() != o.getClass()) return false;
         CryptoFav autreCryptoFav = (CryptoFav) o;
 
-        return crypto.equals(autreCryptoFav.crypto) &&
-                account.equals(autreCryptoFav.account) &&
+        return Objects.equals(crypto, autreCryptoFav.crypto) &&
+                Objects.equals(account, autreCryptoFav.account) &&
                 Objects.equals(dateCryptoFav, autreCryptoFav.dateCryptoFav);
     }
 }
