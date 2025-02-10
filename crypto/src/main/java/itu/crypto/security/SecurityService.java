@@ -18,12 +18,10 @@ public class SecurityService {
     }
 
     public boolean isExcludedPath(List<String> excludedPaths, String path) {
-        boolean isExcluded = excludedPaths.stream()
+        return excludedPaths.stream()
                 .anyMatch(
                         pattern -> pathMatchesPattern(path, pattern)
                 );
-
-        return isExcluded;
     }
 
     /**

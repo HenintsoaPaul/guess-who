@@ -13,7 +13,7 @@ public interface WalletRepository extends JpaRepository<Wallet, Integer> {
     List<Wallet> findAllByAccount(Account account);
 
     @Query(value = """
-                select w from Wallet w 
+                select w from Wallet w
                             where w.crypto.id = :idCrypto and w.account.id = :idAccount
             """)
     Optional<Wallet> findByCryptoAndAccount(Integer idCrypto, Integer idAccount);
