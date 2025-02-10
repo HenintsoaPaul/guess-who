@@ -1,6 +1,7 @@
 package itu.crypto.service.transaction;
 
 import itu.crypto.entity.crypto.Crypto;
+import itu.crypto.entity.fund.MvFund;
 import itu.crypto.entity.purchase.PurchaseException;
 import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.account.Account;
@@ -12,8 +13,10 @@ import itu.crypto.firebase.notification.FcmService;
 import itu.crypto.repository.TypeMvWalletRepository;
 import itu.crypto.repository.transaction.PurchaseRepository;
 import itu.crypto.repository.transaction.SaleDetailRepository;
+import itu.crypto.repository.transaction.fund.TypeMvFundRepository;
 import itu.crypto.repository.transaction.wallet.MvWalletRepository;
 import itu.crypto.service.account.AccountService;
+import itu.crypto.service.transaction.fund.MvFundService;
 import itu.crypto.service.transaction.wallet.WalletService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,8 +44,10 @@ public class PurchaseService implements BaseService<Purchase> {
     private final SaleDetailRepository saleDetailRepository;
     private final WalletService walletService;
     private final TypeMvWalletRepository typeMvWalletRepository;
+    private final TypeMvFundRepository typeMvFundRepository;
     private final MvWalletRepository mvWalletRepository;
     private final FcmService fcmService;
+    private final MvFundService mvFundService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -146,6 +151,33 @@ public class PurchaseService implements BaseService<Purchase> {
         mvWalletRepository.save(mvWalletSeller);
 
         // mv_fund
+        // todo: fetch prix actuel
+        double prixActuel = 500,
+                amount = purchase.getQuantityCrypto() * prixActuel;
+
+        Account purchaser = purchase.getAccountPurchaser();
+        purchaser.setFund(purchaser.getFund() - amount);
+        accountService.save(purchaser);
+
+        Account seller = purchase.getAccountSeller();
+        seller.setFund(seller.getFund() + amount);
+        accountService.save(seller);
+
+        MvFund vente = new MvFund();
+        vente.setDateMv(purchase.getDatePurchase());
+        vente.setIdSource(purchase.getSaleDetail().getId());
+        vente.setAmount(amount);
+        vente.setAccount(seller);
+        vente.setTypeMvFund(typeMvFundRepository.findById(4).orElseThrow());
+        mvFundService.save(vente);
+
+        MvFund achat = new MvFund();
+        achat.setDateMv(purchase.getDatePurchase());
+        achat.setIdSource(purchase.getSaleDetail().getId());
+        achat.setAmount(amount);
+        achat.setAccount(purchaser);
+        achat.setTypeMvFund(typeMvFundRepository.findById(3).orElseThrow());
+        mvFundService.save(achat);
 
         // notifs
         log.info("Achat effectue id: {}, publication d'un achat", purchase.getId());
