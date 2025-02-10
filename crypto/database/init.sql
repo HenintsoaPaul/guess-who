@@ -3,6 +3,7 @@ CREATE TABLE crypto
     id_crypto SERIAL,
     name      VARCHAR(250) NOT NULL,
     symbol    VARCHAR(5)   NOT NULL,
+    logo      VARCHAR(250),
     PRIMARY KEY (id_crypto),
     UNIQUE (name),
     UNIQUE (symbol)
@@ -13,6 +14,7 @@ CREATE TABLE account
     id_account  SERIAL,
     pseudo      VARCHAR(250) NOT NULL,
     account_img VARCHAR(250),
+    fcm_token   VARCHAR(250),
     email       VARCHAR(250) NOT NULL,
     password    VARCHAR(250) NOT NULL,
     fund        NUMERIC(15, 2),
@@ -363,13 +365,6 @@ VALUES ('Alice', 'rocruxappafra-4143@yopmail.com', 'mypassword', 10000),
        ('Hank', 'baviwagrouye-6787@yopmail.com', 'mypassword', 11000),
        ('Ivy', 'bappoppotameu-6100@yopmail.com', 'mypassword', 10500),
        ('Jack', 'nopeummeuxoigrau-1855@yopmail.com', 'mypassword', 11500);
-
--- -- Insertion de données dans la table 'wallet'
--- INSERT INTO wallet (quantity, id_crypto, id_account)
--- VALUES (100, 1, 1),
---        (150, 1, 2),
---        (200, 1, 3),
---        (120, 2, 1);
 
 -- Insertion de données dans la table 'mv_wallet' (exemple pour Alice et Bob)
 -- Alice

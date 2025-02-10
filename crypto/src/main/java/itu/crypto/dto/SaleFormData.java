@@ -1,8 +1,8 @@
 package itu.crypto.dto;
 
 import itu.crypto.entity.account.Account;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class SaleFormData {
     private List<SaleDetail> saleDetails = new ArrayList<>();
 
     public SaleFormData(Account account) {
-	sale = new Sale();
-	sale.setAccount(account);
-	saleDetails.add( new SaleDetail() );
+        sale = new Sale();
+        sale.setAccount(account);
+        saleDetails.add(new SaleDetail());
     }
 }

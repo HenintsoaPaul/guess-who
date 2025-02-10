@@ -1,5 +1,7 @@
 package itu.crypto.controller;
 
+import itu.crypto.entity.wallet.Wallet;
+import itu.crypto.service.transaction.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import itu.crypto.dto.SaleFormData;
-import itu.crypto.entity.Sale;
-import itu.crypto.entity.SaleDetail;
+import itu.crypto.entity.sale.Sale;
+import itu.crypto.entity.sale.SaleDetail;
 import itu.crypto.entity.account.Account;
 import itu.crypto.entity.cours.Cours;
 import itu.crypto.enums.CoursAnalysisType;
@@ -32,11 +34,11 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/front-office")
 public class FrontOfficeController {
 
-
     private final CoursService coursService;
     private final SaleService saleService;
     private final AccountService accountService;
     private final CryptoRepository cryptoRepository;
+    private final WalletService  walletService;
 
     // Home page
     @GetMapping
@@ -83,8 +85,11 @@ public class FrontOfficeController {
     // Sales
     @GetMapping("/sales")
     public String goToList(Model model, HttpSession session) {
+        // todo: Uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // List<Sale> mySales = saleService.findAllByIdAccount(idAccount);
+
+        // todo: comment on production
         List<Sale> mySales = saleService.findAllByIdAccount(1);
 
         model.addAttribute("sales", mySales);
@@ -104,9 +109,11 @@ public class FrontOfficeController {
 
     @GetMapping("/sales/add")
     public String goToForm(Model model, HttpSession session) {
+        // todo: Uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
+        // todo: comment on production
         Account myAccount = accountService.findById(1).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
@@ -135,9 +142,11 @@ public class FrontOfficeController {
     
     @GetMapping("/depot/add")
     public String saveDepot(Model model, HttpSession session) {
+        // todo: uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
+        // todo: comment on production
         Account myAccount = accountService.findById(1).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
@@ -154,13 +163,34 @@ public class FrontOfficeController {
     
     @GetMapping("/retrait/add")
     public String saveRetrait(Model model, HttpSession session) {
+        // todo: uncomment on production
         // Integer idAccount = (Integer) session.getAttribute("id_account");
         // Account myAccount = accountService.findById(idAccount).orElseThrow();
 
+        // todo: comment on production
         Account myAccount = accountService.findById(1).orElseThrow();
 
         model.addAttribute("saleFormData", new SaleFormData(myAccount));
         model.addAttribute("cryptoCurrencies", cryptoRepository.findAll());
         return "front_office/sales/add";
+    }
+
+    //Wallet
+    @GetMapping("/wallet")
+    public String goToWallet(Model model) {
+        // todo: uncomment on production
+        // Integer idAccount = (Integer) session.getAttribute("id_account");
+        // Account myAccount = accountService.findById(idAccount).orElseThrow();
+
+        // todo: comment on production
+        Account myAccount = accountService.findById(1).orElseThrow();
+
+        List<Wallet> wallets = walletService.findAllByAccount(myAccount);
+        int nbTotal = wallets.stream().mapToInt(Wallet::getQuantity).sum();
+
+        model.addAttribute("wallets", walletService.findAllByAccount(myAccount));
+        model.addAttribute("nbTotal", nbTotal);
+        model.addAttribute("user", myAccount.getPseudo() + "(" + myAccount.getEmail() + ")");
+        return "front_office/wallet/index";
     }
 }
