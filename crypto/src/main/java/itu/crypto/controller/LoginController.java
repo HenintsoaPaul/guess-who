@@ -31,7 +31,8 @@ public class LoginController {
             session.removeAttribute("loginError");
         }
 
-        model.addAttribute("loginRequest", new LoginRequest());
+        LoginRequest loginRequest = new LoginRequest("rocruxappafra-4143@yopmail.com", "mypassword");
+        model.addAttribute("loginRequest", loginRequest);
         return "login/index";
     }
 
